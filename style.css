@@ -28,10 +28,12 @@ h1, h2, h3, h4, h5                  /* header fonts */
 {
     font-family: Courier New;
     font-weight: bold;
+    color: var(--color-base);
 }
 
 p                                   /* paragraph formatting */
 {
     font-family: Courier New;
     font-size: 20px;
+    color: var(--color-base-dark);
 }
