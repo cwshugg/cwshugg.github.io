@@ -1,5 +1,6 @@
 /* Style sheet for my personal website */
 
+/********************************* Colors ************************************/
 /* Color Scheme (from https://coolors.co):
 
         Color Name      Hexadecimal     RGB
@@ -19,21 +20,29 @@
     --color-accent-dark:rgb(147, 22, 33);   /* vermilion */
 }
 
-body                                /* body formatting */
+/**************************** Universal Formats ******************************/
+body
 {
     background-color: black;
+    font-family: Courier New;
 }
 
-h1, h2, h3, h4, h5, h6              /* header fonts */
+/***************************** Text Formatting *******************************/
+/* Headers */
+h1, h2, h3, h4, h5, h6
 {
-    font-family: Courier New;
     font-weight: bold;
     color: var(--color-base);
 }
 
-p, li                               /* standard text formatting */
+/* Text, lists, etc. */
+p, li
 {
-    font-family: Courier New;
-    font-size: 20px;
     color: var(--color-light);
+}
+
+/* Links and anchor text */
+a
+{
+    color: var(--color-accent);   
 }
