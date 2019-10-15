@@ -1,3 +1,29 @@
+/* Style sheet for my personal website */
+
+/* Color Scheme (from https://coolors.co):
+
+        Color Name      Hexadecimal     RGB
+        ---------------------------------------------
+        Blueberry:      #4392F1         67, 146, 241
+        Ruby Red:       #931621         147, 22, 33
+        Sea Blue:       #006494         0, 100, 148
+        Raisin Black:   #262626         38, 38, 38
+        Vermilion:      #DC493A         220, 73, 58
+*/
+:root
+{
+    --color-base:rgb(67, 146, 241);         /* blueberry */
+    --color-base-dark:rgb(0, 100, 148);     /* sea blue */
+    --color-dark:rgb(38, 38, 38);           /* raisin black */
+    --color-accent:rgb(220, 73, 58);        /* ruby red */
+    --color-accent-dark:rgb(147, 22, 33);   /* vermilion */
+}
+
+body                                /* body formatting */
+{
+    background-color: var(--color-dark);
+}
+
 h1, h2, h3, h4, h5                  /* header fonts */
 {
     font-family: Courier New;
