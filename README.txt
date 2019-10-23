@@ -1,3 +1,7 @@
+Hi, this is my personal website. I downloaded this website template to use in my Writing
+and Digital Media class. Here's the original contents of the template's README:
+
+-----------------------------------------------------------------------------------------
 Forty by HTML5 UP
 html5up.net | @ajlkn
 Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
