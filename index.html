@@ -38,17 +38,37 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
   </div>
 </div>
 
-<!-- Header -->
+<!-- parallax image style -->
+<!-- https://www.w3schools.com/howto/howto_css_parallax.asp -->
+<style>
+  .background_parallax
+  {
+    background-image: url("images/bg.jpg"); /* background image */
+    min-height: 750px;                      /* height */
+    /* parallax scrolling effect */
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+</style>
+<div class="background_parallax w3-container w3-center" style="padding:128px 16px">
+  <h1 class="w3-margin w3-jumbo w3-text-black">Hello There</h1>
+  <p class="w3-xlarge w3-text-black">I'm Connor</p>
+</div>
+
+<!--
 <header class="w3-container w3-indigo w3-center" style="padding:128px 16px">
   <h1 class="w3-margin w3-jumbo">Hello There</h1>
   <p class="w3-xlarge">I'm Connor</p>
-  <!--<button class="w3-button w3-black w3-padding-large w3-large w3-margin-top">Get Started</button>-->
+  <button class="w3-button w3-black w3-padding-large w3-large w3-margin-top">Get Started</button>
 </header>
+-->
 
 <!-- First Grid -->
 <div class="w3-row-padding w3-padding-64 w3-container shugg-dkgray3">
   <div class="w3-content">
-    <div class="w3-twothird">
+    <div class="w3-text-light-blue">
       <h1 class="w3-text-light-blue">Education</h1>
       <h5 class="w3-padding-8 w3-text-light-blue"><b>Computer Science & Cybersecurity Student</b><br>
                                                    Virginia Tech BS/MS class of 2021/2022</h5>
@@ -70,22 +90,28 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
       </p>
     </div>
 
+    <!--
+    <img src="images/pic_education.jpg" alt="" class="w3-image"/>
+    -->
+
+    <!--
     <div class="w3-third w3-center">
       <img src="images/pic_education.jpg" alt="" class="w3-image"/>
-      <!--<i class="fa fa-anchor w3-padding-64 w3-text-red"></i>-->
     </div>
+    -->
   </div>
 </div>
 
 <!-- Second Grid -->
 <div class="w3-row-padding w3-padding-64 w3-container shugg-dkgray2">
   <div class="w3-content">
+    <!--
     <div class="w3-third w3-center">
       <img src="images/pic_experience.jpg" alt="" class="w3-image"/>
-      <!--<i class="fa fa-coffee w3-padding-64 w3-text-red w3-margin-right"></i>-->
     </div>
+    -->
 
-    <div class="w3-twothird w3-text-light-blue">
+    <div class="w3-text-light-blue">
       <h1>Experience</h1>
       <!-- Microsoft -->
       <h5 class="w3-padding-8">Software Engineering Intern @ Microsoft (2020)</h5>
@@ -106,21 +132,35 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
       for improvement and cost savings.
       </p>
     </div>
+    
+    <!--
+    <img src="images/pic_experience.jpg" alt="" class="w3-image"/>
+    -->
   </div>
 </div>
 
-<div class="w3-container w3-center w3-padding-64 shugg-dkgray1">
-    <h1 class="w3-margin w3-xlarge w3-text-light-blue">Why Programming is Fun</h1>
-    <p class="w3-text-light-grey">
-    One of my favorite professors at Virginia Tech uses a quote that describes why I like Computer Science so much:<br><br>
-    "First is the sheer joy of making things. As the child delights in his mud pie, so the adult enjoys building things,
-     especially things of his own design. Second is the pleasure of making things that are useful to other people.
-     Deep within, we want others to use our work and to find it helpful. Third is the fascination of fashioning complex
-     puzzle-like objects of interlocking moving parts and watching them work in subtle cycles, playing out the
-     consequences of principles built in from the beginning. Fourth is the joy of always learning. In one way or
-     another, the problem is ever new, and its solver learns something."<br>
-     - Fred Brooks
-    </p>
+<div class="w3-row-padding w3-padding-64 w3-container shugg-dkgray1">
+  <div class="w3-content">
+    <!--
+    <div class="w3-third w3-center">
+      <img src="images/pic_experience.jpg" alt="" class="w3-image"/>
+    </div>
+    -->
+
+    <div class="w3-text-light-blue">
+      <h1>Why Programming is Fun</h1>
+      <p class="w3-text-light-grey">
+      One of my favorite professors at Virginia Tech uses a quote that describes why I like Computer Science so much:<br><br>
+      "First is the sheer joy of making things. As the child delights in his mud pie, so the adult enjoys building things,
+      especially things of his own design. Second is the pleasure of making things that are useful to other people.
+      Deep within, we want others to use our work and to find it helpful. Third is the fascination of fashioning complex
+      puzzle-like objects of interlocking moving parts and watching them work in subtle cycles, playing out the
+      consequences of principles built in from the beginning. Fourth is the joy of always learning. In one way or
+      another, the problem is ever new, and its solver learns something."<br>
+      - Fred Brooks
+      </p>
+    </div>
+  </div>
 </div>
 
 <!-- Footer -->
