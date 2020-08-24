@@ -207,17 +207,9 @@ Error message and password prompt
 
 <li>Cybersecurity: Buffer Overflow</li>
 
-<li>Cybersecurity: Hash Functions</li>
-
-<li>Cybersecurity: PKC</li>
-
 <li>Cybersecurity: Principles</li>
 
 <li>Cybersecurity: Return-Oriented Programming</li>
-
-<li>Cybersecurity: RSA</li>
-
-<li>Cybersecurity: RSA Digital Signatures</li>
 
 <li>Data Representation</li>
 
@@ -8983,19 +8975,19 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/url/full&quot;: {
             &quot;title&quot;: &quot;$:/info/url/full&quot;,
-            &quot;text&quot;: &quot;file:///C:/Users/Connor/Desktop/csn_sysarch.html&quot;
+            &quot;text&quot;: &quot;https://shugg.dev/notes/sysarch&quot;
         },
         &quot;$:/info/url/host&quot;: {
             &quot;title&quot;: &quot;$:/info/url/host&quot;,
-            &quot;text&quot;: &quot;&quot;
+            &quot;text&quot;: &quot;shugg.dev&quot;
         },
         &quot;$:/info/url/hostname&quot;: {
             &quot;title&quot;: &quot;$:/info/url/hostname&quot;,
-            &quot;text&quot;: &quot;&quot;
+            &quot;text&quot;: &quot;shugg.dev&quot;
         },
         &quot;$:/info/url/protocol&quot;: {
             &quot;title&quot;: &quot;$:/info/url/protocol&quot;,
-            &quot;text&quot;: &quot;file:&quot;
+            &quot;text&quot;: &quot;https:&quot;
         },
         &quot;$:/info/url/port&quot;: {
             &quot;title&quot;: &quot;$:/info/url/port&quot;,
@@ -9003,7 +8995,7 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/url/pathname&quot;: {
             &quot;title&quot;: &quot;$:/info/url/pathname&quot;,
-            &quot;text&quot;: &quot;/C:/Users/Connor/Desktop/csn_sysarch.html&quot;
+            &quot;text&quot;: &quot;/notes/sysarch&quot;
         },
         &quot;$:/info/url/search&quot;: {
             &quot;title&quot;: &quot;$:/info/url/search&quot;,
@@ -9011,7 +9003,7 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/url/origin&quot;: {
             &quot;title&quot;: &quot;$:/info/url/origin&quot;,
-            &quot;text&quot;: &quot;file://&quot;
+            &quot;text&quot;: &quot;https://shugg.dev&quot;
         },
         &quot;$:/info/browser/screen/width&quot;: {
             &quot;title&quot;: &quot;$:/info/browser/screen/width&quot;,
@@ -9564,75 +9556,6 @@ Modern operating systems have defense buffer overflow attacks. They are as follo
 * ''Address Space Layout Randomization'' (ASLR): Randomizing the addresses of program stacks
 ** This makes it difficult for attacks to guess important addresses</pre>
 </div>
-<div created="20200403213049120" creator="cwshugg" modified="20200403233637138" modifier="cwshugg" tags="cybersecurity" title="Cybersecurity: Hash Functions">
-<pre>Hash functions are used to turn plaintext into a seemingly-random hashed value. The basic idea of these functions is defined below:
-
-!! Hash Function `h: A -&gt; B`
-For any `x in A`, `h(x)` is easy to compute.
-
-* __Onewayness__: for any `y in B`, it is computationally infeasible to find `x in A` such that `h(x) = y`
-** In other words, it's near impossible to convert a hashed value back into its corresponding plaintext
-* __Collision Resistance__: it is computationally infeasible to find two inputs, `x, x' in A` such that `x != x'` and `h(x) = h(x')`
-** In other words, it's near impossible to find two different plaintexts that hash to the same value
-
-! Hash-Based Message Authentication Code (HMAC)
-`HMAC = h(m, k)` where `k` is kept secret. Verifying message integrity requires a symmetric key, but the process is simple and efficient.
-
-HMAC differs from the [[public key digital signature scheme|Cybersecurity: RSA Digital Signatures]] in the fact that it does not provide non-repudiation. The key, `k`, is not uniquely bound to an individual or entity.
-
-
-! Uses of Hash Functions
-Hash functions are used for lots of applications in software. Some include:
-
-* Downloading software online
-* Email signing
-* De-duplication
-* Blockchain</pre>
-</div>
-<div created="20200403195039549" creator="cwshugg" modified="20200407172328896" modifier="cwshugg" tags="cybersecurity" title="Cybersecurity: PKC">
-<pre>Public Key Cryptosystems involve using multiple keys to encrypt and decrypt a message: a //public// key, and a //private// key. The ''Diffie-Hellman public-key exchange protocol'' is the typical setup for a PKC. This uses a common, shared key, whose computation is based on the difficulty of a discrete logarithm problem:
-
-__The logarithm problem__: given two integers, `n` and `g`, and a prime number, `p`, the key, `k`, is computed such that `n = (g^k) mod p`.
-
-* Solutions are known for a small `p` value
-* However, solutions become computationally infeasible as `p` grows larger
-
-! Modular Arithmetic
-PKC is based on modular arithmetic. Here are a few useful properties to know:
-
-* Two numbers, `a` and `b`, are said to be congruent in modulo `n` if:
-** `(a mod n) = (b mod n)`
-** Additionally, the difference between `a` and `b` will be a multiple of `n`
-*** So `a - b = k * n` for some value of `k`
-* `[(a mod n) + (b mod n)] mod n = (a + b) mod n`
-* `[(a mod n) * (b mod n)] mod n = (a * b) mod n`
-* `k = (a^x) mod n = (a mod n) ^ x`
-
-! Diffie-Hellman Exchange Algorithm
-To safely exchange keys between the two parties, only //public// keys are exchanged. Public keys are based on the two parties' private keys. For the sake of description, we'll call the two parties ''Alice'' and ''Bob''. The key exchange process is as follows:
-
-# Constants are defined (and known among all participants):
-#* Prime `p`
-#* Integer `g != [0, 1, (p - 1)]`
-# Alice chooses her private key, `sA`, and computes her public key: `kA = (g ^ sA) mod p`
-# Bob chooses his private key, `sB`, and computes his public key: `kB = (g ^ sB) mod p`
-#* (It can be shown that these keys are equal)
-# Alice and Bob exchange their public keys and can use them to decrypt each others' messages
-
-!! Example
-```
-Assume p = 53 and g = 17.
-- Alice chooses sA = 5
-- So, kA = (17 ^ 5) mod 53 = 40
-- Bob chooses sB = 7
-- So, kB = (17 ^ 7) mod 53 = 6
-
-Collectively, each party can combine the two keys they have to compute a shared key:
-Alice: (kB ^ sA) mod p = (6 ^ 5) mod 53 =  38
-Bob:   (kA ^ sB) mod p = (40 ^ 7) mod 53 = 38
-```
-</pre>
-</div>
 <div created="20200404150002893" creator="cwshugg" modified="20200404150351310" modifier="cwshugg" title="Cybersecurity: Principles">
 <pre>There are six main ''security properties'':
 
@@ -9666,131 +9589,6 @@ By returning to some address in the standard C library, //any// of the machine c
 Make sure a program only makes valid control-flow changes. Check every call to make sure it's possible, given the original code.
 
 This idea is known as ''Control-Flow Integrity'' (CFI).</pre>
-</div>
-<div created="20200403201804720" creator="cwshugg" modified="20200403212021376" modifier="cwshugg" tags="cybersecurity" title="Cybersecurity: RSA">
-<pre>RSA (&quot;Rivest–Shamir–Adleman&quot;) is a popular public-key cryptosystem still in use today. This makes use of modular arithmetic to compute public and private keys.
-
-! Choosing Keys
-The process for choosing keys for RSA is as follows:
-
-# Choose two large prime numbers, `p` and `q` (typically around 2048 bits //each//)
-# Compute: `n = p * q` and `z = (p - 1) * (q - 1)`
-#* (`z` is called the &quot;totient function&quot;)
-# Choose `e` (where `e &lt; n`) that has no common factors with `z` (`e` and `z` are //relatively prime//)
-# Choose `d` such that `(e * d) - 1` is exactly divisible by `z`
-#* This means: `(e * d) mod z = 1`)
-
-From here, our public and private keys are defined using these chosen values:
-
-* Public key: `(n, e)`
-* Private key: `(n, d)`
-
-
-! Encryption and Decryption
-Given the two keys defined above, we can encrypt and decrypt messages using RSA.
-
-!! Encryption
-A message is encrypted in RSA like so:
-
-`c = (m ^ e) mod n`
-
-(where `c` is the ciphertext, `m` is the plaintext message, and `(n, e)` is the public key)
-
-!! Decryption
-A message is decrypted in RSA like so:
-
-`m = (c ^ d) mod n`
-
-(where `c` is the ciphertext, `m` is the plaintext message, and `(n, d)` is the private key)
-
-!! Example
-```
-- Bob chooses p = 5 and q = 7
-- n is computed to be 35
-- z is computed to be 24
-- e is 5 (so e and z are relatively prime)
-- d = 29 (so ((e * d) - 1) is exactly divisible by z)
-
-Let the message, m, be m = 12. Encryption would look like this:
-    c = (12 ^ 5) mod 35 = 17
-Decryption would look like this:
-    m = (17 ^ 29) mod 35 = 12
-```
-
-!! Why it works
-Putting the encryption and decryption equations together, we can see they cancel each other out:
-
-```
-Encrypt:  c = (m ^ e) mod n
-Decrypt:  m = (c ^ d) mod n
-Together: m = (((m ^ e) mod n) ^ d) mod n
-```
-A useful number theory result comes out of this idea: if `p` and `q` are both prime, and `n = p * q`, then: `(x ^ y) mod n = (x ^ (y mod ((p - q) * (q - 1)))) mod n`
-
-!! Keeping the Encryption Secure
-To keep an RSA encryption secure, `p` and `q` should be kept secret (or just tossed away, once `d` is computed). RSA's security lies in the hardness of factoring `n` to get `p` and `q`.
-
-! Attacks and Cryptanalysis
-!! Security Flaws
-RSA is a ''deterministic'' encryption scheme. This means that the same message //always// yields the same ciphertext. This isn't secure.
-
-RSA is also ''multiplicative''. So, `[(m1 ^ e) mod n] * [(m2 ^ e) mod n] = ((m1 * m2) ^ e) mod n`. This property might enable an attacker to decrypt the ciphertext of his choice.
-
-!! Randomized Padding
-In an attempt to fix the issues of RSA, randomized padding was added onto the original plaintext, making for a different ciphertext after encrypting the same plaintext twice. The padding was formatted like so:
-
-```
-+----+---------------------------+----+--------------------------+
-| 02 |        Random Pad         | FF |         Message          |
-+----+---------------------------+----+--------------------------+
-                               |
-                               V
-+----+---------------------------+----+--------------------------+
-|                         Ciphertext                             |
-+----+---------------------------+----+--------------------------+
-
-```
-Attacks could be mounted on RSA ciphertexts with this padding, though. An attacker could guess if the 16 most-significant bits of plaintext was equal to `02`, the indicator for the beginning of the padding. To decrypt a given ciphertext, they could do the following
-
-# Choose `r`, compute `c' = (r ^ e) * c = (r * m) ^ e`
-# Attempt to authenticate with `c'`, and use the response (yes/no) to determine how to change `c'`
-
-If done correctly, this process could reveal N most-significant bits of the plaintext.</pre>
-</div>
-<div created="20200403212014431" creator="cwshugg" modified="20200403212831687" modifier="cwshugg" tags="cybersecurity" title="Cybersecurity: RSA Digital Signatures">
-<pre>''Digital signatures'' were created to authenticate the origin of a message. These can be calculated along with the other values involved in RSA encryption/decryption.
-
-! Naïve Digital Signatures
-
-To set things up, Alice generates `(d, e, n)` for a typical RSA encryption scheme (`(d, n)` is the private key, and `(e, n)` is the public key). From here, Alice can &quot;sign&quot; a message by generating `s`, the signature:
-
-`s = (m ^ d) mod n`
-
-When Bob receives the message, he can &quot;verify&quot; the message using this signature:
-
-`m' = (s ^ e) mod n` (If `m` and `m'` are the same, then it's been successfully verified)
-
-
-!! Attacks and Cryptanalysis
-Signatures can be forged with little effort. Take this example:
-
-```
-- Bob's key values are: n = 77, e = 53, d = 17
-- 26 contracts exist, numbered from 00 to 25
-
-- Alice, the attacker, has made Bob sign 05 and 17
-    - s1 = (m1 ^ d) mod n = (05 ^ 17) mod 77 = 3
-    - s2 = (m2 ^ d) mod n = (17 ^ 17) mod 77 = 19
-
-- Using this information, Alice can compute a new contract number
-    - (m1 * m2) mod 77 = (05 * 17) mod 77 = 08
-    - From here, Alice claims Bob signed contract 08
-
-- The 'judge' computes ((s1 * s2) ^ e) mod n = (57 ^ 53) mod 77 = 08
-    - The same value, 08, is computed, and the signature is validated (Alice just successfully forged Bob's signature)
-```
-To fix this, the signing needs to happen on the //hash// of the plaintext, not the plaintext itself.
-</pre>
 </div>
 <div created="20200131213318259" creator="cwshugg" modified="20200201043542084" modifier="cwshugg" tags="computer_organization" title="Data Representation">
 <pre>Data is represented in computers using bits: a single value that's either on (1) or off (0). 8 bits form a byte, and 4 bits form a nybble.
@@ -10387,7 +10185,7 @@ Connor Shugg
 &lt;&lt;&lt;
 </pre>
 </div>
-<div created="20200131024136331" creator="cwshugg" modified="20200801192235575" modifier="cwshugg" tags="" title="Table of Contents">
+<div created="20200131024136331" creator="cwshugg" modified="20200824195702589" modifier="cwshugg" tags="" title="Table of Contents">
 <pre>! Linux
 * [[File Permissions|Linux: File Permissions]]
 
@@ -10417,11 +10215,6 @@ Connor Shugg
 
 ! Cybersecurity
 * [[Security Principles|Cybersecurity: Principles]]
-!!! Cryptography
-* [[Public Key Cryptography|Cybersecurity: PKC]]
-* [[RSA|Cybersecurity: RSA]]
-** [[Digital Signatures|Cybersecurity: RSA Digital Signatures]]
-* [[Cryptographic Hash Functions|Cybersecurity: Hash Functions]]
 
 !!! Attacks
 * [[Buffer Overflow Attack|Cybersecurity: Buffer Overflow]]
