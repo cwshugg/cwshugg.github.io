@@ -137,6 +137,8 @@ Error message and password prompt
 
 <li>$:/config/RelinkOnRename</li>
 
+<li>$:/config/TextEditor/EnableToolbar</li>
+
 <li>$:/config/WikiParserRules/Inline/wikilink</li>
 
 <li>$:/core</li>
@@ -193,15 +195,17 @@ Error message and password prompt
 
 <li>Cryptography Notes</li>
 
-<li>Cybersecurity: Hash Functions</li>
+<li>Hash Functions</li>
 
-<li>Cybersecurity: PKC</li>
+<li>Modular Arithmetic and DHEP</li>
 
-<li>Cybersecurity: RSA</li>
+<li>Public Key Cryptography</li>
 
-<li>Cybersecurity: RSA Digital Signatures</li>
+<li>RSA Digital Signatures</li>
 
 <li>Table of Contents</li>
+
+<li>The RSA Cryptosystem</li>
 
 </ul>
 </p>
@@ -217,6 +221,9 @@ Error message and password prompt
 <pre>200</pre>
 </div>
 <div created="20200131230626027" creator="cwshugg" modified="20200131230626027" modifier="cwshugg" title="$:/config/RelinkOnRename">
+<pre>yes</pre>
+</div>
+<div created="20200824174308142" creator="cwshugg" modified="20200824174316194" modifier="cwshugg" title="$:/config/TextEditor/EnableToolbar">
 <pre>yes</pre>
 </div>
 <div created="20200131024029703" creator="cwshugg" modified="20200131024029703" modifier="cwshugg" title="$:/config/WikiParserRules/Inline/wikilink">
@@ -8896,14 +8903,14 @@ very-muted-foreground: #888888</pre>
 <div created="20200131022623523" modified="20200131022623523" title="$:/state/ShowPaletteEditor">
 <pre>yes</pre>
 </div>
-<div created="20200131174736899" creator="cwshugg" modified="20200406222317244" modifier="cwshugg" title="$:/state/sidebar">
+<div created="20200131174736899" creator="cwshugg" modified="20200824174212465" modifier="cwshugg" title="$:/state/sidebar">
 <pre>yes</pre>
 </div>
 <div created="20200131022502764" creator="cwshugg" modified="20200131174310041" modifier="cwshugg" title="$:/state/tab--1963855381">
 <pre>$:/core/ui/ControlPanel/Palette</pre>
 </div>
-<div created="20200131022449218" creator="cwshugg" modified="20200201042811467" modifier="cwshugg" title="$:/state/tab-1749438307">
-<pre>$:/core/ui/ControlPanel/Info</pre>
+<div created="20200131022449218" creator="cwshugg" modified="20200824174223541" modifier="cwshugg" title="$:/state/tab-1749438307">
+<pre>$:/core/ui/ControlPanel/Settings</pre>
 </div>
 <div created="20200131022605673" creator="cwshugg" modified="20200131232302975" modifier="cwshugg" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Recent</pre>
@@ -8933,7 +8940,7 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/url/full&quot;: {
             &quot;title&quot;: &quot;$:/info/url/full&quot;,
-            &quot;text&quot;: &quot;https://shugg.dev/notes/crypto.html&quot;
+            &quot;text&quot;: &quot;https://shugg.dev/notes/crypto&quot;
         },
         &quot;$:/info/url/host&quot;: {
             &quot;title&quot;: &quot;$:/info/url/host&quot;,
@@ -8953,7 +8960,7 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/url/pathname&quot;: {
             &quot;title&quot;: &quot;$:/info/url/pathname&quot;,
-            &quot;text&quot;: &quot;/notes/crypto.html&quot;
+            &quot;text&quot;: &quot;/notes/crypto&quot;
         },
         &quot;$:/info/url/search&quot;: {
             &quot;title&quot;: &quot;$:/info/url/search&quot;,
@@ -9105,7 +9112,7 @@ Connor Shugg
 &lt;&lt;&lt;
 </pre>
 </div>
-<div created="20200403213049120" creator="cwshugg" modified="20200403233637138" modifier="cwshugg" tags="cybersecurity" title="Cybersecurity: Hash Functions">
+<div created="20200403213049120" creator="cwshugg" modified="20200824180020646" modifier="cwshugg" title="Hash Functions">
 <pre>Hash functions are used to turn plaintext into a seemingly-random hashed value. The basic idea of these functions is defined below:
 
 !! Hash Function `h: A -&gt; B`
@@ -9119,7 +9126,7 @@ For any `x in A`, `h(x)` is easy to compute.
 ! Hash-Based Message Authentication Code (HMAC)
 `HMAC = h(m, k)` where `k` is kept secret. Verifying message integrity requires a symmetric key, but the process is simple and efficient.
 
-HMAC differs from the [[public key digital signature scheme|Cybersecurity: RSA Digital Signatures]] in the fact that it does not provide non-repudiation. The key, `k`, is not uniquely bound to an individual or entity.
+HMAC differs from the [[public key digital signature scheme|RSA Digital Signatures]] in the fact that it does not provide non-repudiation. The key, `k`, is not uniquely bound to an individual or entity.
 
 
 ! Uses of Hash Functions
@@ -9130,7 +9137,7 @@ Hash functions are used for lots of applications in software. Some include:
 * De-duplication
 * Blockchain</pre>
 </div>
-<div created="20200403195039549" creator="cwshugg" modified="20200407172328896" modifier="cwshugg" tags="cybersecurity" title="Cybersecurity: PKC">
+<div created="20200403195039549" creator="cwshugg" modified="20200824175101576" modifier="cwshugg" tags="pkc" title="Modular Arithmetic and DHEP">
 <pre>Public Key Cryptosystems involve using multiple keys to encrypt and decrypt a message: a //public// key, and a //private// key. The ''Diffie-Hellman public-key exchange protocol'' is the typical setup for a PKC. This uses a common, shared key, whose computation is based on the difficulty of a discrete logarithm problem:
 
 __The logarithm problem__: given two integers, `n` and `g`, and a prime number, `p`, the key, `k`, is computed such that `n = (g^k) mod p`.
@@ -9174,7 +9181,64 @@ Bob:   (kA ^ sB) mod p = (40 ^ 7) mod 53 = 38
 ```
 </pre>
 </div>
-<div created="20200403201804720" creator="cwshugg" modified="20200403212021376" modifier="cwshugg" tags="cybersecurity" title="Cybersecurity: RSA">
+<div created="20200824175121620" creator="cwshugg" modified="20200824180457540" modifier="cwshugg" tags="pkc" title="Public Key Cryptography">
+<pre>If Alice and Bob are trying to communicate securely on an insecure channel, they need to encrypt their messages so nobody can read them. The problem with ''Private Key Cryptography'' is that it's very difficult to agree upon a shared key on an insecure channel. Any attackers/snoopers could easily pick up on keys that are communicated across that channel.
+
+''Public Key Cryptography'' allows for the use of //two// kinds of keys: a public key and a private key. All Alice and Bob need to do is exchange their //public// keys. Attackers can see these, but they're useless without knowledge of one of the two private keys. Alice and Bob can then use each other's public key to encrypt messages, and their own private keys to decrypt incoming messages.
+
+Multiple mathematical paradigms are used to implement PKC:
+
+* ''Multiplication'' (//easy//) and ''Factorization'' (//hard//)
+* ''Discrete exponentiation'' (//easy//) and ''Discrete logs'' (//hard//)
+
+</pre>
+</div>
+<div created="20200403212014431" creator="cwshugg" modified="20200824174135684" modifier="cwshugg" tags="pkc" title="RSA Digital Signatures">
+<pre>''Digital signatures'' were created to authenticate the origin of a message. These can be calculated along with the other values involved in RSA encryption/decryption.
+
+! Naïve Digital Signatures
+
+To set things up, Alice generates `(d, e, n)` for a typical RSA encryption scheme (`(d, n)` is the private key, and `(e, n)` is the public key). From here, Alice can &quot;sign&quot; a message by generating `s`, the signature:
+
+`s = (m ^ d) mod n`
+
+When Bob receives the message, he can &quot;verify&quot; the message using this signature:
+
+`m' = (s ^ e) mod n` (If `m` and `m'` are the same, then it's been successfully verified)
+
+
+!! Attacks and Cryptanalysis
+Signatures can be forged with little effort. Take this example:
+
+```
+- Bob's key values are: n = 77, e = 53, d = 17
+- 26 contracts exist, numbered from 00 to 25
+
+- Alice, the attacker, has made Bob sign 05 and 17
+    - s1 = (m1 ^ d) mod n = (05 ^ 17) mod 77 = 3
+    - s2 = (m2 ^ d) mod n = (17 ^ 17) mod 77 = 19
+
+- Using this information, Alice can compute a new contract number
+    - (m1 * m2) mod 77 = (05 * 17) mod 77 = 08
+    - From here, Alice claims Bob signed contract 08
+
+- The 'judge' computes ((s1 * s2) ^ e) mod n = (57 ^ 53) mod 77 = 08
+    - The same value, 08, is computed, and the signature is validated (Alice just successfully forged Bob's signature)
+```
+To fix this, the signing needs to happen on the //hash// of the plaintext, not the plaintext itself.
+</pre>
+</div>
+<div created="20200131024136331" creator="cwshugg" modified="20200824175113632" modifier="cwshugg" tags="" title="Table of Contents">
+<pre>! Public-Key Cryptography
+* [[Public Key Cryptography]]
+* [[Modular Arithmetic &amp; The Diffie-Hellman Exchange Protocol|Modular Arithmetic and DHEP]]
+* [[RSA|The RSA Cryptosystem]]
+** [[Digital Signatures|RSA Digital Signatures]]
+
+! Hashing
+* [[Cryptographic Hash Functions|Hash Functions]]</pre>
+</div>
+<div created="20200403201804720" creator="cwshugg" modified="20200824174154073" modifier="cwshugg" tags="pkc" title="The RSA Cryptosystem">
 <pre>RSA (&quot;Rivest–Shamir–Adleman&quot;) is a popular public-key cryptosystem still in use today. This makes use of modular arithmetic to compute public and private keys.
 
 ! Choosing Keys
@@ -9263,48 +9327,6 @@ Attacks could be mounted on RSA ciphertexts with this padding, though. An attack
 # Attempt to authenticate with `c'`, and use the response (yes/no) to determine how to change `c'`
 
 If done correctly, this process could reveal N most-significant bits of the plaintext.</pre>
-</div>
-<div created="20200403212014431" creator="cwshugg" modified="20200403212831687" modifier="cwshugg" tags="cybersecurity" title="Cybersecurity: RSA Digital Signatures">
-<pre>''Digital signatures'' were created to authenticate the origin of a message. These can be calculated along with the other values involved in RSA encryption/decryption.
-
-! Naïve Digital Signatures
-
-To set things up, Alice generates `(d, e, n)` for a typical RSA encryption scheme (`(d, n)` is the private key, and `(e, n)` is the public key). From here, Alice can &quot;sign&quot; a message by generating `s`, the signature:
-
-`s = (m ^ d) mod n`
-
-When Bob receives the message, he can &quot;verify&quot; the message using this signature:
-
-`m' = (s ^ e) mod n` (If `m` and `m'` are the same, then it's been successfully verified)
-
-
-!! Attacks and Cryptanalysis
-Signatures can be forged with little effort. Take this example:
-
-```
-- Bob's key values are: n = 77, e = 53, d = 17
-- 26 contracts exist, numbered from 00 to 25
-
-- Alice, the attacker, has made Bob sign 05 and 17
-    - s1 = (m1 ^ d) mod n = (05 ^ 17) mod 77 = 3
-    - s2 = (m2 ^ d) mod n = (17 ^ 17) mod 77 = 19
-
-- Using this information, Alice can compute a new contract number
-    - (m1 * m2) mod 77 = (05 * 17) mod 77 = 08
-    - From here, Alice claims Bob signed contract 08
-
-- The 'judge' computes ((s1 * s2) ^ e) mod n = (57 ^ 53) mod 77 = 08
-    - The same value, 08, is computed, and the signature is validated (Alice just successfully forged Bob's signature)
-```
-To fix this, the signing needs to happen on the //hash// of the plaintext, not the plaintext itself.
-</pre>
-</div>
-<div created="20200131024136331" creator="cwshugg" modified="20200824130934642" modifier="cwshugg" tags="" title="Table of Contents">
-<pre>! Hashing and Public-Key Cryptography
-* [[Public Key Cryptography|Cybersecurity: PKC]]
-* [[RSA|Cybersecurity: RSA]]
-** [[Digital Signatures|Cybersecurity: RSA Digital Signatures]]
-* [[Cryptographic Hash Functions|Cybersecurity: Hash Functions]]</pre>
 </div>
 
 </div>
