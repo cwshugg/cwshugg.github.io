@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["MessengerManager","Messenger Manager handles incoming  and outgoing messages for properly connected users."]]});

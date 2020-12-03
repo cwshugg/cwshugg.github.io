@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["get_keys_dir","Create and return the SSMP keys directory"],["get_ssmp_dir","Create and return the SSMP directory"],["write_keypair_to_file","Write a keypair to a file"],["write_pub_key_to_file","Write a specific user's public key"]]});

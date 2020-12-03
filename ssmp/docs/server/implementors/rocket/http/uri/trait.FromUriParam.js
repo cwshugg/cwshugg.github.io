@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["rocket"] = [{"text":"impl&lt;'f, A, T:&nbsp;FromUriParam&lt;Query, A&gt; + FromForm&lt;'f&gt;&gt; FromUriParam&lt;Query, A&gt; for LenientForm&lt;T&gt;","synthetic":false,"types":[]},{"text":"impl&lt;'f, A, T:&nbsp;FromUriParam&lt;Query, A&gt; + FromForm&lt;'f&gt;&gt; FromUriParam&lt;Query, A&gt; for Form&lt;T&gt;","synthetic":false,"types":[]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

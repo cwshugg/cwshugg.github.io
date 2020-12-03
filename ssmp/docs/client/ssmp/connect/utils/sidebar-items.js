@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["build_peer_request","build a request msg. Special note: we cannot encrypt the peer request due to the lack of  knowing who the requester would be."]]});
