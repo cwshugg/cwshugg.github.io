@@ -1,6 +1,7 @@
 (function() {var implementors = {};
 implementors["attohttpc"] = [{"text":"impl Error for Error","synthetic":false,"types":[]}];
 implementors["base64"] = [{"text":"impl Error for DecodeError","synthetic":false,"types":[]}];
+implementors["chrono"] = [{"text":"impl Error for ParseError","synthetic":false,"types":[]},{"text":"impl Error for RoundingError","synthetic":false,"types":[]}];
 implementors["cookie"] = [{"text":"impl Error for ParseError","synthetic":false,"types":[]}];
 implementors["cookie_store"] = [{"text":"impl Error for Error","synthetic":false,"types":[]},{"text":"impl Error for IdnaErrors","synthetic":false,"types":[]}];
 implementors["futures_channel"] = [{"text":"impl Error for SendError","synthetic":false,"types":[]},{"text":"impl&lt;T:&nbsp;Any&gt; Error for TrySendError&lt;T&gt;","synthetic":false,"types":[]},{"text":"impl Error for TryRecvError","synthetic":false,"types":[]},{"text":"impl Error for Canceled","synthetic":false,"types":[]}];

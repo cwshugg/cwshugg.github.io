@@ -1,5 +1,6 @@
 (function() {var implementors = {};
 implementors["bytes"] = [{"text":"impl&lt;T:&nbsp;Buf&gt; Iterator for IntoIter&lt;T&gt;","synthetic":false,"types":[]}];
+implementors["chrono"] = [{"text":"impl&lt;'a&gt; Iterator for StrftimeItems&lt;'a&gt;","synthetic":false,"types":[]}];
 implementors["cookie"] = [{"text":"impl&lt;'a&gt; Iterator for Delta&lt;'a&gt;","synthetic":false,"types":[]},{"text":"impl&lt;'a&gt; Iterator for Iter&lt;'a&gt;","synthetic":false,"types":[]}];
 implementors["error_chain"] = [{"text":"impl&lt;'a&gt; Iterator for Iter&lt;'a&gt;","synthetic":false,"types":[]}];
 implementors["form_urlencoded"] = [{"text":"impl&lt;'a&gt; Iterator for Parse&lt;'a&gt;","synthetic":false,"types":[]},{"text":"impl&lt;'a&gt; Iterator for ParseIntoOwned&lt;'a&gt;","synthetic":false,"types":[]},{"text":"impl&lt;'a&gt; Iterator for ByteSerialize&lt;'a&gt;","synthetic":false,"types":[]}];
@@ -12,6 +13,7 @@ implementors["memchr"] = [{"text":"impl&lt;'a&gt; Iterator for Memchr&lt;'a&gt;"
 implementors["mime"] = [{"text":"impl&lt;'a&gt; Iterator for Params&lt;'a&gt;","synthetic":false,"types":[]}];
 implementors["mime_guess"] = [{"text":"impl Iterator for Iter","synthetic":false,"types":[]},{"text":"impl Iterator for IterRaw","synthetic":false,"types":[]}];
 implementors["mio"] = [{"text":"impl&lt;'a&gt; Iterator for Iter&lt;'a&gt;","synthetic":false,"types":[]}];
+implementors["num_integer"] = [{"text":"impl&lt;T&gt; Iterator for IterBinomial&lt;T&gt; <span class=\"where fmt-newline\">where<br>&nbsp;&nbsp;&nbsp;&nbsp;T: Integer + Clone,&nbsp;</span>","synthetic":false,"types":[]}];
 implementors["openssl"] = [{"text":"impl&lt;T:&nbsp;Stackable&gt; Iterator for IntoIter&lt;T&gt;","synthetic":false,"types":[]},{"text":"impl&lt;'a, T:&nbsp;Stackable&gt; Iterator for Iter&lt;'a, T&gt;","synthetic":false,"types":[]},{"text":"impl&lt;'a, T:&nbsp;Stackable&gt; Iterator for IterMut&lt;'a, T&gt;","synthetic":false,"types":[]},{"text":"impl&lt;'a&gt; Iterator for X509NameEntries&lt;'a&gt;","synthetic":false,"types":[]}];
 implementors["percent_encoding"] = [{"text":"impl&lt;'a&gt; Iterator for PercentEncode&lt;'a&gt;","synthetic":false,"types":[]},{"text":"impl&lt;'a&gt; Iterator for PercentDecode&lt;'a&gt;","synthetic":false,"types":[]}];
 implementors["proc_macro2"] = [{"text":"impl Iterator for IntoIter","synthetic":false,"types":[]}];

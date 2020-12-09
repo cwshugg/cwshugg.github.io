@@ -73,7 +73,6 @@
 <span id="70">70</span>
 <span id="71">71</span>
 <span id="72">72</span>
-<span id="73">73</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">mod</span> <span class="ident">auth</span>;
 <span class="kw">mod</span> <span class="ident">handshake</span>;
@@ -98,6 +97,8 @@
 
 <span class="attribute">#[<span class="ident">tokio</span>::<span class="ident">main</span>]</span>
 <span class="ident">async</span> <span class="kw">fn</span> <span class="ident">main</span>() {
+    <span class="ident">printer</span>::<span class="ident">print_intro</span>();
+    
     <span class="comment">// Print out initial prompt</span>
     <span class="ident">printer</span>::<span class="ident">print_prompt</span>();
     <span class="ident">flush_stdout</span>();
@@ -111,9 +112,6 @@
     {
         <span class="kw">let</span> <span class="ident">config</span>: <span class="ident">ClientConfig</span> <span class="op">=</span> <span class="ident">config_load</span>.<span class="ident">unwrap</span>();
         <span class="ident">parser</span>.<span class="ident">config</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">config</span>);
-
-        <span class="comment">// let config_ref = parser.config.as_ref().unwrap();</span>
-        <span class="comment">// println!(&quot;\nAttempting automatic signup for &#39;{}&#39;...&quot;, config_ref.username);</span>
     }
 
     <span class="comment">// Keep looping</span>
