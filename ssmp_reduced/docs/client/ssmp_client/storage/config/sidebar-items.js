@@ -1,0 +1,1 @@
+initSidebarItems({"constant":[["CONFIG_FILE",""],["CONFIG_KEY_EMPTY",""]],"struct":[["ClientConfig","The `ClientConfig` struct represents the JSON contents of the client's configuration file."]]});

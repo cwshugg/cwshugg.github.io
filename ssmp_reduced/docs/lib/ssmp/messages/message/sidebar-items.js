@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["from_json",""]],"struct":[["Message","To represent a request to the transmitter to send a message to properly connected user. Properly will mean the handshake has completed and they lie in the Messenger Manager's user_list."]]});

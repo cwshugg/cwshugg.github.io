@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["PacketParseStatus","PacketParseStatus EnumThis enum defines all possible parse successes and errors that could be returned from a PacketParser parsing function."]],"struct":[["PacketParser","Packet ParserThe `PacketParser` struct is responsible for taking in a collection of bytes and parsing it into a `Packet` struct instance."]]});

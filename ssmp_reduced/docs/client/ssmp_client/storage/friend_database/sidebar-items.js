@@ -1,0 +1,1 @@
+initSidebarItems({"constant":[["FRIEND_DATABASE_FILE",""]],"struct":[["FriendDatabase","The Friend DatabaseThis `FriendDatabase` struct defines an interface used to interact with a SQLite database that stores `FriendSchema`."],["FriendSchema","The Friend SchemaA schema used to organize the data kept in the SQLite friend database. The struct fields are as follows:"]]});
