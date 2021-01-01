@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["AsymmetricCryptoAPI","Define the Asymmetric API. The calling function is responsible for communicating the data (which, for most cases, will be the symmetric key)."]]});

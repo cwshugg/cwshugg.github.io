@@ -1,3 +1,0 @@
-(function() {var implementors = {};
-implementors["rocket_contrib"] = [{"text":"impl&lt;'a, T:&nbsp;Serialize&gt; Responder&lt;'a&gt; for Json&lt;T&gt;","synthetic":false,"types":[]},{"text":"impl&lt;'a&gt; Responder&lt;'a&gt; for JsonValue","synthetic":false,"types":[]}];
-if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

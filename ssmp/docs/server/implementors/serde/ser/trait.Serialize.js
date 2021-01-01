@@ -1,7 +1,0 @@
-(function() {var implementors = {};
-implementors["jwt"] = [{"text":"impl Serialize for AlgorithmType","synthetic":false,"types":[]},{"text":"impl Serialize for Claims","synthetic":false,"types":[]},{"text":"impl Serialize for RegisteredClaims","synthetic":false,"types":[]},{"text":"impl Serialize for Header","synthetic":false,"types":[]},{"text":"impl Serialize for HeaderType","synthetic":false,"types":[]},{"text":"impl Serialize for HeaderContentType","synthetic":false,"types":[]}];
-implementors["rocket_contrib"] = [{"text":"impl Serialize for JsonValue","synthetic":false,"types":[]}];
-implementors["serde_json"] = [{"text":"impl Serialize for Map&lt;String, Value&gt;","synthetic":false,"types":[]},{"text":"impl Serialize for Value","synthetic":false,"types":[]},{"text":"impl Serialize for Number","synthetic":false,"types":[]}];
-implementors["ssmp_server"] = [{"text":"impl Serialize for LoginRecord","synthetic":false,"types":[]}];
-implementors["toml"] = [{"text":"impl Serialize for Value","synthetic":false,"types":[]},{"text":"impl Serialize for Datetime","synthetic":false,"types":[]}];
-if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

@@ -1,6 +1,0 @@
-(function() {var implementors = {};
-implementors["devise_core"] = [{"text":"impl Binary for GenericSupport","synthetic":false,"types":[]},{"text":"impl Binary for DataSupport","synthetic":false,"types":[]}];
-implementors["inotify"] = [{"text":"impl Binary for EventMask","synthetic":false,"types":[]},{"text":"impl Binary for WatchMask","synthetic":false,"types":[]}];
-implementors["notify"] = [{"text":"impl Binary for Op","synthetic":false,"types":[]}];
-implementors["tinyvec"] = [{"text":"impl&lt;A:&nbsp;Array&gt; Binary for ArrayVec&lt;A&gt; <span class=\"where fmt-newline\">where<br>&nbsp;&nbsp;&nbsp;&nbsp;A::Item: Binary,&nbsp;</span>","synthetic":false,"types":[]},{"text":"impl&lt;A:&nbsp;Array&gt; Binary for TinyVec&lt;A&gt; <span class=\"where fmt-newline\">where<br>&nbsp;&nbsp;&nbsp;&nbsp;A::Item: Binary,&nbsp;</span>","synthetic":false,"types":[]}];
-if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

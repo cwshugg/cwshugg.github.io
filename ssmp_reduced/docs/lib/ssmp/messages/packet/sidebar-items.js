@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Packet","The SSMP PacketThe SSMP Packet is made up of three main sections:"]]});

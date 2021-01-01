@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["ConnectedUser","ConnectedUsers for all  users that have been accepted by the peer request."],["User","User represents a single online user"]]});

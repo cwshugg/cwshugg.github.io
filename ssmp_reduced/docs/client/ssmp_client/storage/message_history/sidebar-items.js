@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["MessageHistory","Message HistoryThe `MessageHistory` struct is used to interface with messages from a a single user. It interacts with the `MessageDatabase` to provide a higher- level API for viewing messages."]]});

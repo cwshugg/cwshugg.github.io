@@ -1,1 +1,0 @@
-initSidebarItems({"mod":[["message",""],["messenger",""],["msg_parser",""],["packet",""],["packet_control",""],["packet_headers",""],["packet_interface",""],["utils",""]]});

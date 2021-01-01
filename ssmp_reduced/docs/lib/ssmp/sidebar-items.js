@@ -1,1 +1,0 @@
-initSidebarItems({"mod":[["api",""],["config",""],["connect",""],["fileio",""],["messages",""],["security",""],["user",""]],"struct":[["SSMP","Main library interface. Ideally, client code will only interract with this portion of the library."]]});
