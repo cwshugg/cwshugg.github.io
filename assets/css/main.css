@@ -240,3 +240,32 @@ hr{border:0;border-top:1px solid #eee;margin:20px 0}
 .w3-border-dark-grey,.w3-hover-border-dark-grey:hover,.w3-border-dark-gray,.w3-hover-border-dark-gray:hover{border-color:#616161!important}
 .w3-border-pale-red,.w3-hover-border-pale-red:hover{border-color:#ffe7e7!important}.w3-border-pale-green,.w3-hover-border-pale-green:hover{border-color:#e7ffe7!important}
 .w3-border-pale-yellow,.w3-hover-border-pale-yellow:hover{border-color:#ffffcc!important}.w3-border-pale-blue,.w3-hover-border-pale-blue:hover{border-color:#e7ffff!important}
+
+.strava-widget-container
+{
+    width: 100%
+    display: flex;
+    justify-content: center;
+}
+
+.strava-widget
+{
+    margin: 8px;
+    width: 45%;
+    max-width: 512px;
+}
+
+@media only screen and (max-width: 900px)
+{
+  .strava-widget-container
+  {
+    display: inline;
+    justify-content: center;
+  }
+  
+  .strava-widget
+  {
+      width: 90%;
+      max-width: 90%;
+  }
+}
