@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<title>Connor Shugg - Projects</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="assets/css/main.css"><!--href="https://www.w3schools.com/w3css/4/w3.css">-->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
+.w3-bar,h1,button {font-family: "Montserrat", sans-serif}
+</style>
+<body class="shugg-dkgray1">
+
+<!---------------------------------- NAVBAR ---------------------------------->
+<div class="w3-top">
+  <div class="w3-bar w3-card w3-left-align w3-large w3-indigo">
+    <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-indigo" href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+    <a href="./index.html" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Home</a>
+    <a href="./about.html" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Brag Sheet</a>
+    <a href="./projects.html" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Projects</a>
+    <a href="./cycling.html" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">
+      <i class="fa fa-bicycle" aria-hidden="true" style="font-size: 24px"></i>
+    </a>
+  </div>
+
+  <!-- Navbar on small screens -->
+  <div id="navDemo" class="w3-bar-block shugg-dkgray0 w3-text-white w3-hide w3-hide-large w3-hide-medium w3-large">
+    <a href="./index.html" class="w3-bar-item w3-button w3-padding-large">Home</a>
+    <a href="./about.html" class="w3-bar-item w3-button w3-padding-large">Brag Sheet</a>
+    <a href="./projects.html" class="w3-bar-item w3-button w3-padding-large">Projects</a>
+    <a href="./cycling.html" class="w3-bar-item w3-button w3-padding-large">
+      <i class="fa fa-bicycle" aria-hidden="true" style="font-size: 24px"></i>
+    </a>
+  </div>
+</div>
+
+<!-- navbar script -->
+<script>
+  // Used to toggle the menu on small screens when clicking on the menu button
+  function myFunction() {
+    var x = document.getElementById("navDemo");
+    if (x.className.indexOf("w3-show") == -1) {
+      x.className += " w3-show";
+    } else { 
+      x.className = x.className.replace(" w3-show", "");
+    }
+  }
+</script>
+<!---------------------------------------------------------------------------->
+
+<div class="w3-row-padding w3-padding-64 w3-container shugg-dkgray1">
+  <div class="w3-content">
+  
+  <!-- cycling intro -->
+  <h1 class="w3-text-light-blue">Personal Projects</h1>
+  <p class="w3-text-white">
+    I like coding so much that I do it in my free time! Here are a few projects I've
+    worked on in the past:
+  </p>
+  
+  <!-- PROJECT 1: WRIVCam -->
+  <div>
+      <h2 class="w3-text-light-blue">WRIVCam</h2>
+      <p class="w3-text-white">
+        Dash cams are expensive, so I made my own. Struggling to come up with a cool name for it,
+        I ended up with <b>WRIVCam</b>: "Wooden Ragtag In-Vehicle Camera." It's comprised of a
+        Raspberry Pi 3B+, some jumper cables, a few LEDs, two buttons, and a Raspberry Pi camera
+        module, all living in a small wooden box I bought from A.C Moore.<br>
+      </p>
+      <!-- images/video -->
+      <div style="display: flex; justify-content: center">
+          <img src="images/projects/wrivcam_image1.jpg" alt="A picture of my dash cam"
+               style="padding: 8px; width: 50%" class="w3-image"/>
+          <video style="padding: 8px; width: 50%" controls>
+            <source src="images/projects/wrivcam_video1.mp4" type="video/mp4">
+          </video>
+      </div>
+      <p class="w3-text-white">
+        It's driven by some Python code I wrote for it.
+        You can find the code, and more details, on my
+        <a href="https://github.com/cwshugg/wrivcam">GitHub Page</a>.
+      </p>
+  </div>
+  
+  <!-- PROJECT 2: TTYDO -->
+  <div>
+      <h2 class="w3-text-light-blue">ttydo</h2>
+      <p class="w3-text-white">
+        I do quite a lot of work on the Linux command-line, and I like keeping track of my
+        "to-dos." So I created <b>ttydo</b> to keep track of them straight from the command-line.
+        It supports the creation of multiple "task lists," each containing their own "tasks" that
+        describe something that needs doing. Tasks can be added, deleted, edited, reordered, etc.
+        I've been using it myself and have found it pretty useful.
+      </p>
+      <!-- images/video -->
+      <div style="display: flex; justify-content: center">
+          <img src="images/projects/ttydo_image1.png" alt="A picture of ttydo's main menu"
+               style="padding: 8px; width: 100%; max-width: 737px" class="w3-image"/>
+      </div>
+      <div style="display: flex; justify-content: center">
+          <img src="images/projects/ttydo_image2.png" alt="A picture some lists in ttydo"
+               style="padding: 8px; width: 100%; max-width: 939px" class="w3-image"/>
+      </div>
+      <p class="w3-text-white">
+        I wrote it entirely in vanilla C code.
+        Check out its <a href="https://github.com/cwshugg/ttydo">GitHub Page</a>.
+      </p>
+  </div>
+</div>
+  
+  </div>
+</div>
+
+
+<footer class="w3-container w3-indigo w3-center w3-margin-top">
+  <!--
+  <i class="fa fa-facebook-official w3-hover-opacity"></i>
+  <i class="fa fa-instagram w3-hover-opacity"></i>
+  <i class="fa fa-snapchat w3-hover-opacity"></i>
+  <i class="fa fa-pinterest-p w3-hover-opacity"></i>
+  <i class="fa fa-twitter w3-hover-opacity"></i>
+  <i class="fa fa-linkedin w3-hover-opacity"></i>
+  <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+  -->
+  <div class="w3-xlarge w3-padding-32">
+    <a href="https://www.linkedin.com/in/connor-shugg/" target="_blank"><i class="fa fa-linkedin w3-hover-opacity" style="color:white"></i></a>
+    <a href="https://github.com/cwshugg" target="_blank"><i class="fa fa-github w3-hover-opacity" style="color:white"></i></a>
+  </div>
+</footer>
+
+</body>
+</html>
