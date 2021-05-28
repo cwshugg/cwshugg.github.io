@@ -207,9 +207,13 @@ Error message and password prompt
 
 <li>Cybersecurity: Buffer Overflow</li>
 
+<li>Cybersecurity: Cache Timing Attacks</li>
+
 <li>Cybersecurity: Principles</li>
 
 <li>Cybersecurity: Return-Oriented Programming</li>
+
+<li>Cybersecurity: Side-Channel Attacks</li>
 
 <li>Data Representation</li>
 
@@ -8975,19 +8979,19 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/url/full&quot;: {
             &quot;title&quot;: &quot;$:/info/url/full&quot;,
-            &quot;text&quot;: &quot;https://shugg.dev/notes/sysarch&quot;
+            &quot;text&quot;: &quot;file:///C:/Users/t-cshugg/OneDrive%20-%20Microsoft/Desktop/sysarch.html&quot;
         },
         &quot;$:/info/url/host&quot;: {
             &quot;title&quot;: &quot;$:/info/url/host&quot;,
-            &quot;text&quot;: &quot;shugg.dev&quot;
+            &quot;text&quot;: &quot;&quot;
         },
         &quot;$:/info/url/hostname&quot;: {
             &quot;title&quot;: &quot;$:/info/url/hostname&quot;,
-            &quot;text&quot;: &quot;shugg.dev&quot;
+            &quot;text&quot;: &quot;&quot;
         },
         &quot;$:/info/url/protocol&quot;: {
             &quot;title&quot;: &quot;$:/info/url/protocol&quot;,
-            &quot;text&quot;: &quot;https:&quot;
+            &quot;text&quot;: &quot;file:&quot;
         },
         &quot;$:/info/url/port&quot;: {
             &quot;title&quot;: &quot;$:/info/url/port&quot;,
@@ -8995,7 +8999,7 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/url/pathname&quot;: {
             &quot;title&quot;: &quot;$:/info/url/pathname&quot;,
-            &quot;text&quot;: &quot;/notes/sysarch&quot;
+            &quot;text&quot;: &quot;/C:/Users/t-cshugg/OneDrive%20-%20Microsoft/Desktop/sysarch.html&quot;
         },
         &quot;$:/info/url/search&quot;: {
             &quot;title&quot;: &quot;$:/info/url/search&quot;,
@@ -9003,15 +9007,15 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/url/origin&quot;: {
             &quot;title&quot;: &quot;$:/info/url/origin&quot;,
-            &quot;text&quot;: &quot;https://shugg.dev&quot;
+            &quot;text&quot;: &quot;file://&quot;
         },
         &quot;$:/info/browser/screen/width&quot;: {
             &quot;title&quot;: &quot;$:/info/browser/screen/width&quot;,
-            &quot;text&quot;: &quot;1920&quot;
+            &quot;text&quot;: &quot;1997&quot;
         },
         &quot;$:/info/browser/screen/height&quot;: {
             &quot;title&quot;: &quot;$:/info/browser/screen/height&quot;,
-            &quot;text&quot;: &quot;1080&quot;
+            &quot;text&quot;: &quot;1332&quot;
         }
     }
 }</pre>
@@ -9556,6 +9560,68 @@ Modern operating systems have defense buffer overflow attacks. They are as follo
 * ''Address Space Layout Randomization'' (ASLR): Randomizing the addresses of program stacks
 ** This makes it difficult for attacks to guess important addresses</pre>
 </div>
+<div created="20210528142019165" creator="cwshugg" modified="20210528145412380" modifier="cwshugg" tags="cybersecurity" title="Cybersecurity: Cache Timing Attacks">
+<pre>! Isolation
+CPU architectures are supposed to guarantee isolation between two processes (and even two VMs running on the same machine). This means the memory between processes is //not// shared. Process A should //not// be able to read Process B's memory.
+
+Each process has a mapping of virtual addresses to physical addresses. Even though two processes may have the same virtual addresses, they will //not// access the same physical address. This is almost always the case, //except// for shared libraries.
+
+In order to save space, the kernel will often times load a library shared by multiple processes into memory once, then allow both processes to access it.
+
+!! The Dangers of Caching
+Each CPU on a machine has its own cache(s) in order to speed up fetching values from memory. Some of these are completely isolated, but there is also typically a cache shared between multiple CPUs that's &quot;closer to memory&quot; and &quot;further away from the CPU.&quot; (Such as the L3 cache.) If two processes share the same chunk of memory (for, say, a shared library), they're going to use the same region of the cache.
+
+! Cache Timing Attacks
+A variety of side-channel attacks, using these caches, can be performed. They each rely on performing some action, waiting a short time, then observing what changed (or didn't change). Hence, &quot;timing&quot; attacks.
+
+!! Flush+Reload Attack
+Many architectures provide instructions for performing cache &quot;maintenance operations.&quot; One such operation is a ''flush'' of an entry. To &quot;flush&quot; an entry means to:
+
+# Clean the data from the cache for the particular entry
+# Write the cached value out to memory if it's &quot;dirty&quot; (needs to be updated in memory)
+# Invalidate the entry in the cache (free it up for something else)
+
+(In the x86 ISA, this instruction is `CLFLUSH`.)
+
+If two processes share memory for a shared library, they also share a cache line. Process A (the attacker) can mount an attack on Process B like so:
+
+# Process A flushes the shared cache line.
+# Process A waits for a short time.
+# Process A does a reload.
+#* If the reload took a //short// time, the attacker can infer that some other process (Process B) must have accessed the shared library (since the cache line was somehow refilled).
+#* If the reload took a //long// time, the attacker can infer that the victim did //not// access the shared library (since it had to be fetched from memory).
+# At this point, the attacker can repeat steps 1-3 //many// times and keep track of //when// Process B accesses the shared library. Process A can then deduce a pattern.
+
+!! Flush+Flush Attack
+In a way, Flush+Reload is detectable. Performance counters can be used to count the number of cache misses. If there are too many, a program might be able to detect that a Flush+Reload attack is occurring.
+
+Flush+Flush, however, is less detectable. Rather than //reloading// after flushing and waiting, another flush can be done.
+* If the flush was fast, the attacker knows the cache line //wasn't// in the cache (since not much work had to be done).
+* If the flush was slow, the attacker knows the cache line was somehow refilled (probably by the victim process) (since the flush actually took some time to do).
+
+This attack doesn't cause cache misses, except for when the victim actually loads the library. So, again, it's less detectable.
+
+!! Evict+Reload Attack
+Sometimes, however, a flush instruction isn't available to a program running with user-level permissions. (Why? To prevent these kinds of attacks. A dangerous example: one might be able to implement a cache timing attack in a JavaScript web app, that's downloaded to thousand of machines)
+
+Rather than flushing, an attacker needs to be more clever. They can instead find a way to ''evict'' the cache line of interest. That is, replace the current information in the cache line with something ''congruent''.
+
+A ''congruency'' in a cache is when two different memory addresses map to the same cache line. It can be hard to find such a ''conflict set'', since the attacker doesn't know how virtual addresses are translated to physical addresses, but there are algorithms available to find them.
+
+!! Prime+Probe Attack
+If we think about //another// potential roadblock for the attacker, things get trickier: what if the cache line the attacker wants to spy on //isn't// shared memory with another process? (I.e., not a shared library, or even something mapped to another VM.)
+
+The ''prime'' stage is very similar to the ''evict'' stage of Evict+Reload. The attack works like this:
+
+# The attacker constructs a ''conflict set'' with the cache line-of-interest.
+# ''Prime'': the attacker primes the cache set with his own data. This evicts the victim's cache line.
+# The attacker waits a short time.
+# ''Probe'': the attacker reads back each set within the cache line-of-interest (which includes loading each individual set on the line) and measures how fast each load takes.
+#* If the load of a cache set is fast, then the attacker's data must not have been evicted (meaning no process accessed that cache line).
+#* If the load of a cache set is slow, then the attacker's data must have been re-fetched from memory (meaning some process accessed that cache line).
+
+A big challenge with Prime+Probe is this: how can the attacker know exactly //who// accessed the cache line? There are hundreds of running processes - how do we know its the one the attacker is trying to spy on?</pre>
+</div>
 <div created="20200404150002893" creator="cwshugg" modified="20200404150351310" modifier="cwshugg" title="Cybersecurity: Principles">
 <pre>There are six main ''security properties'':
 
@@ -9589,6 +9655,26 @@ By returning to some address in the standard C library, //any// of the machine c
 Make sure a program only makes valid control-flow changes. Check every call to make sure it's possible, given the original code.
 
 This idea is known as ''Control-Flow Integrity'' (CFI).</pre>
+</div>
+<div created="20210528140514009" creator="cwshugg" modified="20210528141917208" modifier="cwshugg" tags="cybersecurity" title="Cybersecurity: Side-Channel Attacks">
+<pre>A [[side-channel attack|https://en.wikipedia.org/wiki/Side-channel_attack]] is //any// attack based on information gained from the implementation of a computer system, rather than weaknesses in the implemented algorithm itself.
+
+There are all sorts of side-channel attacks. In a way, we can break them into two main categories.
+
+! Attacks that require physical presence
+Attacks such as these can only be performed if the attacker is physically in possession of the victim machine (or, at least, nearby). These can include:
+
+* Power Analysis
+* Electromagnetic Radiation
+* Acoustic Analysis
+
+!! Power Analysis
+Power Analysis is the act of measuring how much power a machine's processor draws to make inferences about the computations it's making.
+
+A common example to how power analysis can be used as a side-channel attack is the RSA algorithm. Because of how the encryption/decryption algorithm is implemented, the individual bits of a private RSA key can be determined with simple power analysis.
+
+! Attacks that can be accomplished purely in software
+Purely-software attacks can take advantage of memory layout (more specifically, caches), to perform side-channel attacks. One of the most popular is a ''cache timing attack''.</pre>
 </div>
 <div created="20200131213318259" creator="cwshugg" modified="20200201043542084" modifier="cwshugg" tags="computer_organization" title="Data Representation">
 <pre>Data is represented in computers using bits: a single value that's either on (1) or off (0). 8 bits form a byte, and 4 bits form a nybble.
@@ -10185,7 +10271,7 @@ Connor Shugg
 &lt;&lt;&lt;
 </pre>
 </div>
-<div created="20200131024136331" creator="cwshugg" modified="20200824195702589" modifier="cwshugg" tags="" title="Table of Contents">
+<div created="20200131024136331" creator="cwshugg" modified="20210528142012805" modifier="cwshugg" tags="" title="Table of Contents">
 <pre>! Linux
 * [[File Permissions|Linux: File Permissions]]
 
@@ -10218,7 +10304,9 @@ Connor Shugg
 
 !!! Attacks
 * [[Buffer Overflow Attack|Cybersecurity: Buffer Overflow]]
-* [[Return-Oriented Programming (Code Reuse Attacks)|Cybersecurity: Return-Oriented Programming]]</pre>
+* [[Return-Oriented Programming (Code Reuse Attacks)|Cybersecurity: Return-Oriented Programming]]
+* [[Side-Channel Attacks|Cybersecurity: Side-Channel Attacks]]
+* [[Side-Channel Attacks: Cache Timing Attacks|Cybersecurity: Cache Timing Attacks]]</pre>
 </div>
 <div created="20200213013738116" creator="cwshugg" modified="20200213020057383" modifier="cwshugg" tags="computer_systems" title="Virtual Memory">
 <pre>''Virtual Memory'' isn't a &quot;type&quot; of memory, like RAM. It's a technique that combines one or more of the following concepts:
