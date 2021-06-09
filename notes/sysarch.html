@@ -215,6 +215,8 @@ Error message and password prompt
 
 <li>Cybersecurity: Side-Channel Attacks</li>
 
+<li>Cybersecurity: Speculative Execution Attacks</li>
+
 <li>Data Representation</li>
 
 <li>Dynamic Memory Allocation</li>
@@ -8979,19 +8981,19 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/url/full&quot;: {
             &quot;title&quot;: &quot;$:/info/url/full&quot;,
-            &quot;text&quot;: &quot;file:///C:/Users/t-cshugg/OneDrive%20-%20Microsoft/Desktop/sysarch.html&quot;
+            &quot;text&quot;: &quot;https://shugg.dev/notes/sysarch&quot;
         },
         &quot;$:/info/url/host&quot;: {
             &quot;title&quot;: &quot;$:/info/url/host&quot;,
-            &quot;text&quot;: &quot;&quot;
+            &quot;text&quot;: &quot;shugg.dev&quot;
         },
         &quot;$:/info/url/hostname&quot;: {
             &quot;title&quot;: &quot;$:/info/url/hostname&quot;,
-            &quot;text&quot;: &quot;&quot;
+            &quot;text&quot;: &quot;shugg.dev&quot;
         },
         &quot;$:/info/url/protocol&quot;: {
             &quot;title&quot;: &quot;$:/info/url/protocol&quot;,
-            &quot;text&quot;: &quot;file:&quot;
+            &quot;text&quot;: &quot;https:&quot;
         },
         &quot;$:/info/url/port&quot;: {
             &quot;title&quot;: &quot;$:/info/url/port&quot;,
@@ -8999,7 +9001,7 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/url/pathname&quot;: {
             &quot;title&quot;: &quot;$:/info/url/pathname&quot;,
-            &quot;text&quot;: &quot;/C:/Users/t-cshugg/OneDrive%20-%20Microsoft/Desktop/sysarch.html&quot;
+            &quot;text&quot;: &quot;/notes/sysarch&quot;
         },
         &quot;$:/info/url/search&quot;: {
             &quot;title&quot;: &quot;$:/info/url/search&quot;,
@@ -9007,7 +9009,7 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/url/origin&quot;: {
             &quot;title&quot;: &quot;$:/info/url/origin&quot;,
-            &quot;text&quot;: &quot;file://&quot;
+            &quot;text&quot;: &quot;https://shugg.dev&quot;
         },
         &quot;$:/info/browser/screen/width&quot;: {
             &quot;title&quot;: &quot;$:/info/browser/screen/width&quot;,
@@ -9676,6 +9678,84 @@ A common example to how power analysis can be used as a side-channel attack is t
 ! Attacks that can be accomplished purely in software
 Purely-software attacks can take advantage of memory layout (more specifically, caches), to perform side-channel attacks. One of the most popular is a ''cache timing attack''.</pre>
 </div>
+<div created="20210609123745885" creator="cwshugg" modified="20210609132148194" modifier="cwshugg" tags="cybersecurity" title="Cybersecurity: Speculative Execution Attacks">
+<pre>! What is Speculative Execution?
+''Speculative Execution'' is a state a processor enters when a conditional branch is encountered, and the branch predictor makes a guess. The branch may or may not happen, but regardless, the branch predictor will attempt to predict the outcome. After doing this, it will start to fetch instructions from the predicted path and &quot;speculatively&quot; execute them. Speculation ends when the branch instruction is run through the processor's pipeline and the result is actually computed.
+
+This is done to give a performance boost: if the prediction is correct, the instructions that were speculatively executed are already done - great! If the prediction was wrong, no harm is done - simply fetch the instructions from the other path and begin executing them.
+
+This logic actually has security issues, based off of this idea: a footprint could be left in the cache.
+
+! Cache Footprints
+What happens if speculative execution (of the wrong branch path) includes an instruction that loads sensitive/high-permission-required memory into a register? At first glance, an attacker shouldn't be able to access it, since once speculation ends, the microarchitectural state will be reset to //before// the branch.
+
+However, a footprint will be left behind in the cache as a result of that memory load, even if the microarchitectural state is reset.
+
+! ''Spectre'' Variant 1
+Think about this example:
+
+```
+int some_function(unsigned long untrusted_index)
+{
+    // ...
+    if (untrusted_index &lt; buffer_size)
+    {
+        unsigned char val1 = buffer[untrusted_index];
+        unsigned char val2 = shared_buffer[val1 * 64];
+        return 0;
+    }
+    else
+    {
+        return -1;
+    }
+    // ...
+}
+```
+
+If `untrusted_index = 98765`, and `buffer_size` is much smaller, than the if statement shouldn't happen. But, speculative execution may end up executing the first few instructions inside the `if` clause, if the branch predictor predicts incorrectly.
+
+When this happens, `98765` will be used to access a location of memory (`buffer[98765]`). This could potentially be secret data in privileged memory. The value returned from the access will then be used to calculate an address for another load (`shared_buffer[val1 * 64]`). This second load will leave a ''footprint'' in the cache.
+
+By training the branch predictor with multiple runs and certain `untrusted_index`'s, an attacker can trigger speculative execution. Furthermore, with a [[cache timing attack|Cybersecurity: Cache Timing Attacks]] (such as Flush+Reload), the attacker can detect the footprint left behind by the privileged memory access. This is called ''Spectre''.
+
+! ''Spectre'' Variant 2
+Another variant exists, where ''branch target injection'' comes into play. Where variant 1 uses conditional branch misprediction, variant 2 uses ''indirect branches'': branches that obtain the branch target address from a register.
+
+These branches, just like conditional branches, don't resolve until the branch is actually executed by the processor's pipeline, and the register's value is read. This kind of branch is even harder to predict, because any sort of predictor would have to guess the //address//, rather than just &quot;yes&quot;/&quot;no&quot;. (But, predictions can still be made, using Branch Target Buffers and other methods.)
+
+An attacker can take advantage of this, since speculative execution still happens. He can train the indirect branch predictor //in his own context//. Then, in the &quot;poisoned&quot; state, the branch predictor will behave a certain way when execution is switched to the victim state. An attacker needs two things to mount this attack:
+
+# A function in the victim's code that utilizes an indirect branch
+# A ''Spectre gagdet'' somewhere in the victim's address space.
+
+!! Spectre Gagdets
+A ''Spectre gadget'' is relatively simple. It's formed by two instructions (not necessarily adjacent) where:
+
+* The first instruction adds/XORs/subtracts/etc. the memory location addressed by an attacker-controlled register, R1, onto an attacker-controlled register, R2.
+* The second instruction accesses memory at the address stored in R2.
+
+Once the gadget is found, the attacker will want execution of the victim context to jump to the gadget's address. To do this, the attacker can train the Indirect Branch Predictor to jump to a function that shares the exact same address (within the attacker's context) before switching to the victim's context.
+
+Once the gadget is executed, another [[cache timing attack|Cybersecurity: Cache Timing Attacks]] will allow the attacker to read the privileged memory that was accessed.
+
+! ''Meltdown''
+Before Meltdown was discovered, it was common practice to map both user-mode and kernel-mode memory into a single process. Kernel memory was mapped into one end of the process' memory space, and user memory was mapped into the other end.
+
+What if a very simply program existed that attempted to access the kernel memory using something like: `data = *(unsigned char*) 0xffff_ffff_8000_0001;`? The user-mode program would simply received a SIGSEGV (segmentation fault), and would be terminated.
+
+Consider this snippet of code:
+
+```
+unsigned char buffer[256 * 64];
+unsigned char data1 = 0;
+unsigned char data2 = 0;
+
+data1 = *(unsigned char*) 0xffff_ffff_8000_0001;
+data2 = buffer[data * 64];
+```
+
+What if a signal handler was installed for SIGSEGV? Speculative execution may end up loading the byte from kernel memory, leaving another footprint in the cache. An attacker can once again take advantage of this same idea to read privileged, kernel-mode memory, from a very simple user-mode program. This is called ''Meltdown''.</pre>
+</div>
 <div created="20200131213318259" creator="cwshugg" modified="20200201043542084" modifier="cwshugg" tags="computer_organization" title="Data Representation">
 <pre>Data is represented in computers using bits: a single value that's either on (1) or off (0). 8 bits form a byte, and 4 bits form a nybble.
 
@@ -10180,7 +10260,7 @@ An object file's anatomy looks something like this (below is the ELF Object File
 
 Once finished, the executable file seen by the user is produced.</pre>
 </div>
-<div created="20200131210736538" creator="cwshugg" modified="20200206224222262" modifier="cwshugg" tags="computer_organization" title="Program Memory Organization">
+<div created="20200131210736538" creator="cwshugg" modified="20210609123639575" modifier="cwshugg" tags="computer_organization" title="Program Memory Organization">
 <pre>Every program has a section of RAM that's allocated and given to it when it executes. Part of this memory space is known as the ''stack''. The stack stores local automatic variables (any variable that's not dynamically allocated).
 
 An example of what a stack looks like:
@@ -10207,7 +10287,7 @@ The overall memory layout of a program looks like this:
 
 
 ! Stack Assembly Instructions
-Assembly instructions that perform operations on the program stack exist:
+Assembly instructions that perform operations on the program stack exist (the below instructions are in x86):
 
 * `push` - Decrements the stack pointer and copies the value of its operand to the top of the stack
 * `pop` - Copies the item at the top of the stack into its operand, and increments the stack pointer by a certain amount, effectively removing the top item of the stack
@@ -10271,7 +10351,7 @@ Connor Shugg
 &lt;&lt;&lt;
 </pre>
 </div>
-<div created="20200131024136331" creator="cwshugg" modified="20210528142012805" modifier="cwshugg" tags="" title="Table of Contents">
+<div created="20200131024136331" creator="cwshugg" modified="20210609125349595" modifier="cwshugg" tags="" title="Table of Contents">
 <pre>! Linux
 * [[File Permissions|Linux: File Permissions]]
 
@@ -10306,7 +10386,8 @@ Connor Shugg
 * [[Buffer Overflow Attack|Cybersecurity: Buffer Overflow]]
 * [[Return-Oriented Programming (Code Reuse Attacks)|Cybersecurity: Return-Oriented Programming]]
 * [[Side-Channel Attacks|Cybersecurity: Side-Channel Attacks]]
-* [[Side-Channel Attacks: Cache Timing Attacks|Cybersecurity: Cache Timing Attacks]]</pre>
+* [[Side-Channel Attacks: Cache Timing Attacks|Cybersecurity: Cache Timing Attacks]]
+* [[Side-Channel Attacks: Speculative Execution|Cybersecurity: Speculative Execution Attacks]]</pre>
 </div>
 <div created="20200213013738116" creator="cwshugg" modified="20200213020057383" modifier="cwshugg" tags="computer_systems" title="Virtual Memory">
 <pre>''Virtual Memory'' isn't a &quot;type&quot; of memory, like RAM. It's a technique that combines one or more of the following concepts:
