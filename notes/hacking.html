@@ -195,7 +195,11 @@ Error message and password prompt
 
 <li>Hacking Notes</li>
 
+<li>Recon: GoBuster</li>
+
 <li>Recon: Google Dorking</li>
+
+<li>Recon: nmap</li>
 
 <li>SQL Injection</li>
 
@@ -8919,7 +8923,7 @@ very-muted-foreground: #888888</pre>
 <div created="20200131023052705" creator="c" modified="20200131023053305" modifier="cwshug" title="$:/status/UserName">
 <pre>cwshugg</pre>
 </div>
-<div list="[[Hacking Notes]] [[Table of Contents]]" title="$:/StoryList">
+<div list="[[Hacking Notes]] [[Table of Contents]] [[Recon: GoBuster]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20200201021025248" creator="cwshugg" modified="20200824130809917" modifier="cwshugg" title="$:/temp/advancedsearch">
@@ -8938,19 +8942,19 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/url/full&quot;: {
             &quot;title&quot;: &quot;$:/info/url/full&quot;,
-            &quot;text&quot;: &quot;file:///C:/Users/Connor/Desktop/hacking.html&quot;
+            &quot;text&quot;: &quot;https://shugg.dev/notes/hacking&quot;
         },
         &quot;$:/info/url/host&quot;: {
             &quot;title&quot;: &quot;$:/info/url/host&quot;,
-            &quot;text&quot;: &quot;&quot;
+            &quot;text&quot;: &quot;shugg.dev&quot;
         },
         &quot;$:/info/url/hostname&quot;: {
             &quot;title&quot;: &quot;$:/info/url/hostname&quot;,
-            &quot;text&quot;: &quot;&quot;
+            &quot;text&quot;: &quot;shugg.dev&quot;
         },
         &quot;$:/info/url/protocol&quot;: {
             &quot;title&quot;: &quot;$:/info/url/protocol&quot;,
-            &quot;text&quot;: &quot;file:&quot;
+            &quot;text&quot;: &quot;https:&quot;
         },
         &quot;$:/info/url/port&quot;: {
             &quot;title&quot;: &quot;$:/info/url/port&quot;,
@@ -8958,7 +8962,7 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/url/pathname&quot;: {
             &quot;title&quot;: &quot;$:/info/url/pathname&quot;,
-            &quot;text&quot;: &quot;/C:/Users/Connor/Desktop/hacking.html&quot;
+            &quot;text&quot;: &quot;/notes/hacking&quot;
         },
         &quot;$:/info/url/search&quot;: {
             &quot;title&quot;: &quot;$:/info/url/search&quot;,
@@ -8966,15 +8970,15 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/url/origin&quot;: {
             &quot;title&quot;: &quot;$:/info/url/origin&quot;,
-            &quot;text&quot;: &quot;file://&quot;
+            &quot;text&quot;: &quot;https://shugg.dev&quot;
         },
         &quot;$:/info/browser/screen/width&quot;: {
             &quot;title&quot;: &quot;$:/info/browser/screen/width&quot;,
-            &quot;text&quot;: &quot;1920&quot;
+            &quot;text&quot;: &quot;2560&quot;
         },
         &quot;$:/info/browser/screen/height&quot;: {
             &quot;title&quot;: &quot;$:/info/browser/screen/height&quot;,
-            &quot;text&quot;: &quot;1080&quot;
+            &quot;text&quot;: &quot;1440&quot;
         }
     }
 }</pre>
@@ -9103,6 +9107,25 @@ very-muted-foreground: #888888</pre>
 While you're at it, you might want to take a look at my networking notes for various networking tools used in the cyber security field.
 </pre>
 </div>
+<div created="20210623011327179" creator="cwshugg" modified="20210623011730598" modifier="cwshugg" tags="recon" title="Recon: GoBuster">
+<pre>''GoBuster'' is a tool that specializes in hammering a webserver with requests to discover hidden directories (URLs). An example might be: `https://example.com/hidden_directory_with_secret_info`.
+
+! Word Lists
+GoBuster requires input in the form of a word list. A text file suffices, with one word on each line. GoBuster will use this word list to mount a brute-force attack.
+
+! Invocation &amp; Commands
+Invoke GoBuster like so: `gobuster &lt;COMMAND&gt; &lt;ARGS&gt;`. A command is always specified, and each command has a series of command-line switches available.
+
+!! `dir` Command
+The `dir` command mounts the brute-force attack. Common command-line arguments include:
+
+* `-u` - specifies the target URL.
+* `-w` - specifies the path to your word list.
+* `-U` and `-P` - used for basic username/password authentication attempts.
+* `-p &lt;PROXY&gt;` - sets the proxy to be used for requests.
+* `-c &lt;COOKIES&gt;` - sets any HTTP cookies to use.
+* `-e` - print the entire URL to the console, rather than just the directory name.</pre>
+</div>
 <div created="20200905010104816" creator="cwshugg" modified="20200905012451748" modifier="cwshugg" tags="recon" title="Recon: Google Dorking">
 <pre>''Google Dorking'' is the act of utilizing search engine operators to find specific, useful information. Each search engine has their own operator list, but they appear to be very similar to one another. The operators described here originate from Google. ([ext[Source|https://ahrefs.com/blog/google-advanced-search-operators/]]) Most may work on other engines like DuckDuckGo, but some may not.
 
@@ -9126,6 +9149,24 @@ While you're at it, you might want to take a look at my networking notes for var
 * ''In Text'': `intext:&lt;query&gt;` searches for pages containing the words specified (anywhere in the page).
 * ''All In Text'': `allintext:&lt;word1&gt; &lt;word2&gt; ...` searches for pages whose content contains //all// words specified.
 * ''Around'': `&lt;word1&gt; AROUND(x) &lt;word2&gt;` searches for pages containing two words that appear within `x` words of each other.</pre>
+</div>
+<div created="20210623010444340" creator="cwshugg" modified="20210623011252842" modifier="cwshugg" tags="recon" title="Recon: nmap">
+<pre>''NMap'' is short for ''Network Map''. It's a well-known network scanning tool that allows you to find machines on your network, and the services they have running that are listening for connections.
+
+Nmap is invoked like so: `nmap &lt;OPTIONS&gt; &lt;IP ADDRESS&gt;`.
+
+! Command-Line Arguments
+Below are commonly-used command-line arguments for reconnaissance:
+
+* `-sV` - attempts to discover the versions of services running on a machine.
+* `-p &lt;PORT&gt;` - used to specify which port(s) to scan.
+** `-p &lt;LOW&gt;-&lt;HIGH&gt;` will scan in the range from `LOW` to `HIGH` (inclusive).
+** `-p -` will scan //every// port.
+* `-Pn` - this disables host discovery (via DNS). IP addresses won't be resolved to domain names. Ports will be searched for.
+* `-A` - this enables OS detection. Nmap runs a little extra script with this argument, including some that attempts to identify the target machine's OS.
+* `-sU` - this scans via UDP, rather than TCP.
+* `-sS` - this scans using TCP SYN packets. Only the first part of the TCP three-way handshake is done here, making it a potentially stealthier way to scan a network.
+* `-v` - verbose mode.</pre>
 </div>
 <div created="20200905201655323" creator="cwshugg" modified="20200905201706447" modifier="cwshugg" tags="databases" title="SQL Injection">
 <pre>The basis of an SQL Injection attack is the idea that a web server takes user input and interprets is as part of an SQL command. The command/query gets executed, and any malicious-intending command is willingly run by the web server.
@@ -9210,12 +9251,14 @@ The rule of thumb to prevent SQL injections is: developers must //never// allow 
 
 </pre>
 </div>
-<div created="20200131024136331" creator="cwshugg" modified="20200905200823851" modifier="cwshugg" tags="" title="Table of Contents">
+<div created="20200131024136331" creator="cwshugg" modified="20210623011322214" modifier="cwshugg" tags="" title="Table of Contents">
 <pre>! Anonymity
 * [[Being Anonymous on the Web|https://youtu.be/_393maHbHWc]]
 
 ! Reconnaissance
 * [[Google Dorking|Recon: Google Dorking]]
+* [[Network Scanning with nmap|Recon: nmap]]
+* [[Discovering Webserver Endpoints with GoBuster|Recon: GoBuster]]
 
 ! Web Exploits
 * [[Server Side Includes|Web: SSI]]
