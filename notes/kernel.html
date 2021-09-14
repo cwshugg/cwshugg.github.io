@@ -409,6 +409,8 @@ Error message and password prompt
 
 <li>Kernel Development Notes</li>
 
+<li>KM: Macros and Module Parameters</li>
+
 <li>KM: Overview</li>
 
 <li>LK: Building and Exploring</li>
@@ -9209,7 +9211,7 @@ very-muted-foreground: #888888</pre>
 <div created="20200131023052705" creator="c" modified="20200131023053305" modifier="cwshug" title="$:/status/UserName">
 <pre>cwshugg</pre>
 </div>
-<div list="[[Kernel Development Notes]]" title="$:/StoryList">
+<div list="[[Kernel Development Notes]] [[Table of Contents]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20200201021025248" creator="cwshugg" modified="20200824130809917" modifier="cwshugg" title="$:/temp/advancedsearch">
@@ -9228,19 +9230,19 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/url/full&quot;: {
             &quot;title&quot;: &quot;$:/info/url/full&quot;,
-            &quot;text&quot;: &quot;file:///C:/Users/Connor/Desktop/kernel.html&quot;
+            &quot;text&quot;: &quot;https://shugg.dev/notes/kernel&quot;
         },
         &quot;$:/info/url/host&quot;: {
             &quot;title&quot;: &quot;$:/info/url/host&quot;,
-            &quot;text&quot;: &quot;&quot;
+            &quot;text&quot;: &quot;shugg.dev&quot;
         },
         &quot;$:/info/url/hostname&quot;: {
             &quot;title&quot;: &quot;$:/info/url/hostname&quot;,
-            &quot;text&quot;: &quot;&quot;
+            &quot;text&quot;: &quot;shugg.dev&quot;
         },
         &quot;$:/info/url/protocol&quot;: {
             &quot;title&quot;: &quot;$:/info/url/protocol&quot;,
-            &quot;text&quot;: &quot;file:&quot;
+            &quot;text&quot;: &quot;https:&quot;
         },
         &quot;$:/info/url/port&quot;: {
             &quot;title&quot;: &quot;$:/info/url/port&quot;,
@@ -9248,7 +9250,7 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/url/pathname&quot;: {
             &quot;title&quot;: &quot;$:/info/url/pathname&quot;,
-            &quot;text&quot;: &quot;/C:/Users/Connor/Desktop/kernel.html&quot;
+            &quot;text&quot;: &quot;/notes/kernel&quot;
         },
         &quot;$:/info/url/search&quot;: {
             &quot;title&quot;: &quot;$:/info/url/search&quot;,
@@ -9256,15 +9258,15 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/url/origin&quot;: {
             &quot;title&quot;: &quot;$:/info/url/origin&quot;,
-            &quot;text&quot;: &quot;file://&quot;
+            &quot;text&quot;: &quot;https://shugg.dev&quot;
         },
         &quot;$:/info/browser/screen/width&quot;: {
             &quot;title&quot;: &quot;$:/info/browser/screen/width&quot;,
-            &quot;text&quot;: &quot;2560&quot;
+            &quot;text&quot;: &quot;1920&quot;
         },
         &quot;$:/info/browser/screen/height&quot;: {
             &quot;title&quot;: &quot;$:/info/browser/screen/height&quot;,
-            &quot;text&quot;: &quot;1440&quot;
+            &quot;text&quot;: &quot;1080&quot;
         }
     }
 }</pre>
@@ -10062,19 +10064,44 @@ The bitmap's header file is located in `include/linux/bitmap.h`, and it's implem
 
 The hash table is used quite a lot in the Linux kernel. One such example is the &quot;transparent hugepage&quot;.</pre>
 </div>
-<div created="20210914033212514" creator="cwshugg" modified="20210914033443213" modifier="cwshugg" tags="data_structures" title="DS: Linked List">
+<div created="20210914033212514" creator="cwshugg" modified="20210914161807096" modifier="cwshugg" tags="data_structures" title="DS: Linked List">
 <pre>The kernel implements its own linked list, using a single sentinel node for efficiency. Pointer arithmetic is used to get data from a list entry in a linked list.
 
 [img[img_linked_list]]
 
 The header file, to be included for any module that wishes to use the linked list, can be found at `include/linux/list.h` within the Linux repository.
 
+Documentation on all the API functions for the kernel linked list can be found [[here|https://www.kernel.org/doc/htmldocs/kernel-api/adt.html#id347958]].
+
 ! Use Cases
 
 The kernel uses this linked list in several places. A few include:
 
 * A list of threads under the same parent PID
-* A list of superblocks of a file system</pre>
+* A list of superblocks of a file system
+
+! Coding
+
+To define a list object for use, you'll want to use the `LIST_HEAD` macro:
+
+```cpp
+// set up a static list head struct
+// (defined in include/linux/list.h)
+static LIST_HEAD(list);
+```
+
+Then, in order to store something in the list, you'll need to define a wrapper struct that contains a `struct list_head`:
+
+```cpp
+struct entry
+{
+    int data;
+    struct list_head node;
+};
+```
+
+From here, you can utilize the list API in `include/linux/list.h` to build and use your linked list.
+</pre>
 </div>
 <div created="20210914034022208" creator="cwshugg" modified="20210914034239041" modifier="cwshugg" tags="data_structures" title="DS: Radix Tree">
 <pre>The Radix Tree is also called a &quot;trie&quot;, &quot;digital tree&quot;, or &quot;prefix tree&quot;. This is a data structure used by the Linux kernel's memory management. In this tree, the key at each node is compared chunk-o-bits by chunk-o-bits. All descendants of a node have a common prefix, and values are only associated with leaves.
@@ -10235,6 +10262,69 @@ To return from a system call, a few different instructions could be used (some o
 <pre>These are the notes I've taken about Linux kernel development during my time at Virginia Tech.
 
 &gt; Connor Shugg</pre>
+</div>
+<div created="20210914151811335" creator="cwshugg" modified="20210914164345257" modifier="cwshugg" tags="kmodules" title="KM: Macros and Module Parameters">
+<pre>There are a few specific C macros you'll typically see in a kernel module. In the Linux source code, many are defined in `include/linux/module.h` and `include/linux/moduleparam.h`.
+
+! Module Background Information
+
+A few macros exist to define background information for a kernel module:
+
+* `MODULE_LICENSE(&quot;license_name&quot;)` - This specifies what license this module is protected by.
+* `MODULE_AUTHOR(&quot;author_name&quot;)` - This specifies the creator of the kernel module.
+* `MODULE_DESCRIPTION(&quot;brief_module_description&quot;)` - This defines a brief description of the kernel module.
+
+! Entry and Exit
+
+Two macros can be used to define entry and exit procedures for your kernel module. They are `module_init(function_ptr)` and `module_exit(function_ptr)`.
+
+```cpp
+// Entry/initialization procedure.
+static void __init my_module_init(void)
+{
+    /* do initialization work here */
+    return;
+}
+
+// Exit procedure.
+static void __exit my_module_exit(void)
+{
+    /* do exit/cleanup work here */
+    return;
+}
+
+// Register the entry/exit functions with the two macros:
+module_init(my_module_init);
+module_exit(my_module_exit);
+```
+
+These macros are defined in `include/linux/module.h`.
+
+! Module Parameters
+
+The `module_param()` macro allows for a programmer to define a kernel module parameter, which is passed to it upon launch.
+
+```cpp
+// Define &quot;name&quot;, a module parameter that takes in a string.
+module_param(name, charp, S_IRUSR | S_IRGRP | S_IROTH)
+```
+
+The order of parameters for this macro are as follows:
+
+# ''Name'' - the name of the module parameter.
+# ''Type'' - the type of the module parameter. (In the above example, `charp` means `char*` (`char` pointer).)
+# ''Permissions'' - the permissions in place on the parameter.
+
+The `MODULE_PARM_DESC(name, &quot;description&quot;)` macro is used to give each module parameter a brief description on what it is and how to use it.
+
+```cpp
+// Give a brief description for the 'name' module parameter.
+MODULE_PARM_DESC(name, &quot;A string containing your first and last name.&quot;)
+```
+
+!! Module Parameter Permissions
+
+These permissions are a series of file-esque permissions (such `0777`, `0644`, etc.). In the Linux kernel, many of these definitions can be found in `include/uapi/linux/stat.h`. They define permissions for the file created in `/sys/module/MODULE_NAME/parameters/PARAMETER_NAME`. A permission value of `0` prevents the file from being created, and other file-type permission values modify the file's permissions accordingly.</pre>
 </div>
 <div created="20210914034519508" creator="cwshugg" modified="20210914034927710" modifier="cwshugg" tags="kmodules" title="KM: Overview">
 <pre>A kernel module is a piece of kernel code that is dynamically loaded and uploaded at runtime. It's a great alternative to test code you've written for the kernel, without having to recompile the entire kernel. (There's no need to reboot when loading/unloading a module.)
@@ -10403,7 +10493,7 @@ This is used to allocate memory that's virtually contiguous, but //not// physica
 
 This means, at minimum, you have to allocate 4KBs of memory. In addition, the memory isn't physically contiguous, meaning there will be more virtual address translation/page swapping overhead when accessing it. This along with the fact that `vmalloc` might sleep until more memory is available, makes it much more costly when compared to `kmalloc`.</pre>
 </div>
-<div created="20200131024136331" creator="cwshugg" modified="20210914034503260" modifier="cwshugg" tags="" title="Table of Contents">
+<div created="20200131024136331" creator="cwshugg" modified="20210914153353643" modifier="cwshugg" tags="" title="Table of Contents">
 <pre>! The Linux Kernel
 
 * [[Introduction|LK: Introduction]]
@@ -10432,7 +10522,8 @@ This means, at minimum, you have to allocate 4KBs of memory. In addition, the me
 
 ! Kernel Modules
 
-* [[Overview|KM: Overview]]</pre>
+* [[Overview|KM: Overview]]
+* [[Development Macros &amp; Module Parameters|KM: Macros and Module Parameters]]</pre>
 </div>
 
 </div>
