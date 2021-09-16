@@ -9223,7 +9223,7 @@ very-muted-foreground: #888888</pre>
 <div created="20200131023052705" creator="c" modified="20200131023053305" modifier="cwshug" title="$:/status/UserName">
 <pre>cwshugg</pre>
 </div>
-<div list="[[Kernel Development Notes]] [[Table of Contents]] [[PM: Overview]] [[PM: Task Struct]]" title="$:/StoryList">
+<div list="[[Kernel Development Notes]] [[Table of Contents]] [[DS: Hash Table]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20200201021025248" creator="cwshugg" modified="20200824130809917" modifier="cwshugg" title="$:/temp/advancedsearch">
@@ -9242,19 +9242,19 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/url/full&quot;: {
             &quot;title&quot;: &quot;$:/info/url/full&quot;,
-            &quot;text&quot;: &quot;file:///C:/Users/Connor/Desktop/kernel.html&quot;
+            &quot;text&quot;: &quot;https://shugg.dev/notes/kernel&quot;
         },
         &quot;$:/info/url/host&quot;: {
             &quot;title&quot;: &quot;$:/info/url/host&quot;,
-            &quot;text&quot;: &quot;&quot;
+            &quot;text&quot;: &quot;shugg.dev&quot;
         },
         &quot;$:/info/url/hostname&quot;: {
             &quot;title&quot;: &quot;$:/info/url/hostname&quot;,
-            &quot;text&quot;: &quot;&quot;
+            &quot;text&quot;: &quot;shugg.dev&quot;
         },
         &quot;$:/info/url/protocol&quot;: {
             &quot;title&quot;: &quot;$:/info/url/protocol&quot;,
-            &quot;text&quot;: &quot;file:&quot;
+            &quot;text&quot;: &quot;https:&quot;
         },
         &quot;$:/info/url/port&quot;: {
             &quot;title&quot;: &quot;$:/info/url/port&quot;,
@@ -9262,7 +9262,7 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/url/pathname&quot;: {
             &quot;title&quot;: &quot;$:/info/url/pathname&quot;,
-            &quot;text&quot;: &quot;/C:/Users/Connor/Desktop/kernel.html&quot;
+            &quot;text&quot;: &quot;/notes/kernel&quot;
         },
         &quot;$:/info/url/search&quot;: {
             &quot;title&quot;: &quot;$:/info/url/search&quot;,
@@ -9270,15 +9270,15 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/url/origin&quot;: {
             &quot;title&quot;: &quot;$:/info/url/origin&quot;,
-            &quot;text&quot;: &quot;file://&quot;
+            &quot;text&quot;: &quot;https://shugg.dev&quot;
         },
         &quot;$:/info/browser/screen/width&quot;: {
             &quot;title&quot;: &quot;$:/info/browser/screen/width&quot;,
-            &quot;text&quot;: &quot;1920&quot;
+            &quot;text&quot;: &quot;2560&quot;
         },
         &quot;$:/info/browser/screen/height&quot;: {
             &quot;title&quot;: &quot;$:/info/browser/screen/height&quot;,
-            &quot;text&quot;: &quot;1080&quot;
+            &quot;text&quot;: &quot;1440&quot;
         }
     }
 }</pre>
@@ -10069,8 +10069,66 @@ This plugin also requires the JSZip plugin ([[$:/plugins/tiddlywiki/jszip]]) to 
 
 The bitmap's header file is located in `include/linux/bitmap.h`, and it's implemented in `lib/bitmap.c`.</pre>
 </div>
-<div created="20210914033449787" creator="cwshugg" modified="20210914033530604" modifier="cwshugg" tags="data_structures" title="DS: Hash Table">
+<div created="20210914033449787" creator="cwshugg" modified="20210916161053767" modifier="cwshugg" tags="data_structures" title="DS: Hash Table">
 <pre>The kernel also implements and uses a hash table. It's a simple fixed-size open chaining hash table, with a fixed bucket size of 2^N (where N is given upon initialization). The kernel's hash table has singly-linked lists on each bucket to resolve collisions. For many search and add operations, the time complexity is roughly O(1).
+
+! Using the Hash Table
+
+The hash table's API is defined in `include/linux/hashtable.h`. To start, use the `DEFINE_HASHTABLE()` macro to set up a `struct hlist_head` object - the head of the hash table. You'll also need to define a struct used to contain a `struct hlist_node`, in order to store entries in the table:
+
+```cpp
+#include &lt;linux/hashtable.h&gt;
+
+// hash table definition
+static DEFINE_HASHTABLE(my_hashtable, 6); // using 6 bits, so this hash table has 2^6 (64) buckets
+
+// hash table node wrapper struct
+struct hashtable_entry
+{
+    int data;
+    struct hlist_node htnode;
+}
+// ...
+```
+
+!! Adding to the Hash Table
+
+To add an entry to your hash table, utilize the `hash_add(htable, htable_node_ptr, key)` macro:
+
+```cpp
+// ...
+int main()
+{
+    // allocate memory for a hash table entry
+    struct hashtable_entry* hte = kmalloc(sizeof(struct hashtable_entry), GFP_KERNEL);
+    hte-&gt;data = 5;
+
+    // invoke 'hash_add' to add to the table.
+    // A common trick: use the pointer's address as the key
+    hash_add(my_hashtable, &amp;hte-&gt;htnode, (long) hte);
+}
+```
+
+!! Iterating over the Hash Table
+
+To iterate, use the `hash_for_each()` macro. If you want to remove entries as you iterate, you'll need to use `hash_for_each_safe()`.
+
+```cpp
+static void some_function(void)
+{
+    // set up iteration variables
+    int bucket_cursor;
+    struct hashtable_entry* entry_cursor;
+
+    // iterate across the hash table
+    hash_for_each(my_hashtable, bucket_cursor, entry_cursor, htnode)
+    {
+        printk(KERN_INFO &quot;Bucket %d: data stored = %d.\n&quot;, bucket_cursor, entry_cursor-&gt;data);
+    }
+}
+```
+
+There's a great tutorial on the kernel's hash table found [[here|https://kernelnewbies.org/FAQ/Hashtables]].
 
 ! Use Cases
 
