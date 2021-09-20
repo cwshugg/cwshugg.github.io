@@ -429,9 +429,17 @@ Error message and password prompt
 
 <li>MM: Memory Allocation</li>
 
+<li>PM: Creation</li>
+
+<li>PM: Family Tree</li>
+
 <li>PM: Overview</li>
 
+<li>PM: Process Context</li>
+
 <li>PM: Task Struct</li>
+
+<li>PM: Threads</li>
 
 <li>Table of Contents</li>
 
@@ -9223,7 +9231,7 @@ very-muted-foreground: #888888</pre>
 <div created="20200131023052705" creator="c" modified="20200131023053305" modifier="cwshug" title="$:/status/UserName">
 <pre>cwshugg</pre>
 </div>
-<div list="[[Kernel Development Notes]] [[Table of Contents]]" title="$:/StoryList">
+<div list="[[Kernel Development Notes]] [[Table of Contents]] [[PM: Threads]] [[PM: Task Struct]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20200201021025248" creator="cwshugg" modified="20200824130809917" modifier="cwshugg" title="$:/temp/advancedsearch">
@@ -9242,7 +9250,7 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/url/full&quot;: {
             &quot;title&quot;: &quot;$:/info/url/full&quot;,
-            &quot;text&quot;: &quot;https://shugg.dev/notes/kernel&quot;
+            &quot;text&quot;: &quot;https://shugg.dev/notes/kernel.html&quot;
         },
         &quot;$:/info/url/host&quot;: {
             &quot;title&quot;: &quot;$:/info/url/host&quot;,
@@ -9262,7 +9270,7 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/url/pathname&quot;: {
             &quot;title&quot;: &quot;$:/info/url/pathname&quot;,
-            &quot;text&quot;: &quot;/notes/kernel&quot;
+            &quot;text&quot;: &quot;/notes/kernel.html&quot;
         },
         &quot;$:/info/url/search&quot;: {
             &quot;title&quot;: &quot;$:/info/url/search&quot;,
@@ -9274,11 +9282,11 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/browser/screen/width&quot;: {
             &quot;title&quot;: &quot;$:/info/browser/screen/width&quot;,
-            &quot;text&quot;: &quot;2560&quot;
+            &quot;text&quot;: &quot;1920&quot;
         },
         &quot;$:/info/browser/screen/height&quot;: {
             &quot;title&quot;: &quot;$:/info/browser/screen/height&quot;,
-            &quot;text&quot;: &quot;1440&quot;
+            &quot;text&quot;: &quot;1080&quot;
         }
     }
 }</pre>
@@ -10888,6 +10896,79 @@ This is used to allocate memory that's virtually contiguous, but //not// physica
 
 This means, at minimum, you have to allocate 4KBs of memory. In addition, the memory isn't physically contiguous, meaning there will be more virtual address translation/page swapping overhead when accessing it. This along with the fact that `vmalloc` might sleep until more memory is available, makes it much more costly when compared to `kmalloc`.</pre>
 </div>
+<div created="20210920205335169" creator="cwshugg" modified="20210920210611910" modifier="cwshugg" tags="processes" title="PM: Creation">
+<pre>Linux doesn't implement a way to create tasks from scratch. Instead, it uses `fork()` and `exec()` to make //copies// of an existing process.
+
+The `fork()` system call creates a child process. It's an exact copy of the parent process, save for a few key details (PID, PPID, a few resources/stats). The `exec()` system call takes an existing process and loads a new executable into its address space.
+
+! Forking in the Kernel
+
+The `fork()` call is implemented by the `clone()` system call. `clone()` is mapped to `sys_clone()` in the kernel. This calls `do_fork()`, which calls `copy_process()`, which does the following:
+
+!! `copy_process()`
+
+The parent process' `task_struct` and `thread_info` struct are both duplicated, along with the kernel stack. Various members of the new `task_struct` are cleared along the way. (This is implemented in `dup_task_struct()`, called by `copy_process()`.
+
+After duplicating things, `sched_fork()` is called, which sets the child state to `TASK_NEW`. It copies parent information (such as file descriptors, signal handlers, etc.) and assigns a new PID using `alloc_pid()`.
+
+Ultimately, `copy_process()` returns a pointer to the new child `task_struct`, and `do_fork()` calls `wake_up_new_task()`, setting the child's state to `TASK_RUNNING`.
+
+(Somewhere along the line, the kernel manually manipulates the child's stack to modify the return value of `fork()`, which is how we get different return values in the parent and child processes. Pretty sweet.)
+
+! Copy on Write (CoW)
+
+When `fork()` is called, Linux duplicates the parent page tables and creates a new process descriptor. Initially, the page tables are not all copied to the child process. This is done to save memory and time when forking a child process.
+
+However, when the child accesses the page for //writing//, the page is copied and the page table entry is changed from read-only to read-write.</pre>
+</div>
+<div created="20210920204600208" creator="cwshugg" modified="20210920205303128" modifier="cwshugg" tags="processes" title="PM: Family Tree">
+<pre>! The `init` Process
+
+The `init` process is the root of //all// processes on the operating system. It's launched by the kernel as the last step of the boot process.
+
+When it runs, it reads the system `initscripts` and executes more programs, such as daemons, and eventually completes the boot process. It has a PID of `1`, and its `task_struct` is a global variable called `init_task`, defined in `init/init_task.c` in the Linux kernel's code.
+
+! Viewing the Family Tree
+
+On a Linux system, the entire tree of processes can be viewed via the `pstree` command. An example of its output looks like:
+
+```bash
+$ pstree
+systemd─┬─ModemManager───3*[{ModemManager}]
+        ├─NetworkManager───2*[{NetworkManager}]
+        ├─3*[abrt-dump-journ]
+        ├─abrtd───2*[{abrtd}]
+        ├─agetty
+        ├─atd
+        ├─auditd─┬─sedispatch
+        │        └─2*[{auditd}]
+        ├─chronyd
+        ├─dbus-broker-lau───dbus-broker
+        ├─firewalld───{firewalld}
+        ├─gssproxy───5*[{gssproxy}]
+        ├─irqbalance───{irqbalance}
+        ├─mcelog
+        ├─polkitd───5*[{polkitd}]
+        ├─rsyslogd───2*[{rsyslogd}]
+        ├─sshd───sshd───sshd───bash───tmux: client
+        ├─sssd─┬─sssd_be
+        │      └─sssd_nss
+        ├─systemd───(sd-pam)
+        ├─systemd-homed
+        ├─systemd-journal
+        ├─systemd-logind
+        ├─systemd-oomd
+        ├─systemd-resolve
+        ├─systemd-udevd
+        ├─systemd-userdbd───3*[systemd-userwor]
+        └─tmux: server─┬─bash───make───make───make───cargo─┬─rustc───4*[{rustc}]
+                       │                                   ├─rustc───{rustc}
+                       │                                   └─3*[{cargo}]
+                       └─bash───pstree
+```
+
+(You can see I'm compiling some Rust code on a tmux session)</pre>
+</div>
 <div created="20210915205738502" creator="cwshugg" modified="20210915210846760" modifier="cwshugg" tags="processes" title="PM: Overview">
 <pre>A process is a program //currently// executing on the system. It is composed of:
 
@@ -10927,7 +11008,12 @@ Creating, then `wait`'ing for a new process looks like this:
 
 One of the most important structs in all the Linux kernel is the `task_struct`. It is a descriptor of a process currently alive in the kernel. ([[More information|PM: Task Struct]])</pre>
 </div>
-<div created="20210915210853116" creator="cwshugg" modified="20210915211248904" modifier="cwshugg" tags="processes" title="PM: Task Struct">
+<div created="20210920204251327" creator="cwshugg" modified="20210920204527519" modifier="cwshugg" tags="processes" title="PM: Process Context">
+<pre>The kernel can execute in a ''process context'' or a ''interrupt context''. The `current` macro described [[here|PM: Task Struct]] is meaningful //only// when the kernel is executing in a ''process context'' (such as executing a system call).
+
+The ''interrupt context'' has its own context.</pre>
+</div>
+<div created="20210915210853116" creator="cwshugg" modified="20210920204202605" modifier="cwshugg" tags="processes" title="PM: Task Struct">
 <pre>The `struct task_struct` is what the Linux kernel uses to manage all the living processes. Defined in `include/linux/sched.h`, it's MASSIVE. An abbreviated version is pasted below.
 
 ```cpp
@@ -10948,11 +11034,87 @@ struct task_struct
     struct signal_struct *signal;   /* signal handlers */
     /* ... SO much more ... */
     /* NOTE: In Linux kernel, process and task are interchangably used. */
-}; /* TODO: Let's check `pstree` output. */
+};
 
+```
+
+Each task is linked together in a global task list. The task struct's list link is `struct list_head tasks`. The scheduler uses each task struct's `struct sched_entity se` field to perform process scheduling.
+
+You also might notice the `strut list_head children` and `struct list_head sibling`. The `children` field is the head of a list that links together a task's child processes, and the `sibling` field is used to link a task with its siblings.
+
+! Allocation of the `task_struct`
+
+In older kernels, the `task_struct` for each process was allocated at the bottom of the kernel stack of each process. With this method, getting the address of the `task_struct` was as simple as masking out the 13 least-significant bits of the stack pointer.
+
+However, since Linux v4.9, the `task_struct` is dynamically allocated at the heap, because of the risks of potential exploit when the kernel stack is overflowed.
+
+To efficiently access the current `task_struct` being executed by a processor, the kernel maintains a per-CPU variable named `current_task` In `arch/x86/include/asm/current.h`, you can find the following code defined:
+
+```cpp
+/* linux/arch/x86/include/asm/current.h */
+DECLARE_PER_CPU(struct task_struct *, current_task);
+static __always_inline struct task_struct *get_current(void)
+{
+    return this_cpu_read_stable(current_task);
+}
+#define current get_current()
+```
+
+This defines an &quot;array&quot; of sorts, with one entry for each CPU, of task structs, each called `current_task`. The `get_current()` function is macro'd by `current`, which allows kernel code to effectively get the current `task_struct` running on the CPU on which the kernel code is executing.
+
+! The Task State
+
+The `task_struct`'s `state` field defines the current state of a task. The states are:
+
+* `TASK_RUNNING` - This means the task is //runnable//. It's either currently running //or// it's in a per-CPU schedule queue.
+* `TASK_INTERRUPTIBLE` - The process is sleeping and waiting for some condition.
+** The process is switched to `TASK_RUNNING` when the waiting condition becomes satisfied, or some signal is received.
+* `TASK_UNINTERRUPTIBLE` - This is the same idea as `TASK_INTERRUPTIBLE`, but the process will //not// wake up on a signal.
+
+The above three are the most important states, but others exist too. For example:
+
+* `__TASK_TRACED` - This means the process is traced by some other process (such as a debugger)
+* `__TASK_STOPPED` - The process isn't running nor waiting - it was stopped via some signal (such as `SIGSTOP` or `SIGTSTP`).
+
+All the process state values can be found in `include/linux/sched.h`.</pre>
+</div>
+<div created="20210920210638723" creator="cwshugg" modified="20210920211251410" modifier="cwshugg" tags="processes" title="PM: Threads">
+<pre>Threads in Linux are concurrent flows of execution that belong to the same program. They share the //same// address space, and pretty much everything else, //except// for the stack.
+
+Interestingly enough, there's no such thing as a thread in the Linux kernel. Linux implements all threads as processes. Effectively, a thread, to Linux, is just another process that shares information with other processes. (Each thread has its own `task_struct`.)
+
+Threads, like processes, are created through the same `clone()` system call, with specific flags that enable the sharing of resources.
+
+! Kernel Threads
+
+''Kernel threads'' are used to perform necessary background work while the kernel is running. They're pretty similar to user-space threads (they are schedulable entities, just like user-space threads).
+
+The main difference is the fact that kernel threads lack their own address space. The `mm` field in each kernel thread's `task_struct` is `NULL`.
+
+Every kernel thread is forked from the `kthreadd` process (given a PID of 2).
+
+Try running `ps --ppid 2` to show all alive kernel threads. An example of the output:
+
+```bash
+$ ps --ppid 2
+    PID TTY          TIME CMD
+      3 ?        00:00:00 rcu_gp
+      4 ?        00:00:00 rcu_par_gp
+      6 ?        00:00:00 kworker/0:0H-events_highpri
+      9 ?        00:00:00 mm_percpu_wq
+     10 ?        00:00:00 rcu_tasks_kthre
+     11 ?        00:00:00 rcu_tasks_rude_
+     12 ?        00:00:00 rcu_tasks_trace
+     13 ?        00:00:01 ksoftirqd/0
+     14 ?        00:00:03 rcu_sched
+     15 ?        00:00:00 migration/0
+     16 ?        00:00:00 cpuhp/0
+     17 ?        00:00:00 cpuhp/1
+     18 ?        00:00:00 migration/1
+     # ... and lots more ...
 ```</pre>
 </div>
-<div created="20200131024136331" creator="cwshugg" modified="20210915211433843" modifier="cwshugg" tags="" title="Table of Contents">
+<div created="20200131024136331" creator="cwshugg" modified="20210920210631787" modifier="cwshugg" tags="" title="Table of Contents">
 <pre>! The Linux Kernel
 
 * [[Introduction|LK: Introduction]]
@@ -10979,6 +11141,10 @@ struct task_struct
 
 * [[Overview|PM: Overview]]
 * [[The Task Struct|PM: Task Struct]]
+* [[Process Context|PM: Process Context]]
+* [[The Process Family Tree|PM: Family Tree]]
+* [[Process Creation|PM: Creation]]
+* [[Threads|PM: Threads]]
 
 ! Kernel Memory Management
 
