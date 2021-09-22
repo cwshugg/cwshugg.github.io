@@ -439,7 +439,13 @@ Error message and password prompt
 
 <li>PM: Task Struct</li>
 
+<li>PM: Termination</li>
+
 <li>PM: Threads</li>
+
+<li>PS: Overview</li>
+
+<li>PS: Policies</li>
 
 <li>Table of Contents</li>
 
@@ -9231,7 +9237,7 @@ very-muted-foreground: #888888</pre>
 <div created="20200131023052705" creator="c" modified="20200131023053305" modifier="cwshug" title="$:/status/UserName">
 <pre>cwshugg</pre>
 </div>
-<div list="[[Kernel Development Notes]] [[Table of Contents]] [[PM: Threads]] [[PM: Task Struct]]" title="$:/StoryList">
+<div list="[[Kernel Development Notes]] [[Table of Contents]] [[PS: Policies]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20200201021025248" creator="cwshugg" modified="20200824130809917" modifier="cwshugg" title="$:/temp/advancedsearch">
@@ -9282,11 +9288,11 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/browser/screen/width&quot;: {
             &quot;title&quot;: &quot;$:/info/browser/screen/width&quot;,
-            &quot;text&quot;: &quot;1920&quot;
+            &quot;text&quot;: &quot;2560&quot;
         },
         &quot;$:/info/browser/screen/height&quot;: {
             &quot;title&quot;: &quot;$:/info/browser/screen/height&quot;,
-            &quot;text&quot;: &quot;1080&quot;
+            &quot;text&quot;: &quot;1440&quot;
         }
     }
 }</pre>
@@ -11078,7 +11084,46 @@ The above three are the most important states, but others exist too. For example
 
 All the process state values can be found in `include/linux/sched.h`.</pre>
 </div>
-<div created="20210920210638723" creator="cwshugg" modified="20210920211251410" modifier="cwshugg" tags="processes" title="PM: Threads">
+<div created="20210922202253795" creator="cwshugg" modified="20210922203444343" modifier="cwshugg" tags="processes" title="PM: Termination">
+<pre>! Process Exit Sequence
+
+When a user-space process exits, it invokes the `exit()` system call. On a return from `main()`, the compiler will insert a call to `exit()`.
+
+The kernel's binding to `exit()`, `sys_exit()` runs, and calls `do_exit()`, which is implemented in `kernel/exit.c` in the kernel's code.
+
+From here, `do_exit()` modifies a few fields in the child process:
+
+* The `PF_EXITING` flag is set.
+* The `exit_code` field is set, which can be retrieved by the parent process.
+
+Next, `do_exit()` makes a few function calls to release resources:
+
+* `exit_mm()` is called to release the `mm_struct` for the task.
+* `exit_sem()` is called. If the process is currently waiting for a semaphore, this causes it to be dequeued from the line.
+* `exit_files()` and `exit_fs()` are called to decrease the reference counters for file descriptors and any filesystem data.
+
+Then, `exit_notify()` is called to signal the parent, and any children of the process are &quot;re-parented&quot; to some other thread group, or the `init` process.
+
+Finally, a few more fields in the `task_struct` are set:
+
+* `exit_state` is set to `EXIT_ZOMBIE`
+* `state` is set to `TASK_DEAD`
+
+Lastly, `schedule()` is called to switch CPU execution to a new process.
+
+! Parent Reaping Process
+
+After the child process has completed its exit sequence, it's up to the parent process to &quot;reap&quot; it. The child process' `task_struct`, `thread_info`, and kernel stack remain. When the parent process calls the `wait()`/`waitpid()` system call to retrieve exit information, the remaining memory is freed.
+
+This cleanup sequence is implemented in `release_task()`, called from the `wait()`/`waitpid()` system call.
+
+! Zombie Processes
+
+''What if a parent process exits before its child?'' In this case, the child task must be &quot;re-parented&quot; (as mentioned above). When `exit_notify()` runs, it makes a call to `forget_original_parent()`, which calls the `find_new_reaper()` function.
+
+Ultimately, this `find_new_reaper()` function returns a pointer to the `task_struct` of some other process in the thread group (if one exists). If another exists, it defaults to the `init` process. With this new `task_struct`, all the children of the dying task are re-parented to the &quot;new reaper&quot;. (I love the terminology)</pre>
+</div>
+<div created="20210920210638723" creator="cwshugg" modified="20210922202224014" modifier="cwshugg" tags="processes" title="PM: Threads">
 <pre>Threads in Linux are concurrent flows of execution that belong to the same program. They share the //same// address space, and pretty much everything else, //except// for the stack.
 
 Interestingly enough, there's no such thing as a thread in the Linux kernel. Linux implements all threads as processes. Effectively, a thread, to Linux, is just another process that shares information with other processes. (Each thread has its own `task_struct`.)
@@ -11112,9 +11157,71 @@ $ ps --ppid 2
      17 ?        00:00:00 cpuhp/1
      18 ?        00:00:00 migration/1
      # ... and lots more ...
-```</pre>
+```
+
+!! Kernel Thread API
+
+The API to create a kernel thread is comparable to the POSIX thread library (pthread). Defined in `include/linux/kthread.h`, the common functions include:
+
+* `kthread_create()`
+** This creates a kthread, but it's not in a runnable state. The `wake_up_process()` function needs to be called.
+* `kthread_run()`.
+** This is a wrapper macro that executes both `kthread_create()` and `wake_up_process()`.
+* `kthread_stop()`.
+** This can be invoked by //other// threads to ask a kernel thread to stop execution. The target kernel thread can check `kthread_should_stop()` to determine whether or not it should stop execution.
+</pre>
 </div>
-<div created="20200131024136331" creator="cwshugg" modified="20210920210631787" modifier="cwshugg" tags="" title="Table of Contents">
+<div created="20210922203547064" creator="cwshugg" modified="20210922204607169" modifier="cwshugg" tags="processes" title="PS: Overview">
+<pre>The ''process scheduler'' decides which process runs next, when, and for how long. It's job is to make the //best possible// use of the CPU.
+
+''Multitasking'' is the idea of simultaneously interweaving the execution of multiple processes at once. The idea of &quot;parallelism&quot; differs here depending on how many CPUs your machine has.
+
+* With just //one// CPU, the scheduler give the //illusion// of running multiple processes by quickly switching between them. They all share the same CPU.
+* With //multiple// CPUs, the schedule can schedule multiple tasks at once for running, enabling //true// parallelism.
+</pre>
+</div>
+<div created="20210922204637657" creator="cwshugg" modified="20210922211722115" modifier="cwshugg" tags="processes" title="PS: Policies">
+<pre>The scheduler has multiple ''policies'' - sets of rules that define //what// process should run //when//. To help with this, processes can be considered in a few different categories:
+
+* ''I/O-bound Processes''. These processes tend to spend most of their time waiting on some sort of I/O service, such as the disk, network, or some peripheral device (keyboard or mouse).
+** These typically only run for a short duration.
+* ''CPU-bound Processes''. These spend most of their time executing on the CPU performing computations.
+** The CPU caches stay &quot;hot&quot; while they run.
+
+! Linux's Scheduling Policy
+
+The Linux kernel uses a ''priority-based scheduling'' policy. It ranks processes based on their need for CPU time. The processes with a higher priority are scheduled to run first.
+
+!! Priority Ranges
+
+Linux implements two kinds of &quot;priority ranges&quot;: ''nice value'' and ''real-time priority''.
+
+!!! Nice Value
+
+The ''nice value'' defines how &quot;nice&quot; a process is. That is, how willing it is to give up the CPU to another process. It ranges from ''-20'' to ''19''. Higher nice values mean a process has lower priority.
+
+The `nice()` system call can be used by user-space programs to specify a niceness value.
+
+!!! Real-Time Value
+
+This value ranges from ''0'' to ''99''. A higher value means the process has a higher priority.
+
+! Scheduling Timeslice
+
+How does the kernel decide on a &quot;timeslice&quot; to allow each process to run before context switching to the next one?
+
+* Too long of a slice (useful for CPU-bound processes) gives bad interactive performance.
+* Too short of a slice (useful for I/O-bound processes) gives lots of overhead for context switching.
+
+So, what gives? The Linux CFS (Completely Fair Scheduler) does //not// use an absolute value for the timeslice. Rather, the timeslice given to a process depends on the current load of the system. The timeslice is also weighed against the process' priority.
+
+If there are two processes, `P` and `C` (where `C` is currently running):
+
+* `P` will preempt `C` if `P` consumed a smaller proportion of the CPU than `C`.
+
+</pre>
+</div>
+<div created="20200131024136331" creator="cwshugg" modified="20210922204632938" modifier="cwshugg" tags="" title="Table of Contents">
 <pre>! The Linux Kernel
 
 * [[Introduction|LK: Introduction]]
@@ -11144,7 +11251,13 @@ $ ps --ppid 2
 * [[Process Context|PM: Process Context]]
 * [[The Process Family Tree|PM: Family Tree]]
 * [[Process Creation|PM: Creation]]
+* [[Process Termination|PM: Termination]]
 * [[Threads|PM: Threads]]
+
+!! Process Scheduling
+
+* [[Overview|PS: Overview]]
+* [[Scheduling Policies|PS: Policies]]
 
 ! Kernel Memory Management
 
