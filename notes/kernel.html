@@ -443,6 +443,8 @@ Error message and password prompt
 
 <li>PM: Threads</li>
 
+<li>PS: Modular Scheduling</li>
+
 <li>PS: Overview</li>
 
 <li>PS: Policies</li>
@@ -9237,7 +9239,7 @@ very-muted-foreground: #888888</pre>
 <div created="20200131023052705" creator="c" modified="20200131023053305" modifier="cwshug" title="$:/status/UserName">
 <pre>cwshugg</pre>
 </div>
-<div list="[[Kernel Development Notes]] [[Table of Contents]] [[PS: Policies]]" title="$:/StoryList">
+<div list="[[Kernel Development Notes]] [[Table of Contents]] [[PS: Modular Scheduling]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20200201021025248" creator="cwshugg" modified="20200824130809917" modifier="cwshugg" title="$:/temp/advancedsearch">
@@ -9288,11 +9290,11 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/browser/screen/width&quot;: {
             &quot;title&quot;: &quot;$:/info/browser/screen/width&quot;,
-            &quot;text&quot;: &quot;2560&quot;
+            &quot;text&quot;: &quot;1920&quot;
         },
         &quot;$:/info/browser/screen/height&quot;: {
             &quot;title&quot;: &quot;$:/info/browser/screen/height&quot;,
-            &quot;text&quot;: &quot;1440&quot;
+            &quot;text&quot;: &quot;1080&quot;
         }
     }
 }</pre>
@@ -11171,6 +11173,100 @@ The API to create a kernel thread is comparable to the POSIX thread library (pth
 ** This can be invoked by //other// threads to ask a kernel thread to stop execution. The target kernel thread can check `kthread_should_stop()` to determine whether or not it should stop execution.
 </pre>
 </div>
+<div created="20210927201319064" creator="cwshugg" modified="20210927205800110" modifier="cwshugg" tags="processes" title="PS: Modular Scheduling">
+<pre>The Linux scheduler is modular. It provides a pluggable interface for developers to add new scheduling algorithms, used to schedule specific types of processes. Each algorithm is called a ''scheduler class'', and each has its own priority. Some examples:
+
+* `SCHED_NORMAL` - The normal scheduling algorithm (CFS). Implemented in `kernel/sched/fair.c`.
+* `SCHED_FIFO` - First In, First Out
+* `SCHED_RR` - Round Robin
+* `SCHED_DEADLINE` - The sporadic task model deadline scheduling
+* `SCHED_OTHER`
+
+The scheduler's base code can be found in `kernel/sched/core.c` within the Linux code base. (Specifically, see functions `scheduler_tick()` and `schedule()`.)
+
+```cpp
+// ...
+/*
+ * This function gets called by the timer code, with HZ frequency.
+ * We call it with interrupts disabled.
+ */
+void scheduler_tick(void)
+{
+    int cpu = smp_processor_id();
+    struct rq *rq = cpu_rq(cpu);
+    struct task_struct *curr = rq-&gt;curr;
+    // ...
+}
+
+//...
+
+asmlinkage __visible void __sched schedule(void)
+{
+    struct task_struct *tsk = current;
+
+    sched_submit_work(tsk);
+    do {
+            preempt_disable();
+            __schedule(false);
+            sched_preempt_enable_no_resched();
+    } while (need_resched());
+    sched_update_worker(tsk);
+}
+EXPORT_SYMBOL(schedule);
+
+// ...
+```
+
+! Scheduler Class Implementation
+
+There is a C-like abstract base class (AKA: a fancy struct) used by all scheduler classes, defined in `kernel/sched/sched.h`. An abbreviated version from my class slides is pasted below:
+
+```cpp
+struct sched_class
+{
+    // ...
+    
+    /* Called when a task enters a runnable state */
+    void (*enqueue_task) (struct rq *rq, struct task_struct *p, int flags);
+    /* Called when a task becomes unrunnable */
+    void (*dequeue_task) (struct rq *rq, struct task_struct *p, int flags);
+    /* Yield the processor (dequeue then enqueue back immediately) */
+    void (*yield_task) (struct rq *rq);
+    /* Preempt the current task with a newly woken task if needed */
+    void (*check_preempt_curr) (struct rq *rq, struct task_struct *p, int flags);
+    /* Choose a next task to run */
+    struct task_struct * (*pick_next_task) (struct rq *rq,
+                                            struct task_struct *prev,
+                                            struct rq_flags *rf);
+    /* Called periodically (e.g., 10 msec) by a system timer tick handler */
+    void (*task_tick) (struct rq *rq, struct task_struct *p, int queued);
+    /* Update the current task's runtime statistics */
+    void (*update_curr) (struct rq *rq);
+    
+    // ...
+};
+```
+
+! Scheduler `task_struct` Fields
+
+The `task_struct` has multiple fields used in tandem with the scheduler:
+
+```cpp
+struct task_struct
+{
+    // ...
+    /* the schedule class of this task */
+    const struct sched_class* sched_class;
+
+    /* used for time-sharing scheduling */
+    struct sched_entity se;
+
+    /* used for real-time scheduling */
+    struct sched_rt_entity rt;
+    // ...
+};
+```</pre>
+</div>
 <div created="20210922203547064" creator="cwshugg" modified="20210922204607169" modifier="cwshugg" tags="processes" title="PS: Overview">
 <pre>The ''process scheduler'' decides which process runs next, when, and for how long. It's job is to make the //best possible// use of the CPU.
 
@@ -11221,7 +11317,7 @@ If there are two processes, `P` and `C` (where `C` is currently running):
 
 </pre>
 </div>
-<div created="20200131024136331" creator="cwshugg" modified="20210922204632938" modifier="cwshugg" tags="" title="Table of Contents">
+<div created="20200131024136331" creator="cwshugg" modified="20210927205803058" modifier="cwshugg" tags="" title="Table of Contents">
 <pre>! The Linux Kernel
 
 * [[Introduction|LK: Introduction]]
@@ -11258,6 +11354,7 @@ If there are two processes, `P` and `C` (where `C` is currently running):
 
 * [[Overview|PS: Overview]]
 * [[Scheduling Policies|PS: Policies]]
+* [[Modular Scheduling|PS: Modular Scheduling]]
 
 ! Kernel Memory Management
 
