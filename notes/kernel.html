@@ -401,6 +401,8 @@ Error message and password prompt
 
 <li>I+SC: System Calls</li>
 
+<li>IH: Bottom Half</li>
+
 <li>IH: Handler Implementation</li>
 
 <li>IH: IDT</li>
@@ -9251,7 +9253,7 @@ very-muted-foreground: #888888</pre>
 <div created="20200131023052705" creator="c" modified="20200131023053305" modifier="cwshug" title="$:/status/UserName">
 <pre>cwshugg</pre>
 </div>
-<div list="[[Kernel Development Notes]]" title="$:/StoryList">
+<div list="[[Kernel Development Notes]] [[Table of Contents]] [[IH: Bottom Half]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20200201021025248" creator="cwshugg" modified="20200824130809917" modifier="cwshugg" title="$:/temp/advancedsearch">
@@ -9302,11 +9304,11 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/browser/screen/width&quot;: {
             &quot;title&quot;: &quot;$:/info/browser/screen/width&quot;,
-            &quot;text&quot;: &quot;1920&quot;
+            &quot;text&quot;: &quot;2560&quot;
         },
         &quot;$:/info/browser/screen/height&quot;: {
             &quot;title&quot;: &quot;$:/info/browser/screen/height&quot;,
-            &quot;text&quot;: &quot;1080&quot;
+            &quot;text&quot;: &quot;1440&quot;
         }
     }
 }</pre>
@@ -10555,6 +10557,114 @@ To return from a system call, a few different instructions could be used (some o
 * `sysexit` - fast return from fast system calls (x86-32)
 * `sysret` - return from fast system calls (x86-64)</pre>
 </div>
+<div created="20211011191656700" creator="cwshugg" modified="20211011203125587" modifier="cwshugg" tags="interrupts" title="IH: Bottom Half">
+<pre>! Why Two Halves?
+
+The top-half of interrupt handling is designed to run as quickly as possible, in order to prevent user-space (and even kernel space!) tasks from being stalled for too long. Interrupt handling is executed in ''interrupt context'', and thus cannot block.
+
+A lot of the less-critical work is split into the ''bottom half'' of interrupt handling. This comprises the kind of work that doesn't need to be done //immediately//, but instead could be done over a period of time, while still letting tasks execute on the CPU.
+
+! Bottom Half Mechanisms
+
+In older Linux versions, a task queue was used for bottom-half interrupt handling. This was a simple queue of function pointers. It //worked//, but it wasn't lightweight enough for performance-critical parts of the kernel (such as networking).
+
+Nowadays, the bottom-half interrupt handlers are made up of a few different mechanisms:
+
+* Softirq
+* Tasklet
+* Work queues
+
+//All// of the bottom-half interrupt handling mechanisms run with //all// interrupt disabled. ''Softirqs'' and ''tasklets'' both run in interrupt context, while ''work queues'' run in process context (meaning they are able to block/sleep).
+
+!! Softirq
+
+Implemented in `kernel/softirq.c`, softirqs are statically-allocated at compile time. A seires of `struct softirq_action`s are allocated into a static array. Each `struct softirq_action` has a function pointer (the ''handler'' function).
+
+Typically, to call one of these handler functions, the top-half interrupt handlers will mark their particular softirq entries as &quot;needed&quot;. Then, any pending softirqs are checked and executed in a few different places:
+
+* When returning from hardware interrupts
+* In the `ksoftirqd` kernel thread
+* In any other code that explicitly checks the softirq array.
+
+The `do_softirq()` is invoked to actually execute a handler. In addition, a series of indexes are defined in `include/linux/interrupt.h`:
+
+```cpp
+enum
+{
+    HI_SOFTIRQ=0,       /* (high priority) high-priority tasklet */
+    TIMER_SOFTIRQ,      /* timer */
+    NET_TX_SOFTIRQ,     /* send network packets */
+    NET_RX_SOFTIRQ,     /* receive network packets */
+    BLOCK_SOFTIRQ,      /* block devices */
+    IRQ_POLL_SOFTIRQ,   /* interrupt-poll handling for block device */
+    TASKLET_SOFTIRQ,    /* normal priority tasklet */
+    SCHED_SOFTIRQ,      /* scheduler */
+    HRTIMER_SOFTIRQ,    /* unused */
+    RCU_SOFTIRQ,        /* (low priority) RCU locking */
+    
+    SOME_NEW_INDEX,     /* you could add a new index here! */
+    
+    NR_SOFTIRQS         /* used as the total number of softirqs */
+};
+```
+
+!!! Registering a Softirq
+
+To actually register your own softirq, you could make a call to `open_softirq()` in `kernel/softirq.c`.
+
+!!! Advantages of Softirq
+
+Softirq has an advantage over one of the other mechanisms (a ''tasklet''): it's more scalable. If the exact same softirq is raised again //while// it's executing, another processor can run it simultaneously.
+
+Of course, this means race conditions could become an issue. So, proper locking needs to be in place to protect any shared data. Locking takes time, though, so most softirq handler functions will typically use per-CPU data instead.
+
+!!! The `ksoftirqd` Thread
+
+The `ksoftirqd` kernel thread has one copy running on each CPU. Its job is to aid in the completion of raised softirqs. If the number grows to be above normal, the thread wakes up.
+
+!! Tasklet
+
+Tasklets are built on top of softirqs. The `struct tasklet_struct` is defined in `include/linux/interrupt.h`.
+
+Each CPU has two separate linked lists in which these tasklet structs are stored: `tasklet_vec` and `tasklet_hi_vec`. The latter is used for high-priority tasklets. these lists, and the `struct tasklet_head` list element struct are defined in `kernel/softirq.c`.
+
+!!! Scheduling a Tasklet
+
+Tasklets are scheduled with the `tasklet_schedule` function.
+
+!! Work Queues
+
+Work queues function by deferring work into a kernel thread. As such, it always runs in ''process context'', so it's able to block/sleep. `n` different `kworker/n` threads (one per CPU) is created by default, but more can be created.
+
+The `struct worker_pool` is defined in `kernel/workqueue.c` and `include/linux/workqueue.h`. The `DECLARE_WORK()` macro can be used to statically create a work item, and the `INIT_WORK()` macro can be used to dynamically create a work item at runtime. Other API includes:
+
+```cpp
+/* work queue initialization/destruction */
+struct workqueue_struct *create_workqueue(char *name);
+void destroy_workqueue(struct workqueue_struct *wq);
+
+/* scheduling work on the global queue */
+bool schedule_work(struct work_struct *work);
+bool schedule_work_on(int cpu, struct work_struct *work);
+
+/* doing work on a specific work queue */
+bool queue_work(struct workqueue_struct *wq, struct work_struct *work);
+bool queue_work_on(int cpu, struct workqueue_struct *wq, struct work_struct *work);
+
+/* finishing/flushing work */
+int flush_work(struct work_struct *work); /* flush specific work struct */
+void flush_workqueue(struct workqueue_struct *); /* flush specific queue */
+void flush_scheduled_work(void); /* flush default queue */
+void flush_workqueue(struct workqueue_struct *wq); /* cancel work in a queue */
+work_pending(struct work_struct *work); /* check if work is pending */
+```
+
+Each worker thread executes the `worker_thread()` function and perform an infinite loop with the following logic:
+
+# Check if there's work available in the pool.
+# If so, execute all of the `struct work_struct`s in the pool.
+# Sleep until a new work item is inserted into the queue.</pre>
+</div>
 <div created="20211004203917501" creator="cwshugg" modified="20211004210032319" modifier="cwshugg" tags="interrupts" title="IH: Handler Implementation">
 <pre>When writing code that's executed in ''interrupt context'', it's important to remember a few things:
 
@@ -11511,7 +11621,7 @@ do { \
 // ...
 ```</pre>
 </div>
-<div created="20200131024136331" creator="cwshugg" modified="20211004211134992" modifier="cwshugg" tags="" title="Table of Contents">
+<div created="20200131024136331" creator="cwshugg" modified="20211011201652278" modifier="cwshugg" tags="" title="Table of Contents">
 <pre>! The Linux Kernel
 
 * [[Introduction|LK: Introduction]]
@@ -11558,6 +11668,7 @@ do { \
 * [[Interrupt Descriptor Table|IH: IDT]]
 * [[Interrupt Service Routine|IH: ISR]]
 * [[Implementing an Interrupt Handler|IH: Handler Implementation]]
+* [[The Bottom Half|IH: Bottom Half]]
 
 ! Kernel Memory Management
 
