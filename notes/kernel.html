@@ -431,6 +431,14 @@ Error message and password prompt
 
 <li>KM: Overview</li>
 
+<li>KS: Completion Variables</li>
+
+<li>KS: Mutex</li>
+
+<li>KS: Semaphores</li>
+
+<li>KS: Spinlocks</li>
+
 <li>LK: Building and Exploring</li>
 
 <li>LK: Introduction</li>
@@ -9253,7 +9261,7 @@ very-muted-foreground: #888888</pre>
 <div created="20200131023052705" creator="c" modified="20200131023053305" modifier="cwshug" title="$:/status/UserName">
 <pre>cwshugg</pre>
 </div>
-<div list="[[Kernel Development Notes]] [[Table of Contents]] [[IH: Bottom Half]]" title="$:/StoryList">
+<div list="[[Kernel Development Notes]] [[Table of Contents]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20200201021025248" creator="cwshugg" modified="20200824130809917" modifier="cwshugg" title="$:/temp/advancedsearch">
@@ -9304,11 +9312,11 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/browser/screen/width&quot;: {
             &quot;title&quot;: &quot;$:/info/browser/screen/width&quot;,
-            &quot;text&quot;: &quot;2560&quot;
+            &quot;text&quot;: &quot;1920&quot;
         },
         &quot;$:/info/browser/screen/height&quot;: {
             &quot;title&quot;: &quot;$:/info/browser/screen/height&quot;,
-            &quot;text&quot;: &quot;1440&quot;
+            &quot;text&quot;: &quot;1080&quot;
         }
     }
 }</pre>
@@ -11065,6 +11073,124 @@ clean:
 
 To load one of these modules with the currently-running kernel, you need root privileges. Once you have that, typically the `insmod` command is used to load it into the kernel. But, others exist as well.</pre>
 </div>
+<div created="20211018210234644" creator="cwshugg" modified="20211018210626006" modifier="cwshugg" tags="synchronization" title="KS: Completion Variables">
+<pre>The Linux kernel's ''completion variable'' is very similar to the pthread library's ''condition variables''. They're used to allow one thread to signal to another that some event has occurred. (Although, one difference: completion variables are //not// paired with a lock, unlike the pthread condition variable.)
+
+The API, defined in `include/linux/completion.h`, allows for one thread to `wait_for_completion()` on a completion variable. Then, at some point, another thread can call `complete()` to wake up the waiting thread.</pre>
+</div>
+<div created="20211018205512233" creator="cwshugg" modified="20211018210201411" modifier="cwshugg" tags="synchronization" title="KS: Mutex">
+<pre>There really aren't many use-cases of counting semaphores in the Linux kernel. More often than not, a binary semaphore is used for mutual exclusion. To this end, the Linux kernel specifically implements a mutex API.
+
+Defined in `include/linux/mutex.h`, the mutex lock API can be used to create, acquire, and release mutex locks. In addition to the typical 'lock' and 'unlock' API calls, there also exist:
+
+* `mutex_trylock()` - Attempts to acquire the lock. Does not block on failure to acquire.
+* `mutex_is_locked()` - Returns a value indicating whether or not the lock is held.
+
+! Spinlock vs Mutex Lock
+
+Both the spinlock and mutex lock provide mutual exclusion, but one forces processes to sleep, and the other forces them to spin in a while loop. Their uses should be considered carefully:
+
+* ''Need low locking overhead?'' Use a spinlock.
+* ''Will the lock be held for a short time?'' Use a spinlock.
+* ''Will the lock be held for a long time?'' Use a mutex lock.
+* ''Need to lock from interrupt context?'' Use a spinlock.
+* ''Need to sleep while holding the lock?'' Use a mutex lock.</pre>
+</div>
+<div created="20211018204210910" creator="cwshugg" modified="20211018205441856" modifier="cwshugg" tags="synchronization" title="KS: Semaphores">
+<pre>Semaphores allow for multiple holders. They contain an internal counter that's set upon initialization. The counter is decremented each time a thread acquires it, and incremented each time a thread releases it. Once the semaphore's counter hits 0, it becomes unavailable, and threads attempting to acquire block until the counter is incremented again.
+
+Typically, in the Linux kernel uses ''binary semaphores'' - that is, a semaphore whose value is always either 1 or 0. (In other words, it's used for mutual exclusion.)
+
+Semaphores //cannot// be used in interrupt context, because a thread attempting to acquire a semaphore will be put to sleep if it's unavailable.
+
+! Semaphore API
+
+Defined in `include/linux/semaphore.h`, the semaphore API allows for initialization and usage of the semaphores as counters or as mutex locks. The `down()` series of function calls decrements the semaphore (or blocks while trying to), and the `up()` function releases and increments the semaphore.
+
+! Read-Write Semaphores
+
+Just like the read-write spinlock, a read-write semaphore exists and behaves the same way.</pre>
+</div>
+<div created="20211018200628947" creator="cwshugg" modified="20211018204049836" modifier="cwshugg" tags="synchronization" title="KS: Spinlocks">
+<pre>The ''spinlock'' is the most commonly-used lock in the Linux kernel. Unlike the mutex locks (such as the `pthread_mutex_t` type) in user-land that force a process to block while it waits to acquire the lock, a kernel thread waiting on a spinlock will &quot;spin&quot; in a loop until it's available.
+
+These are used often in the interrupt context, since execution when handling interrupts cannot sleep without freezing the kernel. This is why they're so popular in the kernel.
+
+! The Spinlock API
+
+Defined in `include/linux/spinlock.h`, an API exists to define and use spinlocks in kernel code. Most notably are the initialization, lock, and unlock procedures:
+
+```cpp
+#include &lt;linux/spinlock.h&gt;
+
+// ...
+
+// Define a spinlock variable with the name 'lock'
+DEFINE_SPINLOCK(lock);
+
+// ...
+
+void some_function_somewhere()
+{
+    // Acquire the spinlock
+    spin_lock(&amp;lock);
+
+    // Release the lock
+    spin_unlock(&amp;lock);
+}
+```
+
+! Deadlocks in Interrupt Handlers
+
+If an interrupt handler is executing, and acquires a lock, what happens if //another// interrupt is thrown? In the middle of the locked code region, another interrupt handler might get executed, which then tries to re-acquire the lock, a self-deadlock occurs.
+
+To avoid this, if a lock is used in an interrupt handler, you //must// also disable local interrupts before the lock is obtained.
+
+Rather than using `spin_lock()` and `spin_unlock()`, you can make this change easily by instead invoking `spin_lock_irq()` and `spin_unlock_irq()`.
+
+In addition, `spin_lock_irqsave()` and `spin_lock_irqrestore()` is even better. It will save (and restore) the previous local interrupt state upon lock (and unlock).
+
+!! Bottom-Half Handling
+
+The `spin_lock_bh()` and `spin_unlock_bh()` API calls will obtain a given lock and disable all bottom-half interrupt handling.
+
+! Read-Write Spinlocks
+
+A ''read-write spinlock'', or ''reader-writer spinlock'' allows for multiple threads to concurrently read from a shared resource at the same time. If no threads are currently //writing// to a resource, multiple reads are allowed.
+
+!! RWLock API
+
+Also defined in `include/linux/spinlock.h`, a series of API calls can be made to create and use read-write locks.
+
+```cpp
+#include &lt;linux/spinlock.h&gt;
+
+// ...
+
+// Create the read-write lock
+DEFINE_RWLOCK(rwlock);
+
+// ...
+
+void some_function_somewhere()
+{
+    read_lock(&amp;rwlock); // reader: acquire
+    // (do important work)
+    read_unlock(&amp;rwlock); // reader: release
+}
+
+void some_other_function()
+{
+    write_lock(&amp;rwlock); // write: acquired
+    // (do some writes)
+    write_unlock(&amp;rwlock); // write: release
+}
+
+// ...
+```
+
+Similarly to a normal spinlock, the RWLock API has functions to disable local interrupts and save/restore local interrupt state upon lock/unlock.</pre>
+</div>
 <div created="20210914020725574" creator="cwshugg" modified="20210914022248459" modifier="cwshugg" tags="linux" title="LK: Building and Exploring">
 <pre>The [[Linux kernel repository|https://github.com/torvalds/linux]] is gigantic. It can be challenging to navigate and build, but it's doable.
 
@@ -11621,7 +11747,7 @@ do { \
 // ...
 ```</pre>
 </div>
-<div created="20200131024136331" creator="cwshugg" modified="20211011201652278" modifier="cwshugg" tags="" title="Table of Contents">
+<div created="20200131024136331" creator="cwshugg" modified="20211018210227372" modifier="cwshugg" tags="" title="Table of Contents">
 <pre>! The Linux Kernel
 
 * [[Introduction|LK: Introduction]]
@@ -11673,6 +11799,13 @@ do { \
 ! Kernel Memory Management
 
 * [[Memory Allocation|MM: Memory Allocation]]
+
+! Kernel Synchronization
+
+* [[Spinlocks|KS: Spinlocks]]
+* [[Semaphores|KS: Semaphores]]
+* [[Mutex Locks|KS: Mutex]]
+* [[Completion Variables|KS: Completion Variables]]
 
 ! Kernel Modules
 
