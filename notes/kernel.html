@@ -433,7 +433,11 @@ Error message and password prompt
 
 <li>KS: Completion Variables</li>
 
+<li>KS: Memory Ordering and Barriers</li>
+
 <li>KS: Mutex</li>
+
+<li>KS: RCU</li>
 
 <li>KS: Semaphores</li>
 
@@ -9280,19 +9284,19 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/url/full&quot;: {
             &quot;title&quot;: &quot;$:/info/url/full&quot;,
-            &quot;text&quot;: &quot;https://shugg.dev/notes/kernel.html&quot;
+            &quot;text&quot;: &quot;file:///C:/Users/Connor/Desktop/kernel.html&quot;
         },
         &quot;$:/info/url/host&quot;: {
             &quot;title&quot;: &quot;$:/info/url/host&quot;,
-            &quot;text&quot;: &quot;shugg.dev&quot;
+            &quot;text&quot;: &quot;&quot;
         },
         &quot;$:/info/url/hostname&quot;: {
             &quot;title&quot;: &quot;$:/info/url/hostname&quot;,
-            &quot;text&quot;: &quot;shugg.dev&quot;
+            &quot;text&quot;: &quot;&quot;
         },
         &quot;$:/info/url/protocol&quot;: {
             &quot;title&quot;: &quot;$:/info/url/protocol&quot;,
-            &quot;text&quot;: &quot;https:&quot;
+            &quot;text&quot;: &quot;file:&quot;
         },
         &quot;$:/info/url/port&quot;: {
             &quot;title&quot;: &quot;$:/info/url/port&quot;,
@@ -9300,7 +9304,7 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/url/pathname&quot;: {
             &quot;title&quot;: &quot;$:/info/url/pathname&quot;,
-            &quot;text&quot;: &quot;/notes/kernel.html&quot;
+            &quot;text&quot;: &quot;/C:/Users/Connor/Desktop/kernel.html&quot;
         },
         &quot;$:/info/url/search&quot;: {
             &quot;title&quot;: &quot;$:/info/url/search&quot;,
@@ -9308,7 +9312,7 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/url/origin&quot;: {
             &quot;title&quot;: &quot;$:/info/url/origin&quot;,
-            &quot;text&quot;: &quot;https://shugg.dev&quot;
+            &quot;text&quot;: &quot;file://&quot;
         },
         &quot;$:/info/browser/screen/width&quot;: {
             &quot;title&quot;: &quot;$:/info/browser/screen/width&quot;,
@@ -11078,6 +11082,34 @@ To load one of these modules with the currently-running kernel, you need root pr
 
 The API, defined in `include/linux/completion.h`, allows for one thread to `wait_for_completion()` on a completion variable. Then, at some point, another thread can call `complete()` to wake up the waiting thread.</pre>
 </div>
+<div created="20211020201839258" creator="cwshugg" modified="20211020203119583" modifier="cwshugg" tags="memory synchronization" title="KS: Memory Ordering and Barriers">
+<pre>At compile-time, the compile may decide to reorder memory loads and stores to improve performance. In addition, the CPU at run-time may perform ''TSO: Total Store Ordering'' and ''PSO: Partial Store Ordering''.
+
+! Store Ordering
+
+The x86 architecture follows ''TSO''. The processor will reorder load instructions freely, but it will //not// reorder the store instructions. They are left exactly how the compiler produced them.
+
+''PSO'' allows the processor to occasionally reorder store instructions, under certain conditions.
+
+! Memory Barriers
+
+Specific instructions exist that instruct a compiler or a processor to //never// reorder instructions around some point.
+
+!! The Compiler Barrier
+
+In the Linux kernel, the `barrier()` macro defines a compiler barrier. It tells the compiler //not// to reorder instructions around it.
+
+!! Compiler and Processor Barriers
+
+Other macros exist in the kernel with similar purposes:
+
+* `rmb()` - ''read memory barrier.''
+* `wmb()` - ''write memory barrier.''
+* `mb()` - prevents //both// read and write reorders.
+* `read_barrier_depends()` - prevents any data-dependent loads from being reordered across the barrier.
+
+These macros correspond to various assembly instructions. (Example: the x86 architecture's `LFENCE` instruction.)</pre>
+</div>
 <div created="20211018205512233" creator="cwshugg" modified="20211018210201411" modifier="cwshugg" tags="synchronization" title="KS: Mutex">
 <pre>There really aren't many use-cases of counting semaphores in the Linux kernel. More often than not, a binary semaphore is used for mutual exclusion. To this end, the Linux kernel specifically implements a mutex API.
 
@@ -11095,6 +11127,24 @@ Both the spinlock and mutex lock provide mutual exclusion, but one forces proces
 * ''Will the lock be held for a long time?'' Use a mutex lock.
 * ''Need to lock from interrupt context?'' Use a spinlock.
 * ''Need to sleep while holding the lock?'' Use a mutex lock.</pre>
+</div>
+<div created="20211020203542564" creator="cwshugg" modified="20211020210816185" modifier="cwshugg" tags="synchronization" title="KS: RCU">
+<pre>Many data structures protected by locks from multiple threads often have //multiple// readers at one time, but very few writers. ''RCU'', or ''Read-Copy-Update'' was designed with this in mind. It supports concurrent reads across multiple reads and a single writer. In fact, //readers never block//.
+
+In short, locks are only required for writers. Readers don't have to lock. //But wouldn't this leave room for race conditions between the readers and writer?// Actually, no. RCU maintains multiple versions of the protected object and ensures they're not freed until all pre-existing critical reads complete.
+
+RCU is used for lots of read-heavy systems, such as the directory-entry cache, the DNS name database, etc. It's extremely efficient, but very difficult to program.
+
+! The RCU API
+
+Defined in `include/linux/rcupdate.h`, API exists to protect code regions in a similar way as a typical read-write lock.
+
+!! RCU Data Structures
+
+A few RCU-based data structures are defined in the Linux kernel:
+
+* Doubly-Linked List: `include/linux/rculist.h`
+* Circular Doubly-Linked List: `include/linux/rculist.h`</pre>
 </div>
 <div created="20211018204210910" creator="cwshugg" modified="20211018205441856" modifier="cwshugg" tags="synchronization" title="KS: Semaphores">
 <pre>Semaphores allow for multiple holders. They contain an internal counter that's set upon initialization. The counter is decremented each time a thread acquires it, and incremented each time a thread releases it. Once the semaphore's counter hits 0, it becomes unavailable, and threads attempting to acquire block until the counter is incremented again.
@@ -11747,7 +11797,7 @@ do { \
 // ...
 ```</pre>
 </div>
-<div created="20200131024136331" creator="cwshugg" modified="20211018210227372" modifier="cwshugg" tags="" title="Table of Contents">
+<div created="20200131024136331" creator="cwshugg" modified="20211020201830521" modifier="cwshugg" tags="" title="Table of Contents">
 <pre>! The Linux Kernel
 
 * [[Introduction|LK: Introduction]]
@@ -11806,6 +11856,8 @@ do { \
 * [[Semaphores|KS: Semaphores]]
 * [[Mutex Locks|KS: Mutex]]
 * [[Completion Variables|KS: Completion Variables]]
+* [[Memory Ordering and Barriers|KS: Memory Ordering and Barriers]]
+* [[RCU: Read-Copy-Update|KS: RCU]]
 
 ! Kernel Modules
 
