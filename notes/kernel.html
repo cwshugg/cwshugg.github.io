@@ -477,6 +477,12 @@ Error message and password prompt
 
 <li>Table of Contents</li>
 
+<li>TM: Jiffies</li>
+
+<li>TM: Kernel Time</li>
+
+<li>TM: RTC</li>
+
 </ul>
 </p>
 
@@ -9265,7 +9271,7 @@ very-muted-foreground: #888888</pre>
 <div created="20200131023052705" creator="c" modified="20200131023053305" modifier="cwshug" title="$:/status/UserName">
 <pre>cwshugg</pre>
 </div>
-<div list="[[Kernel Development Notes]] [[Table of Contents]]" title="$:/StoryList">
+<div list="[[Kernel Development Notes]] [[Table of Contents]] [[TM: RTC]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20200201021025248" creator="cwshugg" modified="20200824130809917" modifier="cwshugg" title="$:/temp/advancedsearch">
@@ -9284,19 +9290,19 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/url/full&quot;: {
             &quot;title&quot;: &quot;$:/info/url/full&quot;,
-            &quot;text&quot;: &quot;file:///C:/Users/Connor/Desktop/kernel.html&quot;
+            &quot;text&quot;: &quot;https://shugg.dev/notes/kernel.html&quot;
         },
         &quot;$:/info/url/host&quot;: {
             &quot;title&quot;: &quot;$:/info/url/host&quot;,
-            &quot;text&quot;: &quot;&quot;
+            &quot;text&quot;: &quot;shugg.dev&quot;
         },
         &quot;$:/info/url/hostname&quot;: {
             &quot;title&quot;: &quot;$:/info/url/hostname&quot;,
-            &quot;text&quot;: &quot;&quot;
+            &quot;text&quot;: &quot;shugg.dev&quot;
         },
         &quot;$:/info/url/protocol&quot;: {
             &quot;title&quot;: &quot;$:/info/url/protocol&quot;,
-            &quot;text&quot;: &quot;file:&quot;
+            &quot;text&quot;: &quot;https:&quot;
         },
         &quot;$:/info/url/port&quot;: {
             &quot;title&quot;: &quot;$:/info/url/port&quot;,
@@ -9304,7 +9310,7 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/url/pathname&quot;: {
             &quot;title&quot;: &quot;$:/info/url/pathname&quot;,
-            &quot;text&quot;: &quot;/C:/Users/Connor/Desktop/kernel.html&quot;
+            &quot;text&quot;: &quot;/notes/kernel.html&quot;
         },
         &quot;$:/info/url/search&quot;: {
             &quot;title&quot;: &quot;$:/info/url/search&quot;,
@@ -9312,7 +9318,7 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/url/origin&quot;: {
             &quot;title&quot;: &quot;$:/info/url/origin&quot;,
-            &quot;text&quot;: &quot;file://&quot;
+            &quot;text&quot;: &quot;https://shugg.dev&quot;
         },
         &quot;$:/info/browser/screen/width&quot;: {
             &quot;title&quot;: &quot;$:/info/browser/screen/width&quot;,
@@ -11797,7 +11803,7 @@ do { \
 // ...
 ```</pre>
 </div>
-<div created="20200131024136331" creator="cwshugg" modified="20211020201830521" modifier="cwshugg" tags="" title="Table of Contents">
+<div created="20200131024136331" creator="cwshugg" modified="20211025204244365" modifier="cwshugg" tags="" title="Table of Contents">
 <pre>! The Linux Kernel
 
 * [[Introduction|LK: Introduction]]
@@ -11859,16 +11865,65 @@ do { \
 * [[Memory Ordering and Barriers|KS: Memory Ordering and Barriers]]
 * [[RCU: Read-Copy-Update|KS: RCU]]
 
-! Kernel Modules
+!! Time Management
+
+* [[Kernel Time|TM: Kernel Time]]
+* [[Jiffies|TM: Jiffies]]
+* [[The Real-Time Clock|TM: RTC]]
+
+! Development
+
+!! Kernel Modules
 
 * [[Overview|KM: Overview]]
 * [[Development Macros &amp; Module Parameters|KM: Macros and Module Parameters]]
 
-! Kernel Debugging
+!! Debugging
 
 * [[Overview|KD: Overview]]
 * [[Kernel Panics|KD: Panics]]
 * [[QEMU and GDB|KD: QEMU and GDB]]</pre>
+</div>
+<div created="20211025202614163" creator="cwshugg" modified="20211025204101053" modifier="cwshugg" tags="time" title="TM: Jiffies">
+<pre>The `jiffies` global variable is very important. It holds the number of timer ticks since the system booted (it's an `unsigned long`). On 32-bit architectures, it's a 32-bit integer, and on 64-bit architectures, it's a 64-bit integer.
+
+To convert between jiffies and seconds, use this simple formula: `jiffies = seconds * HZ`.
+
+! Jiffies API
+
+An API is defined in `include/linux/jiffies.h` to convert to/from jiffies, compare timestamps, etc.
+
+!! `time_*` Macros
+
+In 32-bit systems, with `HZ = 100`, the counter overflows in 497 days. With `HZ = 1000`, the counter overflows in 50 days. 64-bit systems probably don't need to worry - overflow will take a //long// time.
+
+Regardless, overflow may happen. That's why it's important //not// to directly compare jiffy values. Rather, utilize the `time_*` macros defined in `include/linux/jiffies.h` to make comparisons - they account for overflow.</pre>
+</div>
+<div created="20211025201428983" creator="cwshugg" modified="20211025202628175" modifier="cwshugg" tags="time" title="TM: Kernel Time">
+<pre>Knowledge of the passing of time is vital to the kernel. It's used for:
+
+* Performing periodic tasks (such as scheduling)
+* Delaying the processing of something to some relative time in the future.
+* Giving the time of day
+
+The kernel has ''absolute time'' and ''relative time''.
+
+! The Tick Rate
+
+The tick rate is defined with the `HZ` macro (`HZ` is used because of the unit: Hertz). `HZ` is defined to hold specific values depending on which architecture is in use.
+
+`HZ` It's used for kernel timers, system calls that have timeouts (such as `epoll`, timing measurements, and more.
+
+!! Disabling Ticks
+
+Optionally, the Linux kernel can be compiled as a &quot;tickless system&quot;. This involves toggling the varios `NO_HZ` compilation options. Rather than using `HZ`, a tickless kernel dynamically reprograms the system timer.
+
+This approach saves energy and reduces overhead of maintaining a strict tick rate. However, as a downside, there may be instances where there are no events for hundreds of milliseconds.</pre>
+</div>
+<div created="20211025204252320" creator="cwshugg" modified="20211025205027658" modifier="cwshugg" tags="time" title="TM: RTC">
+<pre>The ''Real-Time Clock (RTC)'' stores the &quot;wall-clock&quot; time, and is still incremented when the computer is powered off (//By what? Witchcraft?!// No, by a small battery on the motherboard).
+
+The Linux kernel stores the wall-clock time in a data structure upon boot, called `xtime`.  The processor's time stamp counter (read by the `rdtsc` and `rdtscp` instructions in x86) is used to read the RTC.</pre>
 </div>
 
 </div>
