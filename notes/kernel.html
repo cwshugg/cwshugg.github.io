@@ -449,7 +449,13 @@ Error message and password prompt
 
 <li>LK: Programming</li>
 
-<li>MM: Memory Allocation</li>
+<li>MM: Allocators</li>
+
+<li>MM: GFP</li>
+
+<li>MM: Memory Allocation API</li>
+
+<li>MM: Pages and Zones</li>
 
 <li>PM: Creation</li>
 
@@ -9250,7 +9256,7 @@ very-muted-foreground: #888888</pre>
 <div created="20200131022623523" modified="20200131022623523" title="$:/state/ShowPaletteEditor">
 <pre>yes</pre>
 </div>
-<div created="20200131174736899" creator="cwshugg" modified="20210915202202937" modifier="cwshugg" title="$:/state/sidebar">
+<div created="20200131174736899" creator="cwshugg" modified="20211027205311377" modifier="cwshugg" title="$:/state/sidebar">
 <pre>yes</pre>
 </div>
 <div created="20200131022502764" creator="cwshugg" modified="20200131174310041" modifier="cwshugg" title="$:/state/tab--1963855381">
@@ -9271,7 +9277,7 @@ very-muted-foreground: #888888</pre>
 <div created="20200131023052705" creator="c" modified="20200131023053305" modifier="cwshug" title="$:/status/UserName">
 <pre>cwshugg</pre>
 </div>
-<div list="[[Kernel Development Notes]] [[Table of Contents]] [[TM: RTC]]" title="$:/StoryList">
+<div list="[[Kernel Development Notes]] [[Table of Contents]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20200201021025248" creator="cwshugg" modified="20200824130809917" modifier="cwshugg" title="$:/temp/advancedsearch">
@@ -9290,19 +9296,19 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/url/full&quot;: {
             &quot;title&quot;: &quot;$:/info/url/full&quot;,
-            &quot;text&quot;: &quot;https://shugg.dev/notes/kernel.html&quot;
+            &quot;text&quot;: &quot;file:///C:/Users/Connor/Desktop/kernel.html&quot;
         },
         &quot;$:/info/url/host&quot;: {
             &quot;title&quot;: &quot;$:/info/url/host&quot;,
-            &quot;text&quot;: &quot;shugg.dev&quot;
+            &quot;text&quot;: &quot;&quot;
         },
         &quot;$:/info/url/hostname&quot;: {
             &quot;title&quot;: &quot;$:/info/url/hostname&quot;,
-            &quot;text&quot;: &quot;shugg.dev&quot;
+            &quot;text&quot;: &quot;&quot;
         },
         &quot;$:/info/url/protocol&quot;: {
             &quot;title&quot;: &quot;$:/info/url/protocol&quot;,
-            &quot;text&quot;: &quot;https:&quot;
+            &quot;text&quot;: &quot;file:&quot;
         },
         &quot;$:/info/url/port&quot;: {
             &quot;title&quot;: &quot;$:/info/url/port&quot;,
@@ -9310,7 +9316,7 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/url/pathname&quot;: {
             &quot;title&quot;: &quot;$:/info/url/pathname&quot;,
-            &quot;text&quot;: &quot;/notes/kernel.html&quot;
+            &quot;text&quot;: &quot;/C:/Users/Connor/Desktop/kernel.html&quot;
         },
         &quot;$:/info/url/search&quot;: {
             &quot;title&quot;: &quot;$:/info/url/search&quot;,
@@ -9318,7 +9324,7 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/url/origin&quot;: {
             &quot;title&quot;: &quot;$:/info/url/origin&quot;,
-            &quot;text&quot;: &quot;https://shugg.dev&quot;
+            &quot;text&quot;: &quot;file://&quot;
         },
         &quot;$:/info/browser/screen/width&quot;: {
             &quot;title&quot;: &quot;$:/info/browser/screen/width&quot;,
@@ -11327,7 +11333,96 @@ A few notes on the //style// of kernel code (there's an official [[standard|http
 * The line lengths should not exceed 80 characters.
 </pre>
 </div>
-<div created="20210914033737347" creator="cwshugg" modified="20210914033956264" modifier="cwshugg" tags="memory" title="MM: Memory Allocation">
+<div created="20211027203052760" creator="cwshugg" modified="20211027211117204" modifier="cwshugg" tags="memory" title="MM: Allocators">
+<pre>A hierarchy of memory allocators exist in a running Linux kernel. It can be visualized:
+
+```
++--------------+  +-----------------------------------+
+|  User-Space  |  | Kernel Dynamic Memory Allocation  |
+|  Allocation  |  |                                   |
++--------------+  +-----------------------------------+
+       ^                ^           ^           ^
+       |                |           |           |
+       |          +-----------+     |     +-----------+
+       |          | vmalloc() |     |     | kmalloc() |
+       |          +-----------+     |     +-----------+
+       |                ^           |           ^
+       |                |           |           |
+       |                |     +-----------------------+
+       |                |     |      SLAB Layer       |
+       |                |     +-----------------------+
+       |                |           ^           ^
+       |                |           |           |
+ +----------------------------------------------------+
+ |             Low-Level Memory Allocator             |
+ |                   (Buddy System)                   |
+ +----------------------------------------------------+
+                           ^
+                           |
+ +----------------------------------------------------+
+ |                    Physical RAM                    |
+ +----------------------------------------------------+
+```
+
+! The Low-Level Allocator (Buddy System)
+
+At the low-level, memory is allocated one page at a time. The ''buddy system'''s purpose is to prevent memory from being fragmented. It maintains an array of free blocks (`struct free_area`) available in each zone defined in memory.
+
+!! The Buddy System API
+
+`include/linux/gfp.h` defines the interface for allocating pages. 
+
+* `alloc_pages()` and `alloc_page()` is used to allocate a set of physically contiguous (adjacent) pages.
+* `__free_pages()` and `__free_page()` is used to free a set of allocated pages.
+** `free_pages()` and `free_page()` does the same thing, but instead takes in a page's address, rather than the page struct itself.
+* `page_address()` is used to get the virtual address to a page.
+
+! The Slab Allocator
+
+Allocating and freeing data structures is done //very// often in the kernel. How can we make it faster? Enter the slab allocator.
+
+Instances of the slab allocator can be created to cache pre-allocated memory for a given type of data structure (for example: a data structure of a specific size).
+
+It's effectively an array of chunks of memory, with metadata specifying which chunks are allocated and which are freed.</pre>
+</div>
+<div created="20211027205511790" creator="cwshugg" modified="20211027210342497" modifier="cwshugg" tags="memory" title="MM: GFP">
+<pre>The `gfp_t` type, defined in `include/linux/gfp.h` allows options to be specified when allocation pages from memory. It's made up of an ''action modifier'' and ''zone modifier''.
+
+* The ''action modifier'' defines //how// the memory should be allocated.
+* The ''zone modifier'' defines which zone to allocate pages from.
+
+! GFP Action Modifiers
+
+* `__GFP_WAIT` means the allocator may sleep until memory is available.
+* `__GFP_HIGH` means the allocator can access emergency memory pools.
+* `__GFP_IO` means the allocator can start disk I/O.
+* `__GPF_FS` means the allocator can start filesystem I/O.
+* `__GFP_NOWARN` means the allocator will not print failure warnings.
+* `__GFP_REPEAT` means the allocator will repeat itself if it fails.
+* `__GFP_NOFAIL` means the allocation will be guaranteed to succeed.
+* `__GFP_NORETRY` means no retries are allowed on failure.
+
+Some of these flags can be combined.
+
+! GFP Zone Modifiers
+
+* `__GFP_DMA` means pages will be allocated from the `ZONE_DMA` zone.
+* `__GFP_DMA32` means pages will be allocated from the `ZONE_DMA32` zone.
+* `__GFP_HIGHMEM` means pages will be allocated from either the `ZONE_NORMAL` or `ZONE_HIGHMEM` zones.
+
+If a zone modifier isn't specified, it'll default to `ZONE_NORMAL`.
+
+! GFP Type Flags
+
+Common combinations of GFP zone and page modifiers are defined in the kernel.
+
+* `GFP_KERNEL` is used in process context, and it //can// sleep.
+* `GFP_ATOMIC` is used in process context, and it //cannot// sleep.
+** It's also used by the interrupt handler, softirq, and tasklets.
+* `GFP_DMA | GFP_KERNEL` allocates from the `ZONE_DMA` and //can// sleep.
+* `GFP_DMA | GFP_ATOMIC` allocates from the `ZONE_DMA` and //cannot// sleep.</pre>
+</div>
+<div created="20210914033737347" creator="cwshugg" modified="20211027210856603" modifier="cwshugg" tags="memory" title="MM: Memory Allocation API">
 <pre>There are two kinds of memory allocation functions used in the kernel:
 
 # `kmalloc(size, gfp_mask)` and `kfree(address)`
@@ -11342,11 +11437,91 @@ The `kmalloc()` function takes in a `gfp_mask`. It's used to specify which types
 
 This is used to allocate virtually and //physically contiguous// memory. This is used when physically contiguous memory is necessary. The maximum allocatable size through one `kmalloc()` call is limited to 4MB on x86.
 
+The `gfp_mask` field is used to pass in specifications as to //how// to allocate the memory and //where// to allocate it from. See [[this page|MM: GFP]] for more information.
+
+It's usage is similar to that of the C standard library's `malloc()`: it returns a pointer to the first allocated byte on success, or returns `NULL` on error.
+
+Memory allocated with `kmalloc()` should later be freed by invoking `kfree()`.
+
 ! `vmalloc(size)`
 
 This is used to allocate memory that's virtually contiguous, but //not// physically contiguous. There's no size limit, other than the amount of free RAM. This memory allocator might temporarily put a thread to sleep to get more free memory. The unit of allocation is a 4KB page.
 
-This means, at minimum, you have to allocate 4KBs of memory. In addition, the memory isn't physically contiguous, meaning there will be more virtual address translation/page swapping overhead when accessing it. This along with the fact that `vmalloc` might sleep until more memory is available, makes it much more costly when compared to `kmalloc`.</pre>
+This means, at minimum, you have to allocate 4KBs of memory. In addition, the memory isn't physically contiguous, meaning there will be more virtual address translation/page swapping overhead when accessing it. This along with the fact that `vmalloc` might sleep until more memory is available, makes it much more costly when compared to `kmalloc`.
+
+Memory allocated with `vmalloc()` should later be freed by invoking `kfree()`.</pre>
+</div>
+<div created="20211027195938804" creator="cwshugg" modified="20211027202832088" modifier="cwshugg" tags="memory" title="MM: Pages and Zones">
+<pre>In the Linux kernel, memory is divided into physical ''pages'' (also called ''frames''). A ''page'' is the kernel's basic unit of memory management.
+
+The size of each page depends on the machine you're on. It's determined by the ''MMU'', or the ''Memory Management Unit''. In general, though, it sits at around 4KB. You can find out what your page size is pretty quickly on a Linux system:
+
+```bash
+$ getconf PAGESIZE
+4096
+```
+
+! The Page Struct
+
+In the Linux kernel, each physical page is represented by a single instance of the `struct page` struct, defined in `include/linux/mm_types.h`. A (very) abbreviated version is written below:
+
+```cpp
+struct page
+{
+    unsigned long flags;    // permissions, dirty, read-only, etc.
+    unsigned long counters; // usage count
+    struct address_space* mapping; // address space mapping
+    pgoff_t index;          // offset within the address space mapping
+    struct list_head lru;   // LRU cache list entry
+    void* virtual;          // virtual address
+}
+```
+
+!! Where is it stored?
+
+If each physical page of memory has a `struct page` to keep track of it, where exactly is that struct stored? It turns out the kernel reserves a chunk of physical memory specifically for storing physical page structs.
+
+! Zones
+
+Certain pieces of hardware are unable to access //every// memory address available. For example, if your computer has 128 GB of ram, that's a //lot// of physical addresses. Some hardware (such as a network device) are powered by drivers that can only access a range of those address (say, the lowest 16 MB, for example).
+
+To address this issue, the kernel creates a mapping of physical addresses into ''zones''. Each zone has certain constraints - constraints which are taken into account when the page allocator allocates pages.
+
+* `ZONE_DMA` pages can be used by DMA devices.
+* `ZONE_DMA32` pages can be used by 32-bit DMA devices.
+* `ZONE_NORMAL` pages is &quot;regular physical memory&quot; in which `kmalloc()` calls are and typical operations happen.
+* `ZONE_HIGHMEM` pages should be mapped-in to a kernel virtual address prior to accessing it.
+
+!! Zone Layouts
+
+Layouts differ for each architecture.
+
+* For 32-bit x86 systems:
+** 0-16MB is `ZONE_DMA`.
+** 16MB-896MB is `ZONE_NORMAL`.
+** 896MB-(end) is `ZONE_HIGHMEM`.
+* For 64-bit x86 systems:
+** 0-16MB is `ZONE_DMA`.
+** 16MB-4GB is `ZONE_DMA32`.
+** 4GB-(?) is `ZONE_NORMAL`.
+
+!! The Zone Struct
+
+Each zone in memory has a corresponding `struct zone` instance. This struct is defined in `include/linux/mmzone.h`. A (very) abbreviated version is pasted below:
+
+```cpp
+struct zone
+{
+    const char* name;  // name of the zone
+    unsigned long zone_start_pfn; // starting page frame number
+
+    // the minimum, low, and high watermarks for per-zone allocation
+    unsigned long watermark[NR_WMARK];
+
+    spinlock_t lock; // to protect against parallel accesses
+    struct free_area free_area[MAX_ORDER]; // list of free pages in the zone
+}
+```</pre>
 </div>
 <div created="20210920205335169" creator="cwshugg" modified="20210920210611910" modifier="cwshugg" tags="processes" title="PM: Creation">
 <pre>Linux doesn't implement a way to create tasks from scratch. Instead, it uses `fork()` and `exec()` to make //copies// of an existing process.
@@ -11803,7 +11978,7 @@ do { \
 // ...
 ```</pre>
 </div>
-<div created="20200131024136331" creator="cwshugg" modified="20211025204244365" modifier="cwshugg" tags="" title="Table of Contents">
+<div created="20200131024136331" creator="cwshugg" modified="20211027210809126" modifier="cwshugg" tags="" title="Table of Contents">
 <pre>! The Linux Kernel
 
 * [[Introduction|LK: Introduction]]
@@ -11854,7 +12029,10 @@ do { \
 
 ! Kernel Memory Management
 
-* [[Memory Allocation|MM: Memory Allocation]]
+* [[Pages and Zones|MM: Pages and Zones]]
+* [[Memory Allocator Design|MM: Allocators]]
+* [[GPF: Get Free Pages|MM: GFP]]
+* [[Memory Allocation API|MM: Memory Allocation API]]
 
 ! Kernel Synchronization
 
