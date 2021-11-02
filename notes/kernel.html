@@ -457,6 +457,14 @@ Error message and password prompt
 
 <li>MM: Pages and Zones</li>
 
+<li>PAS: Memory Mapping</li>
+
+<li>PAS: Memory Struct</li>
+
+<li>PAS: Overview</li>
+
+<li>PAS: VMA Struct</li>
+
 <li>PM: Creation</li>
 
 <li>PM: Family Tree</li>
@@ -9277,7 +9285,7 @@ very-muted-foreground: #888888</pre>
 <div created="20200131023052705" creator="c" modified="20200131023053305" modifier="cwshug" title="$:/status/UserName">
 <pre>cwshugg</pre>
 </div>
-<div list="[[Kernel Development Notes]] [[Table of Contents]]" title="$:/StoryList">
+<div list="[[Kernel Development Notes]] [[Table of Contents]] [[PAS: Memory Mapping]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20200201021025248" creator="cwshugg" modified="20200824130809917" modifier="cwshugg" title="$:/temp/advancedsearch">
@@ -9296,19 +9304,19 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/url/full&quot;: {
             &quot;title&quot;: &quot;$:/info/url/full&quot;,
-            &quot;text&quot;: &quot;file:///C:/Users/Connor/Desktop/kernel.html&quot;
+            &quot;text&quot;: &quot;https://shugg.dev/notes/kernel.html&quot;
         },
         &quot;$:/info/url/host&quot;: {
             &quot;title&quot;: &quot;$:/info/url/host&quot;,
-            &quot;text&quot;: &quot;&quot;
+            &quot;text&quot;: &quot;shugg.dev&quot;
         },
         &quot;$:/info/url/hostname&quot;: {
             &quot;title&quot;: &quot;$:/info/url/hostname&quot;,
-            &quot;text&quot;: &quot;&quot;
+            &quot;text&quot;: &quot;shugg.dev&quot;
         },
         &quot;$:/info/url/protocol&quot;: {
             &quot;title&quot;: &quot;$:/info/url/protocol&quot;,
-            &quot;text&quot;: &quot;file:&quot;
+            &quot;text&quot;: &quot;https:&quot;
         },
         &quot;$:/info/url/port&quot;: {
             &quot;title&quot;: &quot;$:/info/url/port&quot;,
@@ -9316,7 +9324,7 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/url/pathname&quot;: {
             &quot;title&quot;: &quot;$:/info/url/pathname&quot;,
-            &quot;text&quot;: &quot;/C:/Users/Connor/Desktop/kernel.html&quot;
+            &quot;text&quot;: &quot;/notes/kernel.html&quot;
         },
         &quot;$:/info/url/search&quot;: {
             &quot;title&quot;: &quot;$:/info/url/search&quot;,
@@ -9324,15 +9332,15 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/url/origin&quot;: {
             &quot;title&quot;: &quot;$:/info/url/origin&quot;,
-            &quot;text&quot;: &quot;file://&quot;
+            &quot;text&quot;: &quot;https://shugg.dev&quot;
         },
         &quot;$:/info/browser/screen/width&quot;: {
             &quot;title&quot;: &quot;$:/info/browser/screen/width&quot;,
-            &quot;text&quot;: &quot;1920&quot;
+            &quot;text&quot;: &quot;2560&quot;
         },
         &quot;$:/info/browser/screen/height&quot;: {
             &quot;title&quot;: &quot;$:/info/browser/screen/height&quot;,
-            &quot;text&quot;: &quot;1080&quot;
+            &quot;text&quot;: &quot;1440&quot;
         }
     }
 }</pre>
@@ -11523,6 +11531,165 @@ struct zone
 }
 ```</pre>
 </div>
+<div created="20211102135342047" creator="cwshugg" modified="20211102140319026" modifier="cwshugg" tags="processes memory" title="PAS: Memory Mapping" type="">
+<pre>The `do_mmap()` kernel function (invoked by the `mmap2()` system call) is used to create a new //linear// address interval within a process' address space.
+
+```cpp
+unsigned long do_mmap(struct file* file,
+                      unsigned long addr,
+                      unsigned long len,
+                      unsigned long prot,
+                      unsigned long flags,
+                      vm_flags_t vm_flags,
+                      unsigned long pgoff,
+                      unsigned long *populate,
+                      struct list_head* uf);
+```
+
+Creating a new interval could result in the creation of a new VMA //or// the merging of the created area with an adjacent one that has the same permissions.
+
+The `prot` field specifies access permissions for memory within the area. The options are:
+
+* `PROT_READ` - corresponds to `VM_READ`.
+* `PROT_WRITE` - corresponds to `VM_WRITE`.
+* `PROT_EXEC` - corresponds to `VM_EXEC`.
+* `PROT_NONE` - the page can't be accessed in any way.
+
+The `flags` field specifies any other VMA options:
+
+* `MAP_SHARED` - the mapping can be shared.
+* `MAP_PRIVATE` - the mapping cannot be shared.
+* `MAP_FIXED` - the new interval //must// start at `addr`, the given address.
+* `MAP_ANONYMOUS` - the mapping is not file-backed, but it's anonymous.
+* `MAP_GROWSDOWN` - corresponds to `VM_GROWSDOWN`.
+* `MAP_DENYWRITE` - corresponds to `VM_DENYWRITE`.
+* `MAP_EXECUTABLE` - corresponds to `VM_EXECUTABLE`.
+* `MAP_LOCKED` - corresponds to `VM_LOCKED`.
+* `MAP_NORESERVE` - there's no need to reserve space for the mapping.
+* `MAP_POPULATE` - populate page tables (upon creation?).
+* `MAP_NONBLOCK` - don't block on I/O.
+
+! Removing an Address Interval
+
+Removing on of these memory-mapped regions is done by invoking the `munmap()` system call, which in turns calls the `do_munmap()` kernel function.</pre>
+</div>
+<div created="20211102132825931" creator="cwshugg" modified="20211102133454324" modifier="cwshugg" tags="processes memory" title="PAS: Memory Struct">
+<pre>A process' ''memory descriptor'' is represented by an allocated `mm_struct`, referenced by the `task_struct`'s `mm` field:
+
+```cpp
+struct task_struct
+{
+    // ...
+    struct mm_struct* mm;
+    struct mm_struct* active_mm;
+    // ...
+}
+```
+
+! Processes vs Threads
+
+As you know, when a process is `fork()`ed, it does not share the same address space as its parent process. Within the `fork()` system call, the kernel `copy_mm()` function is invoked to make a duplicate of the parent process' MM struct.
+
+When threads are created, the `CLONE_VM` flag is passed to the inner `clone()` system call, and `allocated_vm()` is not called. Rather, threads will simply point to the same `mm_struct`.
+
+!! User Threads vs Kernel Threads
+
+The `task_struct.mm` field represents the //user-space// address space. So, kernel threads don't have a `mm_struct`. Rather, they simply have the field set to `NULL`.
+
+When a kernel thread needs to access memory, it ensures its `task_struct.active_mm` field is set to point to the kernel's address space maapping.</pre>
+</div>
+<div created="20211102131922641" creator="cwshugg" modified="20211102133543096" modifier="cwshugg" tags="processes memory" title="PAS: Overview">
+<pre>A process' ''address space'' represents the entire set of memory addresses it is allowed to access. The kernel grants each process the illusion that they can access 100% of the systems memory, despite there being several processes running concurrently on a Linux system.
+
+A process' address space can map to physical memory as well as virtual memory, allowing for more addresses to be accessed than there is physical RAM installed on the machine.
+
+! Memory Addresses
+
+Each process is given a 32-bit or 64-bit address space that's not segmented. Each memory address is an index within the address space.
+
+! Virtual Memory Areas
+
+Each address space are categorized into ''Virtual Memory Areas (VMA)'' - intervals of addresses the process has specific permissions to access. Examples of these different areas for a process include:
+
+* Executable file's code (`.text` segment)
+* Executable file's initialized values (`.data` segment)
+* Executable file's uninitialized values (`.bss` segment)
+* The user-space stack
+* The `.text`, `.data`, `.bss`, etc., of any loaded shared libraries.
+* Memory-mapped files, shared memory segments, etc.
+
+In the Linux kernel, each VMA is represented by a `struct vm_area_struct`, defined in `include/linux/mm_types.h`. More information on this struct can be found [[here|PAS: VMA Struct]].</pre>
+</div>
+<div created="20211102133550932" creator="cwshugg" modified="20211102135311976" modifier="cwshugg" tags="memory processes" title="PAS: VMA Struct">
+<pre>The `struct vm_area_struct` represents a single categorized section of a process' address space. It's defined in `include/linux/mm_types.h`. A simplified version is pasted below:
+
+```cpp
+struct vm_area_struct
+{
+    // ...
+    struct mm_struct* vm_mm; // address space
+    unsigned long va_start;  // starting address (inclusive)
+    unsigned long va_end;    // ending address (exclusive)
+    pgprot_t vm_page_prot;   // access permissions
+    unsigned long vm_flags;  // flags
+    struct rb_node vm_rb;    // VMA node in the tree
+    struct list_head anon_vma_chain; // list of anonymous mappings
+    struct anon_vma* anon_vma; // anonmous vma object
+    struct vm_operation_struct *vm_ops; // operations
+    unsigned long vm_pgoff;  // offset within file
+    struct file* vm_file;    // mapped file (can be NULL)
+    void* vm_private_data;   // private data
+    // ...
+}
+```
+
+The virtual memory area owns the addresses from `[vm_start, vm_end)` in the process' address space. The size (in bytes) can be computed simply by doing `vm_end - vm_start`.
+
+A pointer back to the process' original `mm_struct` is in the `vm_mm` field.
+
+Two threads that share the same `mm_struct` also share the same `vm_area_struct`.
+
+! VMA Flags
+
+Various flags exist to modify the properties of a virtual memory area. There are a //lot//, so here we go:
+
+* `VM_READ` - the area's memory can be read from.
+* `VM_WRITE` - the area's memory can be written to.
+* `VM_EXEC` - the area's memory can be executed.
+* `VM_SHARED` - the area's memory is shared.
+* `VM_MAYREAD` - the `VM_READ` flag is allowed to be set.
+* `VM_MAYWRITE` - the `VM_WRITE` flag is allowed to be set.
+* `VM_MAYEXEC` - the `VM_EXEC` flag is allowed to be set.
+* `VM_MAYSHARE` - the `VM_SHARE` flag can be set.
+* `VM_GROWSDOWN` - the area can grow downward.
+* `VM_GROWSUP` - the area can grow upward.
+* `VM_SHM` - the area is used for shared memory.
+* `VM_DENYWRITE` - the area maps an unwritable file.
+* `VM_EXECUTABLE` - the area maps an executable file.
+* `VM_LOCKED` - the area's memory is locked.
+* `VM_IO` - the area maps a device's input/output space.
+* `VM_SEQ_READ` - the area's memory seems to be accessed sequentially.
+* `VM_RAND_READ` - the area's memory seems to be accessed randomly.
+* `VM_DONTCOPY` - the area must not be copied on a call to `fork()`.
+* `VM_DONTEXPAND` - the area cannot grow via a call to `mremap()`.
+* `VM_RESERVED` - the area must not be swapped out of memory.
+* `VM_ACCOUNT` - this area is an accounted VM objected.
+* `VM_HUGETLB` - this area uses &quot;hugetlb&quot; pages.
+* `VM_NONLINEAR` - this area is a nonlinear mapping.
+
+The two &quot;seems to be&quot; flags, `VM_SEQ_READ` and `VM_RAND_READ` are set via the `madvise()` system call. It instructs the page-fetching algorithm how best to swap memory pages in/out from the VMA to improve performance.
+
+The `VM_HUGETLB` flag indicates the usage of larger-than-regular page sizes. It allows the kernel to adjust and yeild less TLB misses (TLB = ''Translation Lookaside Buffer'').
+
+! VMA Operations
+
+Each `vm_area_struct` has a pointer to a `vm_operation_struct`, defined in `include/linux/mm.h`. It defines a series of function pointers allowing the behavior of various operations to be changed:
+
+* When areas are added to an address space
+* When areas are removed from an address space
+* When a page not present in physical memory is accessed
+* When a page has its permissions changed.</pre>
+</div>
 <div created="20210920205335169" creator="cwshugg" modified="20210920210611910" modifier="cwshugg" tags="processes" title="PM: Creation">
 <pre>Linux doesn't implement a way to create tasks from scratch. Instead, it uses `fork()` and `exec()` to make //copies// of an existing process.
 
@@ -11978,7 +12145,7 @@ do { \
 // ...
 ```</pre>
 </div>
-<div created="20200131024136331" creator="cwshugg" modified="20211027210809126" modifier="cwshugg" tags="" title="Table of Contents">
+<div created="20200131024136331" creator="cwshugg" modified="20211102135336804" modifier="cwshugg" tags="" title="Table of Contents">
 <pre>! The Linux Kernel
 
 * [[Introduction|LK: Introduction]]
@@ -12033,6 +12200,13 @@ do { \
 * [[Memory Allocator Design|MM: Allocators]]
 * [[GPF: Get Free Pages|MM: GFP]]
 * [[Memory Allocation API|MM: Memory Allocation API]]
+
+!! The Process Address Space
+
+* [[Overview|PAS: Overview]]
+* [[The Memory Struct|PAS: Memory Struct]]
+* [[The Virtual Memory Area Struct|PAS: VMA Struct]]
+* [[Memory Mapping|PAS: Memory Mapping]]
 
 ! Kernel Synchronization
 
