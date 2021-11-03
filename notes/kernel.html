@@ -463,6 +463,8 @@ Error message and password prompt
 
 <li>PAS: Overview</li>
 
+<li>PAS: Page Tables</li>
+
 <li>PAS: VMA Struct</li>
 
 <li>PM: Creation</li>
@@ -9285,7 +9287,7 @@ very-muted-foreground: #888888</pre>
 <div created="20200131023052705" creator="c" modified="20200131023053305" modifier="cwshug" title="$:/status/UserName">
 <pre>cwshugg</pre>
 </div>
-<div list="[[Kernel Development Notes]] [[Table of Contents]] [[PAS: Memory Mapping]]" title="$:/StoryList">
+<div list="[[Kernel Development Notes]] [[Table of Contents]] [[PAS: Page Tables]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20200201021025248" creator="cwshugg" modified="20200824130809917" modifier="cwshugg" title="$:/temp/advancedsearch">
@@ -9336,11 +9338,11 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/browser/screen/width&quot;: {
             &quot;title&quot;: &quot;$:/info/browser/screen/width&quot;,
-            &quot;text&quot;: &quot;2560&quot;
+            &quot;text&quot;: &quot;1920&quot;
         },
         &quot;$:/info/browser/screen/height&quot;: {
             &quot;title&quot;: &quot;$:/info/browser/screen/height&quot;,
-            &quot;text&quot;: &quot;1440&quot;
+            &quot;text&quot;: &quot;1080&quot;
         }
     }
 }</pre>
@@ -11620,6 +11622,11 @@ Each address space are categorized into ''Virtual Memory Areas (VMA)'' - interva
 
 In the Linux kernel, each VMA is represented by a `struct vm_area_struct`, defined in `include/linux/mm_types.h`. More information on this struct can be found [[here|PAS: VMA Struct]].</pre>
 </div>
+<div created="20211103205234433" creator="cwshugg" modified="20211103205509818" modifier="cwshugg" tags="processes memory" title="PAS: Page Tables">
+<pre>All memory accesses made by the CPU are virtual. The ''MMU'' (''Memory Management Unit'') is responsible for translating these virtual addresses into physical addresses. These translations happen through ''page tables''.
+
+Each `mm_struct` contains a pointer to a `pgd_t` (a ''page global directory''). This PGD is used to translate virtual addresses to physical addresses.</pre>
+</div>
 <div created="20211102133550932" creator="cwshugg" modified="20211102135311976" modifier="cwshugg" tags="memory processes" title="PAS: VMA Struct">
 <pre>The `struct vm_area_struct` represents a single categorized section of a process' address space. It's defined in `include/linux/mm_types.h`. A simplified version is pasted below:
 
@@ -12145,7 +12152,7 @@ do { \
 // ...
 ```</pre>
 </div>
-<div created="20200131024136331" creator="cwshugg" modified="20211102135336804" modifier="cwshugg" tags="" title="Table of Contents">
+<div created="20200131024136331" creator="cwshugg" modified="20211103205226433" modifier="cwshugg" tags="" title="Table of Contents">
 <pre>! The Linux Kernel
 
 * [[Introduction|LK: Introduction]]
@@ -12207,6 +12214,7 @@ do { \
 * [[The Memory Struct|PAS: Memory Struct]]
 * [[The Virtual Memory Area Struct|PAS: VMA Struct]]
 * [[Memory Mapping|PAS: Memory Mapping]]
+* [[Page Tables|PAS: Page Tables]]
 
 ! Kernel Synchronization
 
