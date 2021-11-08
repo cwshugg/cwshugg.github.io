@@ -499,6 +499,12 @@ Error message and password prompt
 
 <li>TM: RTC</li>
 
+<li>VFS: Inode</li>
+
+<li>VFS: Overview</li>
+
+<li>VFS: Superblock</li>
+
 </ul>
 </p>
 
@@ -9287,7 +9293,7 @@ very-muted-foreground: #888888</pre>
 <div created="20200131023052705" creator="c" modified="20200131023053305" modifier="cwshug" title="$:/status/UserName">
 <pre>cwshugg</pre>
 </div>
-<div list="[[Kernel Development Notes]] [[Table of Contents]] [[PAS: Page Tables]]" title="$:/StoryList">
+<div list="[[Kernel Development Notes]] [[Table of Contents]] [[VFS: Inode]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20200201021025248" creator="cwshugg" modified="20200824130809917" modifier="cwshugg" title="$:/temp/advancedsearch">
@@ -12152,7 +12158,7 @@ do { \
 // ...
 ```</pre>
 </div>
-<div created="20200131024136331" creator="cwshugg" modified="20211103205226433" modifier="cwshugg" tags="" title="Table of Contents">
+<div created="20200131024136331" creator="cwshugg" modified="20211108221350081" modifier="cwshugg" tags="" title="Table of Contents">
 <pre>! The Linux Kernel
 
 * [[Introduction|LK: Introduction]]
@@ -12215,6 +12221,12 @@ do { \
 * [[The Virtual Memory Area Struct|PAS: VMA Struct]]
 * [[Memory Mapping|PAS: Memory Mapping]]
 * [[Page Tables|PAS: Page Tables]]
+
+! The Virtual File System
+
+* [[Overview|VFS: Overview]]
+* [[Superblock|VFS: Superblock]]
+* [[Inode|VFS: Inode]]
 
 ! Kernel Synchronization
 
@@ -12284,6 +12296,68 @@ This approach saves energy and reduces overhead of maintaining a strict tick rat
 <pre>The ''Real-Time Clock (RTC)'' stores the &quot;wall-clock&quot; time, and is still incremented when the computer is powered off (//By what? Witchcraft?!// No, by a small battery on the motherboard).
 
 The Linux kernel stores the wall-clock time in a data structure upon boot, called `xtime`.  The processor's time stamp counter (read by the `rdtsc` and `rdtscp` instructions in x86) is used to read the RTC.</pre>
+</div>
+<div created="20211108220533535" creator="cwshugg" modified="20211108221352352" modifier="cwshugg" tags="vfs" title="VFS: Inode">
+<pre>An ''inode'' contains metadata on a specific file, plus information on how to manipulate said file. (Where a &quot;file&quot; could be a regular file, directory, symbolic link, etc..) Some of the metadata involves the file size, file owner ID, group ID, etc.
+
+</pre>
+</div>
+<div created="20211108210528640" creator="cwshugg" modified="20211108212403161" modifier="cwshugg" tags="vfs" title="VFS: Overview">
+<pre>A booted Linux kernel can have multiple types of file systems working in different locations on disk (or RAM, in some cases). The ''Virtual File System'' operates as the basis for all the various file systems implemented for the Linux kernel.
+
+The abstraction provided by the ''VFS'' allows file systems to coexist and cooperate. For example: a user could choose to copy a file between an ext4 file system mount and a FAT32 file system mount seamlessly (say, from the hard drive to a FAT32 flash drive).
+
+When you see the term ''filesystem'', it may refer to a few different things:
+
+* A type of file system
+* A partition of the hard drive, designated for one specific file system type.
+
+! Common Interface
+
+User-space programs can interact with all sorts of file systems using a shared interface. This interface boils down to system calls, such as `open()`, `read()`, `write()`, `lseek()`, `close()`, etc.
+
+! File System Data Structures
+
+Several important data structures are used in the VFS:
+
+* `dentry` - A ''directory entry''. It contains a file/directory name and hierarchical links that define the filesystem directory tree.
+* `inode` - A holder of metadata for the file/directory itself.
+* `file` - A container of information about a particular file opened by a particular process.
+* `superblock` - An instance of the super block holds information about a particular partition for a particular filesystem.
+* `file_system_type` - This contains information about a particular filesystem type.
+* Operation structs (structs that contain an interface of function pointers):
+** `super_operations`
+** `inode_operations`
+** `dentry_operations`
+** `file_operations`</pre>
+</div>
+<div created="20211108212448485" creator="cwshugg" modified="20211108220511615" modifier="cwshugg" tags="vfs" title="VFS: Superblock">
+<pre>The ''superblock'' (`struct super_block`) is defined in `include/linux/fs.h` and conains global information about a filesystem partition. This struct is allocated and initialized, then handed over to the VFS, at mount-time.
+
+Disk-based filesystems (those that actually write files out to the hard drive) store this superblock struct in a specific location. Temporary file systems (such as ramfs - a file system existing only in memory) or other filesystems that don't write to disk will generate it at mount-time.
+
+! Superblock Operations
+
+Each field in the `struct super_operations` (also defined in `include/linux/fs.h`) is a function pointer to filesystem-specific operations on its own superblock.
+
+The operations are as follows:
+
+* `alloc_inode()` - creates and initializes a new inode as part of the filesystem partition.
+* `destroy_inode()` - deallocates an existing inode.
+* `dirty_inode()` - marks an existing inode as &quot;dirty&quot; (AKA needing to be written out to disk).
+* `write_inode()` - writes an inode out to disk.
+* `clear_inode()` - releases an inode and clears any pages containing related data.
+* `drop_inode()` - invoked by the VFS when the last reference to an inode is dropped.
+* `put_super()` - invoked by the VFS when unmounting a filesystem partition.
+* `write_super()` - updates the superblock stored on disk.
+* `sync_fs()` - synchronizes the filesystem's metadata with the on-disk version.
+* `write_super_lockfs()` - performs the same action as `write_super()`, but additionally prevents any changes to the filesystem (by acquiring a lock).
+* `unlockfs()` - unlocks the filesystem's lock (acquired in a call to `write_super_lockfs()`).
+* `statfs()` - obtains statistics for the filesystem.
+* `remount_fs()` - remounts a filesystem with new options.
+* `umount_begin()` - invoked by the VFS to interrupt a mount operation.
+
+The function to actually //mount// a filesystem is `mount_bdev()`, found in `fs/super.c`.</pre>
 </div>
 
 </div>
