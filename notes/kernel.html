@@ -467,6 +467,10 @@ Error message and password prompt
 
 <li>PAS: VMA Struct</li>
 
+<li>PC: Overview</li>
+
+<li>PC: Policies</li>
+
 <li>PM: Creation</li>
 
 <li>PM: Family Tree</li>
@@ -498,6 +502,10 @@ Error message and password prompt
 <li>TM: Kernel Time</li>
 
 <li>TM: RTC</li>
+
+<li>VFS: Dentry</li>
+
+<li>VFS: File</li>
 
 <li>VFS: Inode</li>
 
@@ -9293,7 +9301,7 @@ very-muted-foreground: #888888</pre>
 <div created="20200131023052705" creator="c" modified="20200131023053305" modifier="cwshug" title="$:/status/UserName">
 <pre>cwshugg</pre>
 </div>
-<div list="[[Kernel Development Notes]] [[Table of Contents]] [[VFS: Inode]]" title="$:/StoryList">
+<div list="[[Kernel Development Notes]] [[Table of Contents]] [[PC: Overview]]" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20200201021025248" creator="cwshugg" modified="20200824130809917" modifier="cwshugg" title="$:/temp/advancedsearch">
@@ -11703,6 +11711,68 @@ Each `vm_area_struct` has a pointer to a `vm_operation_struct`, defined in `incl
 * When a page not present in physical memory is accessed
 * When a page has its permissions changed.</pre>
 </div>
+<div created="20211110213744903" creator="cwshugg" modified="20211110221254558" modifier="cwshugg" tags="page_cache" title="PC: Overview">
+<pre>The page cache is the meeting point of memory and disk. A ''page'' in this case refers to a chunk of disk contents (where disk contents are broken into ''blocks''). The ''page cache'''s purpose is to hold recently-accessed disk pages in memory.
+
+!! What's the Point?
+
+First of all, //why caching//? Why store it on disk //and// in memory? The answer is access time. A memory reference takes around 100 nanoseconds, and a disk read (on a solid state drive) takes around 150,000 nanoseconds (150 microseconds). (And it's even longer on a hard disk drive with a spinning disk.)
+
+If you compare these time differences in the human world, it's the difference between brushing your teeth for a few minutes and waiting through almost an entire weekend. Caching is very important for access times!
+
+! The Page Cache
+
+The page cache is a cache solely for blocks stored on disk. It can cache regular files, memory-mapped files, block device files, etc. It's dynamically-sized, meaning it grows to consume free memory and shrinks when memory is in-demand by the kernel and other processes.
+
+Any sort of buffered IO operation is typically started with a lookup in the page cache. If a ''cache hit'' occurs, the data is copied from the page cache to user memory. If a ''cache miss'' occurs, the data must be read from disk. Once read, the page is stored in the cache for any future accesses.
+
+On a Linux system, running `sudo cat /proc/PROCESS_ID/maps` will display the currently mapped memory regions for a given process. An example on my WSL2 instance on my laptop:
+
+```bash
+$ sudo cat /proc/1/maps
+00200000-00226000 r--p 00000000 00:14 2533274790698585                   /init
+00226000-00295000 r-xp 00026000 00:14 2533274790698585                   /init
+00295000-0029c000 rw-p 00095000 00:14 2533274790698585                   /init
+0029c000-002a2000 rw-p 00000000 00:00 0
+015ed000-015f0000 rw-p 00000000 00:00 0                                  [heap]
+7faf17416000-7faf17417000 ---p 00000000 00:00 0
+7faf17417000-7faf1742c000 rw-p 00000000 00:00 0
+7ffd1d438000-7ffd1d459000 rw-p 00000000 00:00 0                          [stack]
+7ffd1d59a000-7ffd1d59e000 r--p 00000000 00:00 0                          [vvar]
+7ffd1d59e000-7ffd1d59f000 r-xp 00000000 00:00 0                          [vdso]
+```</pre>
+</div>
+<div created="20211110215203987" creator="cwshugg" modified="20211110220646835" modifier="cwshugg" tags="page_cache" title="PC: Policies">
+<pre>The page cache implements strategies to maximize cache hits.
+
+! Write Policies
+
+There are a few policies used by the page cache when writing out to disk:
+
+* ''No-write'': write operation aren't cached.
+* ''Write-through'': write operations update the page cache //and// immediately go &quot;through&quot; to disk.
+* ''Write-back'': write operations update the page cache but disk isn't immediately updated. (//This is the policy the Linux kernel's page cache uses!//)
+
+! Eviction Policies
+
+When should data be evicted from the page cache? Typically this is done when there is &quot;memory pressure&quot; (i.e. the page cache needs to release some memory to give it up to the kernel or other processes).
+
+Ideally, the pages removed from the page cache should be pages that won't be accessed in the future. This is where the ''eviction policies'' come in.
+
+We can't predict the future, but we can make educated guesses. The standard is to use the ''Least Recently Used'' (''LRU'') policy, where the pages accessed the longest time ago are evicted first.
+
+!! The Two-List Strategy
+
+To further improve performance, two lists are maintained:
+
+* The ''active list'' stores pages that are considered &quot;hot&quot;.
+* The ''inactive list'' stores pages that are considered &quot;cold&quot;.
+** Pages on this list are the ones available for eviction.
+
+Newly-accessed pages are always first added to the ''inactive list''. If the page is accessed //again//, it gets moved up to the ''active list''.
+
+If the active list becomes much larger than the inactive list, it is balanced out (the &quot;least-hottest&quot; items in the active list are moved to the inactive list).</pre>
+</div>
 <div created="20210920205335169" creator="cwshugg" modified="20210920210611910" modifier="cwshugg" tags="processes" title="PM: Creation">
 <pre>Linux doesn't implement a way to create tasks from scratch. Instead, it uses `fork()` and `exec()` to make //copies// of an existing process.
 
@@ -12158,7 +12228,7 @@ do { \
 // ...
 ```</pre>
 </div>
-<div created="20200131024136331" creator="cwshugg" modified="20211108221350081" modifier="cwshugg" tags="" title="Table of Contents">
+<div created="20200131024136331" creator="cwshugg" modified="20211110215436842" modifier="cwshugg" tags="" title="Table of Contents">
 <pre>! The Linux Kernel
 
 * [[Introduction|LK: Introduction]]
@@ -12225,8 +12295,15 @@ do { \
 ! The Virtual File System
 
 * [[Overview|VFS: Overview]]
-* [[Superblock|VFS: Superblock]]
-* [[Inode|VFS: Inode]]
+* [[Superblocks|VFS: Superblock]] (`struct super_block`)
+* [[Inodes|VFS: Inode]] (`struct inode`)
+* [[Directory Entries|VFS: Dentry]] (`struct dentry`)
+* [[Files|VFS: File]] (`struct file`)
+
+! The Page Cache
+
+* [[The Page Cache|PC: Overview]]
+* [[Page Cache Policies|PC: Policies]]
 
 ! Kernel Synchronization
 
@@ -12297,10 +12374,83 @@ This approach saves energy and reduces overhead of maintaining a strict tick rat
 
 The Linux kernel stores the wall-clock time in a data structure upon boot, called `xtime`.  The processor's time stamp counter (read by the `rdtsc` and `rdtscp` instructions in x86) is used to read the RTC.</pre>
 </div>
-<div created="20211108220533535" creator="cwshugg" modified="20211108221352352" modifier="cwshugg" tags="vfs" title="VFS: Inode">
+<div created="20211110211247304" creator="cwshugg" modified="20211110212710150" modifier="cwshugg" tags="vfs" title="VFS: Dentry">
+<pre>The ''directory entry'' (&quot;dentry&quot;) is the path component of an inode. Each inode has a corresponding directory entry used to organize them into the Linux file hierarchy.
+
+A dentry stores a file's name, location in a directory, and allows for specific operation to be performed on an inode (or directory-specific operations if the dentry represents a directory inode).
+
+A dentry can have three possible statuses: ''used'', ''unused'', or ''negative''.
+
+* If set to ''used'', a dentry corresponds to a valid inode (referenced by its `d_inode` field) with one or more users (the number which is referenced via its `d_count` field).
+* If set to ''unused'', a dentry //also// corresponds to a valid inode, but it presently has zero users.
+** It's kept in RAM for caching and could potentially be discarded.
+* If set to ''negative'', then it doesn't point to a valid inode (the file doesn't exist). These exist so repeated attempted accesses to a non-existent file don't cause the disk to be checked //every// time.
+** __Security and Hard Drive health__: If you think about it, if this status didn't exist, and every time a non-existent file was looked for, the disk would get put under a lot of stress. This wears down the hard drive //and// opens up a medium through which an attacker could slow the system down with thousands of repeated disk accesses.
+
+! Dentry Operations
+
+The `struct dentry_operations` data structure defines a function interface for interacting with dentries. Some operations are:
+
+* `d_revalidate()` - determines if an entry is valid.
+* `d_hash()` - computes a hash for the dentry to use to insert into the dentry cache (below).
+* `d_compare()` - compares two file names.
+* `d_delete()` - called by the VFS when `d_count` reaches zero.
+* `d_release()` - called when freeing a `dentry` struct.
+* `d_iput()` - caled when a dentry loses its inode.
+
+! The Dentry Cache
+
+This cache is a linked list of `dentry` structs in the kernel. It's a LRU cache and is used to allow for faster accesses.</pre>
+</div>
+<div created="20211110212742014" creator="cwshugg" modified="20211110213143015" modifier="cwshugg" tags="vfs" title="VFS: File">
+<pre>The `file` object is what defines all the file operations familiar to systems-level programmers, such as `read()`, `write()`, etc. The struct is defined in `include/linux/fs.h`:
+
+```cpp
+/* linux/include/linux/fs.h */  
+struct file
+{
+    // ...
+    struct path            f_path;         // contains the dentry
+    struct file_operations *f_op;          // operations
+    spinlock_t             f_lock;         // lock
+    atomic_t               f_count;        // usage count
+    unsigned int           f_flags;        // open flags
+    mode_t                 f_mode;         // file access mode
+    loff_t                 f_pos;          // file offset
+    struct fown_struct     f_owner;        // owner data for signals
+    const struct cred     *f_cred;         // file credentials
+    struct file_ra_state   f_ra;           // read-ahead state
+    u64                    f_version;      // version number
+    void                   *private_data;  // private data
+    struct list_head       f_ep_link;      // list of epoll links
+    spinlock_t             f_ep_lock;      // epoll lock
+    struct address_space   *f_mapping;     // page cache == inode-&gt;i_mapping
+    // ...
+};
+```
+
+! File Operations
+
+The `struct file_operations` defines the function interface used for common file-related operations.</pre>
+</div>
+<div created="20211108220533535" creator="cwshugg" modified="20211110211047596" modifier="cwshugg" tags="vfs" title="VFS: Inode">
 <pre>An ''inode'' contains metadata on a specific file, plus information on how to manipulate said file. (Where a &quot;file&quot; could be a regular file, directory, symbolic link, etc..) Some of the metadata involves the file size, file owner ID, group ID, etc.
 
-</pre>
+The `struct inode` data structure is defined in `include/linux/fs.h`.
+
+! Inode Operations
+
+The `struct inode_operations` struct defines an interface to create, modify, and delete inodes for a particular filesystem (via a collection of function pointers). Some of these operations are:
+
+* `create()` - make a new inode.
+* `lookup()` - searches a given directory for a file.
+* `link()` - creates a hard link between two `dentry` objects.
+* `unlink()` - removes an inode from a given directory.
+* `symlink()` - creates a symbolic link within a specific directory.
+* `mkdir()` - creates a directory inside another given directory.
+* ``rmdir()` - removes a directory from within another directory.
+* `mknod()` - creates a special file (such as a pipe, file, socket, etc.).
+* `rename()` - moves a file from one location to another.</pre>
 </div>
 <div created="20211108210528640" creator="cwshugg" modified="20211108212403161" modifier="cwshugg" tags="vfs" title="VFS: Overview">
 <pre>A booted Linux kernel can have multiple types of file systems working in different locations on disk (or RAM, in some cases). The ''Virtual File System'' operates as the basis for all the various file systems implemented for the Linux kernel.
