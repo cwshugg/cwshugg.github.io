@@ -9296,7 +9296,7 @@ very-muted-foreground: #888888</pre>
 <div created="20200131022623523" modified="20200131022623523" title="$:/state/ShowPaletteEditor">
 <pre>yes</pre>
 </div>
-<div created="20200131174736899" creator="cwshugg" modified="20211027205311377" modifier="cwshugg" title="$:/state/sidebar">
+<div created="20200131174736899" creator="cwshugg" modified="20211208212848523" modifier="cwshugg" title="$:/state/sidebar">
 <pre>yes</pre>
 </div>
 <div created="20200131022502764" creator="cwshugg" modified="20200131174310041" modifier="cwshugg" title="$:/state/tab--1963855381">
@@ -9368,11 +9368,11 @@ very-muted-foreground: #888888</pre>
         },
         &quot;$:/info/browser/screen/width&quot;: {
             &quot;title&quot;: &quot;$:/info/browser/screen/width&quot;,
-            &quot;text&quot;: &quot;2560&quot;
+            &quot;text&quot;: &quot;1920&quot;
         },
         &quot;$:/info/browser/screen/height&quot;: {
             &quot;title&quot;: &quot;$:/info/browser/screen/height&quot;,
-            &quot;text&quot;: &quot;1440&quot;
+            &quot;text&quot;: &quot;1080&quot;
         }
     }
 }</pre>
@@ -12577,7 +12577,7 @@ A type-2 hypervisor runs on top of an operating system. It can be visualized lik
 +--------------------------------------------------+
 ```</pre>
 </div>
-<div created="20211206230015637" creator="cwshugg" modified="20211206230709757" modifier="cwshugg" tags="virtualization" title="Virtualization: I/O">
+<div created="20211206230015637" creator="cwshugg" modified="20211208214512689" modifier="cwshugg" tags="virtualization" title="Virtualization: I/O">
 <pre>There are a few strategies for virtualizing I/O operations:
 
 ! Front-End/Back-End Drive Model
@@ -12588,7 +12588,7 @@ This strategy has the guest OS using para-virtualized front-end drivers to send 
 
 In this strategy, the behavior of particular devices are emulated completely in software. The guest OS uses the native device drivers for the particular device, and the hypervisor intercepts accesses from the guest OS. These accesses are sent to the emulated device, which does the //actual// I/O operations.
 
-[[QEMU|https://www.qemu.org/|]] implements this.
+[[QEMU|https://www.qemu.org/]] implements this.
 
 ! Hardware-Assisted Virtualization
 
