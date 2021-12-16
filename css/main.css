@@ -11,7 +11,7 @@
 {
     font-family: "Varela";
     src: url("../fonts/varela.ttf");
-    font-weight: 100;
+    font-weight: 0;
     font-style: normal;
 }
 
@@ -21,7 +21,8 @@
     --color-bg1: rgb(10, 10, 10);
     --color-bg2: rgb(50, 50, 50);
     --color-bg3: rgb(150, 150, 150);
-    --color-text1: rgb(225, 225, 255);
+    --color-text1: rgb(200, 200, 225);
+    --color-text2: rgb(150, 150, 175);
     --color-acc1: rgb(35, 70, 158);     /* dark blue (original: 20, 55, 143) */
     --color-acc2: rgb(205, 42, 58);     /* dark-ish red */
     --color-acc3: rgb(235, 154, 32);    /* yellow-gold */
@@ -30,6 +31,10 @@
 }
 
 /********************************** Colors ***********************************/
+.color-text1
+{ color: var(--color-text1); }
+.color-text2
+{ color: var(--color-text2); }
 .color-bg1
 { background-color: var(--color-bg1); }
 .color-bg2
@@ -92,6 +97,19 @@
     color: var(--color-acc3);
 }
 
+.text-quote
+{
+    font-style: italic;
+    color: var(--color-text2);
+    margin-bottom: 4px;
+}
+
+.text-quote-speaker
+{
+    font-style: normal;
+    color: var(--color-acc1);
+}
+
 /********************************* Dividers **********************************/
 .div-main
 {
@@ -135,16 +153,41 @@
 {
     .text-header1
     {
-        font-size: 72px;
+        font-size: 128px;
     }
     
     .text-header2
     {
-        font-size: 48px;
+        font-size: 96px;
+    }
+    
+    .text-header3
+    {
+        font-size: 72px;
     }
     
     .text-main
     {
-        font-size: 18px;
+        font-size: 36px;
+    }
+
+    .text-icon
+    {
+        font-size: 36px;
+    }
+
+    .text-link
+    {
+        font-size: 36px;
+    }
+
+    .text-quote
+    {
+        font-size: 36px;
+    }
+
+    .text-quote-speaker
+    {
+        font-size: 36px;
     }
 }
