@@ -1,197 +1,117 @@
-<!DOCTYPE html>
-<html lang="en">
-<title>Connor Shugg</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="assets/css/main.css"> <!--href="https://www.w3schools.com/w3css/4/w3.css">-->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<style>
-body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
-.w3-bar,h1,button {font-family: "Montserrat", sans-serif}
-.fa-anchor,.fa-coffee {font-size:200px}
-</style>
-<body>
-
-<!---------------------------------- NAVBAR ---------------------------------->
-<div class="w3-top">
-  <div class="w3-bar w3-card w3-left-align w3-large w3-indigo">
-    <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-indigo" href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
-    <a href="./index.html" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Home</a>
-    <a href="./about.html" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Brag Sheet</a>
-    <a href="./projects.html" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Projects</a>
-  </div>
-
-  <!-- Navbar on small screens -->
-  <div id="navDemo" class="w3-bar-block shugg-dkgray0 w3-text-white w3-hide w3-hide-large w3-hide-medium w3-large">
-    <a href="./index.html" class="w3-bar-item w3-button w3-padding-large">Home</a>
-    <a href="./about.html" class="w3-bar-item w3-button w3-padding-large">Brag Sheet</a>
-    <a href="./projects.html" class="w3-bar-item w3-button w3-padding-large">Projects</a>
-  </div>
-</div>
-
-<!-- navbar script -->
-<script>
-  // Used to toggle the menu on small screens when clicking on the menu button
-  function myFunction() {
-    var x = document.getElementById("navDemo");
-    if (x.className.indexOf("w3-show") == -1) {
-      x.className += " w3-show";
-    } else { 
-      x.className = x.className.replace(" w3-show", "");
-    }
-  }
-</script>
-<!---------------------------------------------------------------------------->
-
-<!-- parallax image style -->
-<!-- https://www.w3schools.com/howto/howto_css_parallax.asp -->
-<style>
-  .background_parallax
-  {
-    background-image: url("images/bg.jpg"); /* background image */
-    min-height: 750px;                      /* height */
-    /* parallax scrolling effect */
-    background-attachment: fixed;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-</style>
-<div class="background_parallax w3-container w3-center" style="padding:128px 16px">
-  <h1 class="w3-margin w3-jumbo w3-text-black">Hello There</h1>
-  <p class="w3-xlarge w3-text-black">I'm Connor</p>
-</div>
-
-<!--
-<header class="w3-container w3-indigo w3-center" style="padding:128px 16px">
-  <h1 class="w3-margin w3-jumbo">Hello There</h1>
-  <p class="w3-xlarge">I'm Connor</p>
-  <button class="w3-button w3-black w3-padding-large w3-large w3-margin-top">Get Started</button>
-</header>
--->
-
-<div class="w3-row-padding w3-padding-64 w3-container shugg-dkgray3">
-  <div class="w3-content">
-    <div class="w3-text-light-blue">
-      <h5 class="w3-text-light-grey">
-        Looks like you found my website. Enjoy your stay. <em>Or else.</em>
-      </h5>
-    </div>
-  </div>
-</div>
-
-<!-- First Grid -->
-<div class="w3-row-padding w3-padding-64 w3-container shugg-dkgray2">
-  <div class="w3-content">
-    <div class="w3-text-light-blue">
-      <!--
-      <h3 class="w3-text-light-blue">Who the <i>heck's</i> website did I just find?</h3>
-     
-      <p class="w3-text-light-grey">Just some dude named Connor.<br></p>
-      -->
-
-      <h1>What am I doing</h1>
-      <h5 class="w3-padding-8 w3-text-light-blue"><b>Computer Science & Cybersecurity Student</b><br>
-                                                   Virginia Tech BS/MS class of 2021/2022</h5>
-
-      <p class="w3-text-light-grey">
-      I'm currently a student at Virginia Tech working towards a Computer Science major, Cybersecurity minor,
-      and a Master's degree in Computer Science. As a Computer Science student, I've succeeded in courses
-      involving software design, data structures, advanced algorithms, computer architecture, computer systems,
-      networking, and security. CS is <em>really</em> cool - if it's something you're interested in,
-      definitely give it a try.<br><br>
-      
-      Virginia Tech is a wonderful place. I've made some great friends, had some amazing experiences, and
-      am having an absolute blast. If you're reading this and are on the fence about coming to VT, let me help
-      you: <em>do it.</em><br><br>
-      
-      I'm also a member of <a href="https://www.spiritoftech.com/" target="_blank">The Marching Virginians</a>.
-      It's a great group of people through which I've made many friends and have had unforgettable experiences.
-      (I also get into football games for free, which is always a plus!)
-      </p>
-    </div>
-
-    <!--
-    <img src="images/pic_education.jpg" alt="" class="w3-image"/>
-    -->
-
-    <!--
-    <div class="w3-third w3-center">
-      <img src="images/pic_education.jpg" alt="" class="w3-image"/>
-    </div>
-    -->
-  </div>
-</div>
-
-<div class="w3-row-padding w3-padding-64 w3-container shugg-dkgray1">
-  <div class="w3-content">
-    <!--
-    <div class="w3-third w3-center">
-      <img src="images/pic_experience.jpg" alt="" class="w3-image"/>
-    </div>
-    -->
-
-    <div class="w3-text-light-blue">
-      <h1>Favorite Quotes</h1>
-      <p class="w3-text-light-grey">
-      I've listed some of my favorite quotes below. Fictional and nonfictional people alike have some great things to say.
-      </p>
-      <!-- GANDALF -->
-      <blockquote>
-      All we have to decide is what to do with the time that is given to us.
-      <b class="w3-text-light-grey">Gandalf the Grey</b>
-      </blockquote>
-      
-      <!-- URSULA K. LE GUIN -->
-      <blockquote>
-      What good is power when you're too wise to use it?
-      <b class="w3-text-light-grey">Ursula K. Le Guin</b>
-      </blockquote>
-      
-      <!-- BILBO -->
-      <blockquote>
-      It's a dangerous business, Frodo, going out your door. You step onto the road, and if you don't keep your feet,
-      there's no knowing where you might be swept off to.
-      <b class="w3-text-light-grey">Bilbo Baggins</b>
-      </blockquote>
-      
-      <!-- MCQUAIN 1 -->
-      <blockquote>
-      C, language of the gods.
-      <b class="w3-text-light-grey">William McQuain</b>
-      </blockquote>
-      
-      <!-- MCQUAIN 2 -->
-      <blockquote>
-      The command-line is how God intended you to use the computer.
-      <b class="w3-text-light-grey">...also William McQuain. He's a pretty funny guy.</b>
-      </blockquote>
-      
-      <!-- 'MURICA -->
-      <blockquote>
-      There is nothing wrong with America that faith, love of freedom, intelligence, and energy of her citizens cannot cure.
-      <b class="w3-text-light-grey">Dwight D. Eisenhower</b>
-      </blockquote>
-    </div>
-  </div>
-</div>
-
-<!-- Footer -->
-<footer class="w3-container w3-padding-32 w3-center w3-indigo">
-  <div class="w3-xlarge w3-padding-32">
-    <!--
-    <i class="fa fa-facebook-official w3-hover-opacity" style="color:white"></i>
-    <i class="fa fa-instagram w3-hover-opacity" style="color:white"></i>
-    <i class="fa fa-snapchat w3-hover-opacity" style="color:white"></i>
-    <i class="fa fa-pinterest-p w3-hover-opacity" style="color:white"></i>
-    <i class="fa fa-twitter w3-hover-opacity" style="color:white"></i>
-    -->
-    <a href="https://www.linkedin.com/in/connor-shugg/" target="_blank"><i class="fa fa-linkedin w3-hover-opacity" style="color:white"></i></a>
-    <a href="https://github.com/cwshugg" target="_blank"><i class="fa fa-github w3-hover-opacity" style="color:white"></i></a>
- </div>
-</footer>
-
-</body>
-</html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <title>shugg.dev</title>
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
+    <body class="color-bg1">
+        <!-- title header -->
+        <h1 class="text-header1 color-text-header">
+            <span class="color-acc3">shugg</span><span class="color-acc1">.</span><span class="color-acc2">dev</span>
+        </h1>
+        
+        <!-- blurb 1 -->
+        <div class="div-main text-main">
+            <p>
+            Hello there. I'm Connor, and this is my website. I do computer stuff.
+            </p>
+        </div>
+        
+        <!-- creds -->
+        <div class="div-border-acc1 text-main">
+            <h2 class="text-header2 color-acc1">get_creds</h2>
+            <p>
+            I'm a computer scientist with a passion for invention and security.
+            I graduated from Virginia Tech in 2021 with a B.S. in computer science and a minor in cyber security.
+            I'll also be graduating in the spring of 2022 with a M.S., also in computer science, focusing on
+            computer systems and security, with an emphasis on fuzzing.
+            </p>
+            
+            <h3 class="text-header3">Research</h3>
+            <p>
+            My M.S. thesis work has involved utilizing AFL/AFL++, an intelligent
+            guided fuzzer, along with a series of libraries I have been creating,
+            to perform effective fuzz-testing on web servers written in C.
+            I've also put an education spin on things by integrating the fuzzer
+            as an optional testing tool in Virginia Tech's
+            <a href="https://cs.vt.edu/Undergraduate/courses/CS3214.html" class="text-link">CS 3214</a>
+            course (Computer Systems). My research advisor is
+            <a href="https://people.cs.vt.edu/~gback/" class="text-link">Dr. Godmar Back</a>
+            of the VT Computer Science department.
+            </p>
+            
+            <h3 class="text-header3">Career</h3>
+            <p>
+            In the past, I've had multiple internships with both Cisco and Microsoft.
+            I'm super grateful for those opportunities and learned quite a lot at both
+            companies. Starting in August of 2022, I'll be working as a software engineer
+            at Microsoft.
+            </p>
+        </div>
+        
+        <!-- projects -->
+        <div class="div-border-acc2 text-main">
+            <h2 class="text-header2 color-acc2">get_projects</h2>
+            <p>
+            Dreaming up an idea, then sitting down and creating it, is something I really love.
+            Mix that with a couple of computer science degrees and you wind up with lots of coding projects.
+            Here are a few notable mentions of things I've created (or are still creating):
+            </p>
+            <ul>
+                <li>
+                    <a href="https://github.com/cwshugg/ttydo" class="text-link">ttydo</a>,
+                     a command-line task tracker.
+                 </li>
+                 <li>
+                    <a href="https://github.com/cwshugg/wrivcam" class="text-link">wrivcam</a>,
+                    my homemade Raspberry Pi dash cam.
+                 </li>
+                 <li>
+                    <a href="https://github.com/cwshugg/snowbanker" class="text-link">snowbanker</a>,
+                    my attempt at writing automated stock trading system.
+                 </li>
+                 <li>
+                    <a href="https://github.com/cwshugg/shuggtools" class="text-link">personal bash utilities</a>,
+                    to help me with command-line hackery.
+                 </li>
+                 <li>
+                    An intelligent, customizable, source code guided fuzzer (WIP).
+                    Inspired heavily by the wondrous
+                    <a href="https://lcamtuf.coredump.cx/afl/" class="text-link">AFL</a>
+                    (and
+                    <a href="https://aflplus.plus/" class="text-link">AFL++</a>).
+                 </li>
+            </ul>
+            <p>
+            I've also worked on some pretty neat projects in school. Here are some of my favorites:
+            </p>
+            <ul>
+                <li>HTTP Web Server (C)</li>
+                <li>Memory Alloactor & Manager (C) (like LibC's malloc interface)</li>
+                <li>Threadpool (C)</li>
+                <li>Extensible Linux Shell (C)</li>
+                <li>P2P secure & scalable messaging protocol (Rust) (senior capstone)</li>
+                <li>Simple one-time pad encryption networking protocol (Java)</li>
+                <li>Simplified MIPS32 assembler (C)</li>
+                <li>Rust implementation of the Linux kernel's ramFS</li>
+            </ul>
+        </div>
+        
+        <!-- other info -->
+        <div class="div-border-acc3 text-main">
+            <h2 class="text-header2 color-acc3">get_metadata</h2>
+            <p>
+            TODO: other info
+            </p>
+        </div>
+        
+        <!-- icons -->
+        <div class="div-icons">
+            <a href="https://github.com/cwshugg" class="text-icon">
+                <i class="fa fa-github w3-hover-opacity" style="color:white"></i>
+            </a>
+            <a href="https://www.linkedin.com/in/connor-shugg/" class="text-icon">
+                <i class="fa fa-linkedin" style="color:white"></i>
+            </a>
+        </div>
+</body></html>

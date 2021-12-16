@@ -1,0 +1,150 @@
+/********************************** Imports **********************************/
+@font-face
+{
+    font-family: "Cocomat";
+    src: url("../fonts/cocomat.ttf");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face
+{
+    font-family: "Varela";
+    src: url("../fonts/varela.ttf");
+    font-weight: 100;
+    font-style: normal;
+}
+
+/********************************** Globals **********************************/
+:root
+{
+    --color-bg1: rgb(10, 10, 10);
+    --color-bg2: rgb(50, 50, 50);
+    --color-bg3: rgb(150, 150, 150);
+    --color-text1: rgb(225, 225, 255);
+    --color-acc1: rgb(35, 70, 158);     /* dark blue (original: 20, 55, 143) */
+    --color-acc2: rgb(205, 42, 58);     /* dark-ish red */
+    --color-acc3: rgb(235, 154, 32);    /* yellow-gold */
+    --font1: Cocomat, "Roboto", "Verdana";
+    --font2: Varela, "Roboto", "Arial";
+}
+
+/********************************** Colors ***********************************/
+.color-bg1
+{ background-color: var(--color-bg1); }
+.color-bg2
+{ background-color: var(--color-bg2); }
+.color-bg3
+{ background-color: var(--color-bg3); }
+.color-acc1
+{ color: var(--color-acc1); }
+.color-acc2
+{ color: var(--color-acc2); }
+.color-acc3
+{ color: var(--color-acc3); } 
+
+/****************************** Text Formatting ******************************/
+.text-header1
+{
+    font-family: var(--font1);
+    font-size: 80px;
+    margin-bottom: -4px;
+    margin-left: 4px;
+    margin-top: 4px;
+}
+
+.text-header2
+{
+    font-family: var(--font1);
+    font-size: 48px;
+    margin-bottom: -4px;
+    margin-left: 4px;
+    margin-top: 4px;
+}
+
+.text-header3
+{
+    font-family: var(--font1);
+    font-size: 24px;
+    margin-bottom: -4px;
+    margin-left: 4px;
+    margin-top: 4px;
+}
+
+.text-main
+{
+    color: var(--color-text1);
+    font-family: var(--font2);
+    font-size: 16px;
+}
+
+.text-icon
+{
+    font-size: 32px;
+    margin: 4px;
+    text-decoration: none;
+}
+
+.text-link
+{
+    text-decoration: none;
+    font-weight: bold;
+    color: var(--color-acc3);
+}
+
+/********************************* Dividers **********************************/
+.div-main
+{
+    margin-left: 4px;
+}
+
+.div-border-acc1
+{
+    margin: 16px;
+    margin-left: 4px;
+    border: 2px solid var(--color-acc1);
+    padding-left: 12px;
+}
+
+.div-border-acc2
+{
+    margin: 16px;
+    margin-left: 4px;
+    border: 2px solid var(--color-acc2);
+    padding-left: 12px;
+}
+
+.div-border-acc3
+{
+    margin: 16px;
+    margin-left: 4px;
+    border: 2px solid var(--color-acc3);
+    padding-left: 12px;
+}
+
+.div-icons
+{
+    margin: 16px;
+    text-align: center;
+}
+
+
+/****************************** Mobile Screens *******************************/
+/* https://stackoverflow.com/questions/42025632/how-to-detect-only-with-css-mobile-screens */
+@media only screen and (hover: none) and (pointer: coarse)
+{
+    .text-header1
+    {
+        font-size: 72px;
+    }
+    
+    .text-header2
+    {
+        font-size: 48px;
+    }
+    
+    .text-main
+    {
+        font-size: 18px;
+    }
+}
