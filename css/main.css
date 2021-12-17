@@ -97,6 +97,11 @@
     color: var(--color-acc3);
 }
 
+.icon-link
+{
+    color: var(--color-acc2);
+}
+
 .text-quote
 {
     font-style: italic;
@@ -122,6 +127,7 @@
     margin-left: 4px;
     border: 2px solid var(--color-acc1);
     padding-left: 12px;
+    border-radius: 6px;
 }
 
 .div-border-acc2
@@ -130,6 +136,7 @@
     margin-left: 4px;
     border: 2px solid var(--color-acc2);
     padding-left: 12px;
+    border-radius: 6px;
 }
 
 .div-border-acc3
@@ -138,6 +145,7 @@
     margin-left: 4px;
     border: 2px solid var(--color-acc3);
     padding-left: 12px;
+    border-radius: 6px;
 }
 
 .div-icons
