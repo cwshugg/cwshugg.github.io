@@ -53,7 +53,7 @@
 {
     font-family: var(--font1);
     font-size: 80px;
-    margin-bottom: -4px;
+    margin-bottom: 0px;
     margin-left: 4px;
     margin-top: 4px;
 }
@@ -62,7 +62,7 @@
 {
     font-family: var(--font1);
     font-size: 48px;
-    margin-bottom: -4px;
+    margin-bottom: 0px;
     margin-left: 4px;
     margin-top: 4px;
 }
@@ -71,7 +71,7 @@
 {
     font-family: var(--font1);
     font-size: 24px;
-    margin-bottom: -4px;
+    margin-bottom: 0px;
     margin-left: 4px;
     margin-top: 4px;
 }
@@ -154,6 +154,108 @@
     text-align: center;
 }
 
+.div-btn-deck
+{
+    margin: 4px;
+    justify-content: center;
+}
+
+/********************************** Buttons **********************************/
+/* source: https://dev.to/gscode/20-css-buttons-4cni */
+.btnfos
+{
+    cursor: pointer;
+    display: block;
+    font-family: var(--font2);
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 45px;
+    max-width: 160px;
+    margin: 4px;
+    position: relative;
+    text-transform: uppercase;
+    vertical-align: middle;
+    width: 100%;
+}
+
+@media (min-width: 400px)
+{
+    .btnfos
+    {
+        display: inline-block;
+        margin-right: 4px;
+    }
+    .btnfos:nth-of-type(even)
+    {
+        margin-right: 0;
+    }
+}
+@media (min-width: 600px)
+{
+    .btnfos:nth-of-type(even)
+    {
+        margin-right: 4px;
+    }
+    .btnfos:nth-of-type(5)
+    {
+        margin-right: 0;
+    }
+}
+
+.btnfos-btn
+{
+    border: 2px solid;
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+}
+.btnfos-btn span
+{
+    z-index: 20;
+}
+.btnfos-btn:after
+{
+    background-color: #00ff00;
+    content: "";
+    height: 155px;
+    left: -75px;
+    opacity: .2;
+    position: absolute;
+    top: -50px;
+    width: 50px;
+    -webkit-transition: all 550ms cubic-bezier(0.19, 1, 0.22, 1);
+          transition: all 550ms cubic-bezier(0.19, 1, 0.22, 1);
+    -webkit-transform: rotate(35deg);
+      -ms-transform: rotate(35deg);
+          transform: rotate(35deg);
+    z-index: -10;
+}
+
+.btnfos-btn:hover:after
+{
+    left: 120%;
+    -webkit-transition: all 550ms cubic-bezier(0.19, 1, 0.22, 1);
+          transition: all 550ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+/* accent 1 color */
+.btnfos-acc1
+{ color: var(--color-acc1); }
+.btnfos-acc1:after
+{ background-color: var(--color-acc1); }
+
+/* accent 2 color */
+.btnfos-acc2
+{ color: var(--color-acc2); }
+.btnfos-acc2:after
+{ background-color: var(--color-acc2); }
+
+/* accent 3 color */
+.btnfos-acc3
+{ color: var(--color-acc3); }
+.btnfos-acc3:after
+{ background-color: var(--color-acc3); }
 
 /****************************** Mobile Screens *******************************/
 /* https://stackoverflow.com/questions/42025632/how-to-detect-only-with-css-mobile-screens */
@@ -181,7 +283,7 @@
 
     .text-icon
     {
-        font-size: 72px;
+        font-size: 36px;
     }
 
     .text-link
@@ -195,6 +297,11 @@
     }
 
     .text-quote-speaker
+    {
+        font-size: 36px;
+    }
+    
+    .btnfos
     {
         font-size: 36px;
     }
