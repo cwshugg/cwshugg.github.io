@@ -30,6 +30,12 @@
     --font2: Varela, "Roboto", "Arial";
 }
 
+.body-main
+{
+    max-width: 1600px;
+    margin: auto;
+}
+
 /********************************** Colors ***********************************/
 .color-text1
 { color: var(--color-text1); }
