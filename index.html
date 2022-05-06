@@ -38,27 +38,11 @@
 
             <h3 class="text-header3 color-text2">Research</h3>
             <p>
-            Across the 2020-2021 and 2021-2022 school years at Virginia Tech, I worked
-            with
-            <a href="https://people.cs.vt.edu/~gback/" class="text-link">Dr. Godmar Back</a>
-            to create <a href="https://github.com/cwshugg/gurthang" class="text-link">Gurthang</a>,
-            a robust and easy-to-use fuzzing framework designed specifically for
-            testing web servers. It hooks into
-            <a href="https://aflplus.plus/" class="text-link">AFL++</a>
-            and the target web server with our custom mutator module and LD_PRELOAD library.
-            Gurthang can create multiple concurrent connections to the web server and
-            send different test cases across those connections in a single iteration
-            of the fuzzer. It can mutate both the data sent to the web server <i>and</i>
-            the manner in which that data is delivered. We accomplished this without having
-            to modify AFL++ <i>or</i> the target web server's code at all.
-
-            Thanks to the awesome students enrolled in Virginia Tech's
-            <a href="https://cs.vt.edu/Undergraduate/courses/CS3214.html" class="text-link">CS 3214 - Computer Systems</a>
-            course in the fall 2021 semester, Gurthang found a number of bugs across
-            web servers these students implemented as part of their project work. I also
-            spent time evaluating Gurthang further by fuzzing the Apache and Nginx HTTP
-            web servers.
-            </p>
+            During my M.S. degree at Virginia Tech (2020-2022), I created Gurthang,
+            a fuzzing framework designed specifically for testing web servers.
+            I introduced a novel design and showed its effectiveness through
+            my evaluation.
+            <a href="gurthang.html" class="text-link">Read more about it here!</a>
 
             <h3 class="text-header3 color-text2">Career</h3>
             <p>
@@ -112,12 +96,7 @@
             </p>
             <ul>
                 <li>
-                    <a href="https://github.com/cwshugg/gurthang" class="text-link">gurthang</a>,
-                    my M.S. thesis project. It's a fuzzing framework I created that allows you to
-                    fuzz any kind of multi-threaded or single-threaded web server. It hooks into
-                    <a href="https://aflplus.plus/" class="text-link">AFL++</a> and uses a special file format and
-                    LD_PRELOAD library to send fuzzer test cases to the web server along <i>multiple</i>
-                    concurrent connections.
+                    <a href="gurthang.html" class="text-link">gurthang</a>, my M.S. thesis project
                 </li>
                 <li>HTTP Web Server (C)</li>
                 <li>Memory Alloactor & Manager (C) (like LibC's malloc interface)</li>

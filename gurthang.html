@@ -1,0 +1,106 @@
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Gurthang - A Fuzzing Framework for Concurrent Network Servers</title>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+        <link rel="stylesheet" href="css/gurthang.css">
+        <link rel="stylesheet" href="css/main.css">
+    </head>
+    <body class="body-main color-bg1">
+        <!-- title header -->
+        <h1 class="text-header1 color-text-header">
+            <span class="color-gurthang1">gurthang</span>
+            <!--<span class="color-acc3">shugg</span><span class="color-acc1">.</span><span class="color-acc2">dev</span>-->
+        </h1>
+
+        <!-- blurb 1 -->
+        <div class="div-main text-main">
+            <p>
+            During my M.S. degree at Virginia Tech, I worked with
+            <a href="https://people.cs.vt.edu/~gback/" class="text-link">Dr. Godmar Back</a>
+            to create <a href="https://github.com/cwshugg/gurthang" class="text-link">Gurthang</a>,
+            a fuzzing framework capable of fuzzing web servers.
+            Designing, implementing, and evaluating Gurthang comprised my thesis, which I'll
+            officially complete in May 2022.
+            I successfully defended Gurthang to my advisor committee on May 5th, 2022.
+            </p>
+ 
+            <h3 class="text-header3 color-text-header color-gurthang2">
+                What does it do?
+            </h3>
+            <p>
+            Gurthang hooks into <a href="https://aflplus.plus/" class="text-link">AFL++</a>
+            and the target web server with our custom mutator module and LD_PRELOAD library.
+            Gurthang can create multiple concurrent connections to the web server and
+            send different test cases across those connections in a single iteration
+            of the fuzzer. It can mutate both the data sent to the web server <i>and</i>
+            the manner in which that data is delivered. We accomplished this without having
+            to modify AFL++ <i>or</i> the target web server's code at all.<br><br>
+            
+            When designing Gurthang, we wanted to create something that could fuzz a web
+            server by sending <i>multiple</i> test cases across <i>multiple</i> concurrent
+            connections in a single iteration of AFL++.
+            Part of my design was the Comux file format (short for
+            <b>co</b>nnection <b>mu</b>ltiple<b>x</b>ing). Each of these files are organized
+            to specify:
+
+            <ul>
+                <li>The number of connections to create with the server.</li>
+                <li>The data to be sent across each of these connections.</li>
+                <li>The order in which this data will be sent to the web server.</li>
+                <li>How the data will be segmented and sent across different "chunks" over time.</li>
+            </ul>
+
+            With all of this information specified in a single comux file, we can not only
+            fuzz <i>what</i> is being sent to the web server, but also <i>how</i> it's being
+            sent to the web server. This means Gurthang can fuzz for bugs in the web server's
+            concurrency model and its ability to handle unpredictability in connection ordering
+            and parsing message boundaries.
+            </p>
+            
+            <h3 class="text-header3 color-text-header color-gurthang2">
+                Does it work?
+            </h3>
+            <p>
+            Yes it does! Thanks to the awesome students enrolled in Virginia Tech's
+            <a href="https://cs.vt.edu/Undergraduate/courses/CS3214.html" class="text-link">CS 3214 - Computer Systems</a>
+            course in the fall 2021 semester, Gurthang found a number of bugs across
+            web servers these students implemented as part of their project work. I also
+            spent time evaluating Gurthang further by fuzzing the Apache and Nginx HTTP
+            web servers. Turns out, it was capable of fuzzing both Apache and Nginx without
+            having to modify a <i>single</i> line of their source code. Past approaches have
+            required this, so I consider this a win for my research.
+            </p>
+            
+            <h3 class="text-header3 color-text-header color-gurthang2">
+                Can I use it?
+            </h3>
+            <p>
+            Absolutely. My implementation is open-sourced on
+            <a href="https://github.com/cwshugg/gurthang" class="text-link">GitHub</a>.
+            Give it a shot!
+            </p>
+            
+            <h3 class="text-header3 color-text-header color-gurthang2">
+                Where did the name come from?
+            </h3>
+            <p>
+            So glad you asked. Gurthang comes from J.R.R. Tolkien's world of Arda, during the
+            First Age of Middle Earth. It was a great sword forged from a meteorite and could
+            cut through iron. It passed through a number of owners until, through tragedy,
+            it came into the hands of Túrin Turambar. He wielded Gurthang and became known
+            as Mormegil, The Black Sword of Nargothrond.
+            Túrin slew Glaurang the dragon, a dark creation of Morgoth, only to later throw
+            himself on the blade in suicide. It is said Túrin will return in the Dagor Dagorath
+            to deal Morgoth a fatal blow.
+
+            <a href="http://tolkiengateway.net/wiki/Gurthang" class="text-link">Read more about it here!</a>
+            </p>
+        </div>
+
+        <!-- logo image -->
+        <div class="div-icons">
+            <img src="images/gurthang/logo.png" style="width: 25%; margin: 8px; padding: 8px;"></img>
+        </div>
+    </body>
+</html>
+
