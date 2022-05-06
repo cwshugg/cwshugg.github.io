@@ -23,6 +23,7 @@
     --color-bg3: rgb(150, 150, 150);
     --color-text1: rgb(200, 200, 225);
     --color-text2: rgb(150, 150, 175);
+    --color-text3: rgb(175, 175, 225);
     --color-acc1: rgb(35, 70, 158);     /* dark blue (original: 20, 55, 143) */
     --color-acc2: rgb(205, 42, 58);     /* dark-ish red */
     --color-acc3: rgb(235, 154, 32);    /* yellow-gold */
@@ -41,6 +42,8 @@
 { color: var(--color-text1); }
 .color-text2
 { color: var(--color-text2); }
+.color-text3
+{ color: var(--color-text3); }
 .color-bg1
 { background-color: var(--color-bg1); }
 .color-bg2
@@ -119,6 +122,19 @@
 {
     font-style: normal;
     color: var(--color-acc1);
+}
+
+.text-book-title
+{
+    font-style: italic;
+    color: var(--color-text3);
+    margin-bottom: 4px;
+}
+
+.text-book-author
+{
+    font-style: normal;
+    color: var(--color-text2);
 }
 
 /********************************* Dividers **********************************/
