@@ -1,0 +1,335 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <title>Financial Calculators</title>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+        <link rel="stylesheet" href="css/main.css">
+    </head>
+    <body class="body-main color-bg1">
+        <!-- title header -->
+        <h1 class="text-header1 color-text-header">
+            <span class="color-acc2">finance</span><span class="color-acc1">.</span><span class="color-acc3">calc</span>
+        </h1>
+        
+        <!-- buttons -->
+        <!-- TODO: remove comment when you actually need buttons
+        <div class="div-btn-deck">
+            <a class="btnfos btnfos-btn btnfos-acc1">TEST</a>
+            <a class="btnfos btnfos-btn btnfos-acc2">TEST</a>
+            <a class="btnfos btnfos-btn btnfos-acc3">TEST</a>
+        </div>
+        -->
+        
+        <!-- blurb 1 -->
+        <div class="div-main text-main">
+            <p>
+            In 2021 I took a Financial Literacy course with Professor Thomas Reilly.
+            I created these calculators to help me prepare for the future.
+            </p>
+        </div>
+        
+        <!-- income statement -->
+        <div class="div-border-acc3 text-main">
+            <h2 class="text-header2 color-acc3"><i class="fas fa-money-bill"></i> income statement</h2>
+            <p>
+            An <b>income statement</b> examines your income and expenses over
+            some period of time (ex: monthly). Budgeting and tracking your
+            expenses ties into this. A <b>budget</b> is an <em>ideal</em> income
+            statement that's compared against your actual income statement.
+            </p>
+            <p>
+            Collect a sum of all after-tax income and all expenses you've paid and
+            plug them in here. It simply subtracts the two to tell you how much free
+            income you can use for saving or investing. (I would recommend setting up
+            a spreadsheet or other way to compute these sums more easily.)
+            </p>
+
+            <!-- income -->
+            <h3 class="text-header3 color-acc3">Income</h3>
+            <div class="div-main" style="text-align: left; width: 95%">
+                <!-- gross income -->
+                <label for="ins_income_gross" class="label-main">
+                    <b>Gross Income</b>: the flat-out amount you earn <em>before</em> taxes.
+                </label>
+                <input id="ins_income_gross" class="input-main" placeholder="Total Gross Income"
+                       type"number" step="any" min="0.0">
+                
+                <!-- income tax -->
+                <label for="ins_income_taxes" class="label-main">
+                    <b>Income Taxes</b>: the amount of taxes taken out of your paycheck.
+                </label>
+                <input id="ins_income_taxes" class="input-main" placeholder="Total Gross Income"
+                       type"number" step="any" min="0.0">
+
+                <p>
+                    Your after-tax income is:
+                    <span id="ins_out_income" class="color-acc3">(to-be calculated)</span>
+                </p>
+            </div>
+            
+            <!-- expenses -->
+            <h3 class="text-header3 color-acc3">Living Expenses</h3>
+            <div class="div-main" style="text-align: left; width: 95%">
+                <!-- total expenses -->
+                <label for="ins_expenses" class="label-main">
+                    <b>Expenses</b>: things you pay for.
+                </label>
+                <input id="ins_expenses" class="input-main" placeholder="Total Living Expenses"
+                       type"number" step="any" min="0.0">
+            </div>
+            <!-- available income -->
+            <div class="div-main" style="text-align: left; width: 95%">
+                <p>
+                    Income available for savings/investing:
+                    <span id="ins_out_surplus" class="color-acc3">(to-be calculated)</span>
+                </p>
+            </div>
+
+        </div>
+        
+        <!-- balance sheet -->
+        <div class="div-border-acc2 text-main">
+            <h2 class="text-header2 color-acc2"><i class="fas fa-balance-scale-left"></i> balance sheet</h2>
+            <p>
+            A <b>balance sheet</b> examines your assets, liabilities, and net
+            worth at a specific point in time. (Usually it's created and
+            reviewed once a year.) It's like a snapshot of your financial
+            situation. Your balance sheet is made from two main categories:
+            <ul>
+                <li><b>Assets</b>: things you own.</li>
+                <li><b>Liabilities</b>: things you owe money for.</li>
+            </ul>
+            Your net worth is the difference between the two. Use this
+            calculator to compute your balance sheet.
+            </p>
+
+            <!-- assets -->
+            <h3 class="text-header3 color-acc2">Assets</h3>
+            <div class="div-main" style="text-align: left; width: 95%">
+                <!-- monetary -->
+                <label for="bs_a_monetary" class="label-main">
+                    <b>Monetary Assets</b>: money you could use
+                    <em>today</em> (such as your checking account).
+                </label>
+                <input id="bs_a_monetary" class="input-main"
+                       placeholder="Total Monetary Assets"
+                       type"number" step="any" min="0.0">
+               
+                <!-- investments -->
+                <label for="bs_a_investments" class="label-main">
+                    <b>Investments</b>: money you currently have in stocks
+                    and other investments. They're not as readily accessible,
+                    but you can typically sell investments for money relatively
+                    quickly.
+                </label>
+                <input id="bs_a_investments" class="input-main"
+                       placeholder="Total Investments"
+                       type"number" step="any" min="0.0">
+              
+                <!-- retirement -->
+                <label for="bs_a_retirement" class="label-main">
+                    <b>Retirement Plans</b>: money you have stored in retirement
+                    accounts. You could use this money if you really needed to,
+                    but it's best to leave it to avoid early withdrawal penalties,
+                    and to let it grow.
+                </label>
+                <input id="bs_a_retirement" class="input-main"
+                       placeholder="Retirement Accounts"
+                       type"number" step="any" min="0.0">
+
+                <!-- housing -->
+                <label for="bs_a_housing" class="label-main">
+                    <b>Housing Assets</b>: the estimated value of your house if
+                    you were to put it on the market <em>today</em>. This isn't
+                    very liquid, since it may take a long time to sell. But, it's
+                    still part of your net worth.
+                </label>
+                <input id="bs_a_housing" class="input-main"
+                       placeholder="Total Housing Assets"
+                       type"number" step="any" min="0.0">
+
+                <!-- other -->
+                <label for="bs_a_other" class="label-main">
+                    <b>Other Assets</b>: anything else you could potentially
+                    sell <em>today</em> or in the near future, if you had to.
+                    (Vehicles, computers, furniture, etc.) These aren't very
+                    liquid, so don't assume you're good-to-go financially just
+                    because you own a bunch of cars or computers.
+                </label>
+                <input id="bs_a_other" class="input-main"
+                       placeholder="Total Other Assets"
+                       type"number" step="any" min="0.0">
+                
+                <!-- total -->
+                <p>
+                    Your total asset value is:
+                    <span id="bs_out_a" class="color-acc2">(to-be calculated)</span>
+                </p>
+            </div>
+
+            <!-- current liabilities -->
+            <h3 class="text-header3 color-acc2">Current Liabilities</h3>
+            <div class="div-main" style="text-align: left; width: 95%">
+                <!-- long-term debt payments -->
+                <label for="bs_cl_ltp" class="label-main">
+                    <b>Long-Term Debt Payments</b>: the periodic payments you
+                    make to pay off your long-term debts.
+                </label>
+                <input id="bs_cl_ltp" class="input-main"
+                       placeholder="Total Long-Term Debt Payments"
+                       type"number" step="any" min="0.0">
+                
+                <!-- bills -->
+                <label for="bs_cl_bills" class="label-main">
+                    <b>Bills</b>: bills you owe in the near future
+                    (such as monthly rent or utilities). Don't accidentally
+                    double-count any bills that contribute to paying off
+                    long-term debt.
+                </label>
+                <input id="bs_cl_bills" class="input-main"
+                       placeholder="Total Current Bills"
+                       type"number" step="any" min="0.0">
+
+                <!-- credit card -->
+                <label for="bs_cl_cc" class="label-main">
+                    <b>Credit Cards</b>: credit card bills you owe in the near
+                    future. Don't accidentally double-count your bills if you
+                    use your credit card to pay them.
+                </label>
+                <input id="bs_cl_cc" class="input-main"
+                       placeholder="Total Credit Card Debt"
+                       type"number" step="any" min="0.0">
+                
+                <!-- total -->
+                <p>
+                    Your total current debt is:
+                    <span id="bs_out_cl" class="color-acc2">(to-be calculated)</span>
+                </p>
+            </div>
+            
+            <!-- long-term liabilities -->
+            <h3 class="text-header3 color-acc2">Long-Term Liabilities</h3>
+            <div class="div-main" style="text-align: left; width: 95%">
+                <!-- housing -->
+                <label for="bs_ltl_housing" class="label-main">
+                    <b>Housing</b>: long-term debt on your house.
+                </label>
+                <input id="bs_ltl_housing" class="input-main"
+                       placeholder="Total Housing Debt"
+                       type"number" step="any" min="0.0">
+
+                <!-- credit card -->
+                <label for="bs_ltl_car" class="label-main">
+                    <b>Car Loans</b>: long-term loans on any of your vehicles.
+                </label>
+                <input id="bs_ltl_car" class="input-main"
+                       placeholder="Total Car Debt"
+                       type"number" step="any" min="0.0">
+                
+                <!-- other -->
+                <label for="bs_ltl_other" class="label-main">
+                    <b>Other Loans</b>: other long-term loans.
+                </label>
+                <input id="bs_ltl_other" class="input-main"
+                       placeholder="Total Other Debts"
+                       type"number" step="any" min="0.0">
+                
+                <!-- total -->
+                <p>
+                    Your total long-term debt is:
+                    <span id="bs_out_ltl" class="color-acc2">(to-be calculated)</span>
+                </p>
+            </div>
+
+            <!-- net worth -->
+            <h3 class="text-header3 color-acc2">Net Worth</h3>
+            <div class="div-main" style="text-align: left; width: 95%">
+                <p>
+                    Your net worth is computed by subtracting your
+                    <b>total value of assets</b> from your
+                    <b>total long-term debt</b>.
+                </p>
+                <p>
+                    Your net worth is:
+                    <span id="bs_out_networth" class="color-acc2">(to-be calculated)</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- ratios -->
+        <div class="div-border-acc1 text-main">
+            <h2 class="text-header2 color-acc1"><i class="fas fa-percent"></i> ratios</h2>
+            <p>
+            There are five financial ratios used to assess your financial health.
+            </p>
+            
+            <!-- ratio 1 -->
+            <h3 class="text-header3 color-text2">Do I have enough liquidity for an emergency?</h3>
+            <p>
+                Your <b>current ratio</b> describes how well-prepared you are for
+                an emergency (in terms of readily-accessible money). Aim to make this
+                <em>at least</em> 1.0, but you should really go for 2.0 or higher.
+                <em>Too</em> high isn't great, though, as this suggests most of your money
+                is in assets, rather than investments or retirement accounts.
+            </p>
+            <p>
+                Your <b>current ratio</b> is:
+                <span id="ratio_current" class="color-acc4">(to-be calculated)</span>
+            </p>
+
+            <!-- ratio 2 -->
+            <h3 class="text-header3 color-text2">How many months of living expenses can I cover?</h3>
+            <p>
+                Your <b>month's living expenses covered ratio</b> describes how many
+                months you could cover of your current living expenses <em>right now</em>
+                if you stopped gaining income (if you lost your job, for example).
+                Aim for around 3-6 months.
+            </p>
+            <p>
+                Your <b>month's living expenses covered ratio</b> is:
+                <span id="ratio_mlec" class="color-acc4">(to-be calculated)</span>
+            </p>
+
+            <!-- ratio 3 -->
+            <h3 class="text-header3 color-text2">Can I meet my debt obligations?</h3>
+            <p>
+                Your <b>debt ratio</b> measures your debts against your assets.
+                For younger people (especially students with high student loans),
+                this may start out high. However, you should aim to decrease this
+                as you get older.
+            </p>
+            <p>
+                Your <b>debt ratio</b> is:
+                <span id="ratio_debt" class="color-acc4">(to-be calculated)</span>
+            </p>
+
+            <!-- ratio 4 -->
+            <h3 class="text-header3 color-text2">How does my long-term debt compare to my income?</h3>
+            <p>
+                Your <b>long-term debt coverage ratio</b> compares your gross income
+                against your long-term debt payments. This ratio is supposedly important
+                for taking out mortgages or large loans, as loaners will look at this
+                ratio to determine if you qualify and/or what your interest rate will be.
+                They'll want it to be under 40%. Aim for less than that so you have more
+                flexibility.
+            </p>
+            <p>
+                Your <b>long-term debt coverage ratio</b> is:
+                <span id="ratio_ltdc" class="color-acc4">(to-be calculated)</span>
+            </p>
+
+            <!-- ratio 5 -->
+            <h3 class="text-header3 color-text2">Am I saving as much as I think I am?</h3>
+            <p>
+                Your <b>savings ratio</b> compares your left-over income from your income
+                statement against your gross income. It tells you how much of your income
+                you're able to save. Aim for around 10%, if not more.
+            </p>
+            <p>
+                Your <b>savings ratio</b> is:
+                <span id="ratio_savings" class="color-acc4">(to-be calculated)</span>
+            </p>
+        </div>
+
+        <!-- JS imports -->
+        <script type="text/javascript" src="script/fcalc.js"></script>
+</body></html>

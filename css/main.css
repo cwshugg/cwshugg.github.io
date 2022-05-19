@@ -27,6 +27,7 @@
     --color-acc1: rgb(35, 70, 158);     /* dark blue (original: 20, 55, 143) */
     --color-acc2: rgb(205, 42, 58);     /* dark-ish red */
     --color-acc3: rgb(235, 154, 32);    /* yellow-gold */
+    --color-acc4: rgb(95, 130, 218);    /* lighter blue */
     --font1: Cocomat, "Roboto", "Verdana";
     --font2: Varela, "Roboto", "Arial";
 }
@@ -56,6 +57,8 @@
 { color: var(--color-acc2); }
 .color-acc3
 { color: var(--color-acc3); } 
+.color-acc4
+{ color: var(--color-acc4); } 
 
 /****************************** Text Formatting ******************************/
 .text-header1
@@ -140,8 +143,8 @@
 /********************************* Dividers **********************************/
 .div-main
 {
-    margin-left: 8px;
-    margin-right: 8px;
+    margin: 8px;
+    margin: 8px;
 }
 
 .div-border-acc1
@@ -181,6 +184,32 @@
 {
     margin: 4px;
     justify-content: center;
+}
+
+/********************************** Inputs ***********************************/
+.input-main
+{
+    font-family: var(--font2);
+    background-color: var(--color-bg1);
+    color: var(--color-text1);
+    border: none;
+    border-radius: 0;
+    border-bottom: 1px solid var(--color-text1);
+    padding: 8px;
+    margin: 8px;
+    width: 100%;
+}
+
+.input-main:focus
+{
+    background-color: var(--color-bg1);
+    color: var(--color-text1);
+    outline: none;
+}
+
+.label-main
+{
+    color: var(--color-text2);
 }
 
 /********************************** Buttons **********************************/
@@ -325,6 +354,11 @@
     }
     
     .btnfos
+    {
+        font-size: 36px;
+    }
+
+    .input-main
     {
         font-size: 36px;
     }
