@@ -20,7 +20,8 @@
 {
     --color-bg1: rgb(10, 10, 10);
     --color-bg2: rgb(50, 50, 50);
-    --color-bg3: rgb(150, 150, 150);
+    --color-bg3: rgb(100, 100, 100);
+    --color-bg4: rgb(150, 150, 150);
     --color-text1: rgb(200, 200, 225);
     --color-text2: rgb(150, 150, 175);
     --color-text3: rgb(175, 175, 225);
@@ -213,101 +214,38 @@
 }
 
 /********************************** Buttons **********************************/
-/* source: https://dev.to/gscode/20-css-buttons-4cni */
-.btnfos
+.button-main
 {
+    background-color: var(--color-bg2);
+    color: var(--color-text1);
+    /*color: var(--color-acc1);*/
     cursor: pointer;
-    display: block;
-    font-family: var(--font2);
-    font-size: 18px;
-    font-weight: 400;
-    line-height: 45px;
-    max-width: 160px;
-    margin: 4px;
-    position: relative;
-    text-transform: uppercase;
-    vertical-align: middle;
-    width: 100%;
-}
-
-@media (min-width: 400px)
-{
-    .btnfos
-    {
-        display: inline-block;
-        margin-right: 4px;
-    }
-    .btnfos:nth-of-type(even)
-    {
-        margin-right: 0;
-    }
-}
-@media (min-width: 600px)
-{
-    .btnfos:nth-of-type(even)
-    {
-        margin-right: 4px;
-    }
-    .btnfos:nth-of-type(5)
-    {
-        margin-right: 0;
-    }
-}
-
-.btnfos-btn
-{
-    border: 2px solid;
-    border-radius: 6px;
-    overflow: hidden;
-    position: relative;
+    padding: 12px;
+    margin: 8px;
+    border: none;
     text-align: center;
+    outline: none;
+    font-size: 16px;
+    font-weight: bold;
+    font-family: var(--font1);
+    border-radius: 4px;
 }
-.btnfos-btn span
+
+.button-main:hover:enabled
 {
-    z-index: 20;
+    background-color: var(--color-bg3);
 }
-.btnfos-btn:after
+
+.button-main:focus
 {
-    background-color: #00ff00;
-    content: "";
-    height: 155px;
-    left: -75px;
-    opacity: .2;
-    position: absolute;
-    top: -50px;
-    width: 50px;
-    -webkit-transition: all 550ms cubic-bezier(0.19, 1, 0.22, 1);
-          transition: all 550ms cubic-bezier(0.19, 1, 0.22, 1);
-    -webkit-transform: rotate(35deg);
-      -ms-transform: rotate(35deg);
-          transform: rotate(35deg);
-    z-index: -10;
+    outline: none;
+    box-shadow: none;
 }
 
-.btnfos-btn:hover:after
+.button-main:disabled
 {
-    left: 120%;
-    -webkit-transition: all 550ms cubic-bezier(0.19, 1, 0.22, 1);
-          transition: all 550ms cubic-bezier(0.19, 1, 0.22, 1);
+    color: var(--color-bg4);
 }
-
-/* accent 1 color */
-.btnfos-acc1
-{ color: var(--color-acc1); }
-.btnfos-acc1:after
-{ background-color: var(--color-acc1); }
-
-/* accent 2 color */
-.btnfos-acc2
-{ color: var(--color-acc2); }
-.btnfos-acc2:after
-{ background-color: var(--color-acc2); }
-
-/* accent 3 color */
-.btnfos-acc3
-{ color: var(--color-acc3); }
-.btnfos-acc3:after
-{ background-color: var(--color-acc3); }
 
 /****************************** Mobile Screens *******************************/
 /* https://stackoverflow.com/questions/42025632/how-to-detect-only-with-css-mobile-screens */

@@ -1,0 +1,79 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <title>RELF - Cellular Automata</title>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+        <link rel="stylesheet" href="css/main.css">
+
+        <!-- import library code (cellauto and pixi.js) and my own code -->
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/1.5.3/pixi.js"></script>
+        <script type="text/javascript" src="script/relf/lib/cellauto.js"></script>
+        <script type="text/javascript" src="script/relf/relf.js"></script>
+        <script type="text/javascript" src="script/relf/renderer.js"></script>
+    </head>
+    <body class="body-main color-bg1">
+        <!-- title header -->
+        <h1 class="text-header1 color-text-header">
+            <span class="color-acc3">re</span><span class="color-acc2">ctangular</span>
+            <span class="color-acc3">l</span><span class="color-acc2">ife</span><span class="color-acc3">f</span><span class="color-acc2">orms</span>
+        </h1>
+
+        <!-- intro -->
+        <div class="div-main text-main">
+            <p>
+            After playing around with
+            <a class="text-link" href="https://en.wikipedia.org/wiki/Cellular_automaton">Cellular Automata</a>
+            and zero-player games, I decided to create one of my own.
+            This one is called <b>relf</b>, short for <b>rectangular lifeforms</b>.
+            It's a game of life, of sorts. Each relf has its own priorities and
+            does its own actions.
+            Relves interact with each other, both in good and bad ways.<br><br>
+
+            I used Jonas Olmstead's
+            <a href="https://github.com/sanojian/cellauto" class="text-link">cellauto</a>
+            library to simulate the world and the
+            <a href="https://pixijs.com/" class="text-link">pixi.js</a>
+            library to draw it on this canvas.
+            </p>
+        </div>
+        
+        <!-- game board -->
+        <div class="div-main text-main" style="text-align: center">
+            <canvas id="board" style="border: 1px solid var(--color-acc3); padding-bottom: 8px">
+        </div>
+ 
+        <!-- game settings -->
+        <div class="div-border-acc1 text-main"
+             style="max-width: 600px; margin: 0 auto">
+            <h2 class="color-acc1">Game Settings</h2>
+            <!-- world width -->
+            <input id="in_world_width" class="input-main" placeholder="World Width"
+                    type="number" step="any" min="1.0" style="width: 95%">
+            <!-- world height -->
+            <input id="in_world_height" class="input-main" placeholder="World Height"
+                    type="number" step="any" min="1.0" style="width: 95%">
+            <!-- pixel size -->
+            <input id="in_world_size" class="input-main" placeholder="World Pixel Size"
+                    type="number" step="any" min="1.0" style="width: 95%">
+            <!-- world seed -->
+            <input id="in_world_seed" class="input-main" placeholder="World Seed"
+                    type="number" step="any" min="1.0" style="width: 95%">
+            <p></p>
+
+            <!-- buttons -->
+            <div class="div-btn-deck" style="text-align: center">
+                <button id="btn_reset" class="button-main">RESET</button>
+                <button id="btn_run" class="button-main">RUN</button>
+                <button id="btn_step" class="button-main">STEP</button>
+            </div>
+
+        </div>
+
+        <!-- game details -->
+        <div class="div-main text-main">
+            <p>
+            </p>
+        </div>
+
+        <!-- JS imports -->
+        <script type="text/javascript" src="script/relf/interface.js"></script>
+</body></html>
