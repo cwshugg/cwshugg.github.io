@@ -9,7 +9,8 @@ const palette = [
     "140, 123, 84,  1",     // brownish (nomad)
     "210, 129, 7,   1",     // gold-yellow (settler)
     "180, 17,  33,  1",     // red (hunter)
-    "48,  86,  220, 1"      // blue
+    "233, 18,  153, 1",     // red-pink (warlock)
+    "240, 224, 32,  1",     // yellow (noble)
 ];
 
 // Enum-of-sorts to match indexes to colors in the palette.
@@ -19,7 +20,9 @@ const colors = {
     C_EMPTY: 2,
     C_NOMAD: 3,
     C_SETTLER: 4,
-    C_HUNTER: 5
+    C_HUNTER: 5,
+    C_WARLOCK: 6,
+    C_NOBLE: 7
 };
 
 // Temporary world used for accessing internal fields (such as directions).
@@ -167,7 +170,9 @@ function sort_neighbors(neighbors)
         "empties": [],
         "nomads": [],
         "settlers": [],
-        "hunters": []
+        "hunters": [],
+        "warlocks": [],
+        "nobles": []
     };
 
     // iterate across all neighbors and place them in the correct 'bins'
@@ -184,6 +189,10 @@ function sort_neighbors(neighbors)
         { result.settlers.push(n); }
         else if (n.relf instanceof Hunter)      // HUNTER
         { result.hunters.push(n); }
+        else if (n.relf instanceof Warlock)     // WARLOCK
+        { result.warlocks.push(n); }
+        else if (n.relf instanceof Noble)       // NOBLE
+        { result.nobles.push(n); }
         else if (n.relf instanceof Empty)       // EMPTY CELLS
         { result.empties.push(n); }
     }
@@ -566,10 +575,43 @@ class Settler extends Relf
 
         // SETTLER RULE 4: if a settler has passed its corruption age, it will
         // become a hunter
-        if (this.age >= this.corruption_age)
+        if (this.corruption_age > -1 && this.age >= this.corruption_age)
         { return replacement_relf(Hunter); }
 
+        // SETTLER RULE 5: a settler may turn into a noble (the more neighbors
+        // it has, the better the chance)
+        const noble_chance = [nbs.settlers.length, 20000];
+        if (rand_chance(noble_chance[0], noble_chance[1]))
+        { return replacement_relf(Noble); }
+
         return this;
+    }
+}
+
+// Nobles are like settlers, but they do not succumb to corruption and are more
+// resistant to hunters.
+class Noble extends Settler
+{
+    // Constructor.
+    constructor()
+    {
+        super();
+        this.color = colors.C_NOBLE;
+
+        // nobles have a number of hitpoints
+        this.hp = rand_int(2, 3);
+
+        // nobles don't corrupt and do not reproduce to create hunters
+        this.corruption_age = -1;
+        this.reproduce_hunter_chance = [0, 100];
+    }
+    
+    // Overridden copy method.
+    copy()
+    {
+        const relf = super.copy();
+        relf.hp = this.hp;
+        return relf;
     }
 }
 
@@ -613,8 +655,15 @@ class Hunter extends Nomad
     // Invoked when a relf is killed by the hunter.
     kill_relf(neighbor)
     {
-        neighbor.relf = empty_relf();
-        this.kills++;
+        // first, check if the relf is a noble that has more than 1 HP
+        if (neighbor.relf instanceof Noble && neighbor.relf.hp > 1)
+        { neighbor.relf.hp--; }
+        else
+        {
+            // otherwise, kill the relf and move on
+            neighbor.relf = empty_relf();
+            this.kills++;
+        }
     }
 
     // Overridden process method.
@@ -631,10 +680,19 @@ class Hunter extends Nomad
 
         // HUNTER RULE 1: if at least one settler is nearby, kill one and lose
         // one HP in the process
-        if (nbs.settlers.length >= 1)
+        if (nbs.settlers.length >= 1 || nbs.nobles.length >= 1)
         {
-            const sidx = rand_int(0, nbs.settlers.length - 1);
-            this.kill_relf(nbs.settlers[sidx]);
+            // build an array of settlers and nobles for the hunter to choose
+            // from
+            const targets = [];
+            for (let i = 0; i < nbs.settlers.length; i++)
+            { targets.push(nbs.settlers[i]); }
+            for (let i = 0; i < nbs.nobles.length; i++)
+            { targets.push(nbs.nobles[i]); }
+            
+            // choose a random index to attack
+            const sidx = rand_int(0, targets.length - 1);
+            this.kill_relf(targets[sidx]);
             
             // take some damage, and return appropriately
             const result = this.take_hit();
@@ -647,8 +705,86 @@ class Hunter extends Nomad
         // reaches its calming age
         if (this.age >= this.calming_age)
         { return replacement_relf(Nomad); }
+        
+        // HUNTER RULE 3: the hunter may transform into a warlock at any moment,
+        // especially if it has already killed at least once
+        const warlock_chance = [1, 20000 + (this.age * 2)];
+        if (this.kills > 0) { warlock_chance[0]++; }
+        if (rand_chance(warlock_chance[0], warlock_chance[1]))
+        { return replacement_relf(Warlock); }
 
         return this.move(neighbors);
+    }
+}
+
+// Warlocks move like hunters but have extra, malicious, abilities.
+class Warlock extends Relf
+{
+    // Constructor.
+    constructor()
+    {
+        super();
+        this.color = colors.C_WARLOCK;
+        this.hp = rand_int(6, 24);
+        
+        // warlocks will use magic to summon hunters around it. It will do
+        // this a fixed number of times in its lifetime
+        const burst_count = rand_int(1, 4);
+        this.burst_ages = range_array(0, burst_count - 1);
+        this.burst_ages[0] = rand_int(10, 100);
+        for (let i = 1; i < burst_count; i++)
+        {
+            // we'll compute the next burst age's range so it's guaranteed to
+            // be above the previous one
+            const low = this.burst_ages[i - 1] + 1;
+            const high = low + rand_int(100, 300);
+            this.burst_ages[i] = rand_int(low, high);
+        }
+    }
+        
+    // Overridden copy method.
+    copy()
+    {
+        const relf = super.copy();
+        relf.burst_ages = this.burst_ages;
+        return relf;
+    }
+    
+    // The warlock's "burst" method. Spawns hunters surrounding the warlock.
+    burst(neighbors)
+    {
+        // iterate through each neighbor, replacing any empty squares with new
+        // hunters created by the warlock's "magic"
+        for (let i = 0; i < neighbors.length; i++)
+        {
+            if (neighbor_is_empty(neighbors[i]))
+            { neighbors[i].relf = replacement_relf(Hunter); }
+        }
+    }
+
+    // Overridden process function.
+    process(neighbors)
+    {
+        if (this.processed)
+        { return this; }
+        this.processed = true;
+
+        this.increase_age();
+        const nbs = sort_neighbors(neighbors);
+
+        // WARLOCK RULE 1: if the age is correct, the warlock will produce a
+        // magical *burst* that will create hunters around it
+        if (this.age == this.burst_ages[0])
+        {
+            this.burst_ages.shift();    // pop the first entry
+            this.burst(neighbors);      // spawn hunters
+
+            // if that was the last burst, the warlock dies
+            if (this.burst_ages.length == 0)
+            { return empty_relf(); }
+        }
+        
+        return this;
     }
 }
 

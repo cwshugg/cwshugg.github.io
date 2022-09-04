@@ -1,0 +1,31 @@
+:root
+{
+    --color-nomad: rgb(140, 123, 84);
+    --color-settler: rgb(210, 129, 7);
+    --color-hunter: rgb(180, 17, 33);
+    --color-warlock: rgb(233, 18, 153);
+    --color-noble: rgb(240, 224, 32);
+}
+
+.color-nomad
+{ color: var(--color-nomad); }
+.color-settler
+{ color: var(--color-settler); }
+.color-hunter
+{ color: var(--color-hunter); }
+.color-warlock
+{ color: var(--color-warlock); }
+.color-noble
+{ color: var(--color-noble); }
+
+.border-nomad
+{ border: 1px solid var(--color-nomad); }
+.border-settler
+{ border: 1px solid var(--color-settler); }
+.border-hunter
+{ border: 1px solid var(--color-hunter); }
+.border-warlock
+{ border: 1px solid var(--color-warlock); }
+.border-noble
+{ border: 1px solid var(--color-noble); }
+

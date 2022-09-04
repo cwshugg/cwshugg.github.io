@@ -11,6 +11,7 @@ const in_world_seed = document.getElementById("in_world_seed");
 const btn_run = document.getElementById("btn_run");
 const btn_reset = document.getElementById("btn_reset");
 const btn_step = document.getElementById("btn_step");
+const btn_share = document.getElementById("btn_share");
 
 // Game objects
 let started = false;
@@ -94,6 +95,27 @@ function game_run()
     { game_pause(); }
 }
 
+// Invoked when the "share" button is clicked.
+function game_share()
+{
+    // build the correct URL (start by removing any existing URL parameters)
+    let url = window.location.href;
+    let param_idx = url.indexOf("?");
+    if (param_idx < 0)
+    { param_idx = url.length; }
+    url = url.substring(0, param_idx);
+
+    // append each appropriate parameter
+    url += "?width=" + in_world_w.value;
+    url += "&height=" + in_world_h.value;
+    url += "&size=" + in_world_s.value;
+    url += "&seed=" + in_world_seed.value;
+    
+    // copy the text and alert the user
+    navigator.clipboard.writeText(url);
+    alert("URL copied to clipboard.");
+}
+
 // Window-load function
 window.onload = function()
 {
@@ -101,12 +123,27 @@ window.onload = function()
     btn_run.addEventListener("click", game_run);
     btn_reset.addEventListener("click", game_reset);
     btn_step.addEventListener("click", game_step);
+    btn_share.addEventListener("click", game_share);
     
-    // load the world with default values
-    in_world_w.value = 64;
-    in_world_h.value = 64;
-    in_world_s.value = 8;
+    // start by loading default values
+    in_world_w.value = 100;
+    in_world_h.value = 100;
+    in_world_s.value = 6;
     in_world_seed.value = new Date().getTime();
+
+    // before choosing default values, see if the correct URL parameters
+    // are present
+    const params = new URLSearchParams(window.location.search);
+    if (params.has("width"))
+    { in_world_w.value = parseInt(params.get("width")); }
+    if (params.has("height"))
+    { in_world_h.value = parseInt(params.get("height")); }
+    if (params.has("size"))
+    { in_world_s.value = parseInt(params.get("size")); }
+    if (params.has("seed"))
+    { in_world_seed.value = parseInt(params.get("seed")); }
+    
+    // reset the game
     game_reset();
 }
 

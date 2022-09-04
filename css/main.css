@@ -300,4 +300,12 @@
     {
         font-size: 36px;
     }
+
+    .button-main
+    {
+        padding: 32px;
+        font-size: 32px;
+        margin: 16px;
+        border-radius: 8px;
+    }
 }

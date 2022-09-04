@@ -3,6 +3,7 @@
         <title>RELF - Cellular Automata</title>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
         <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/relf.css">
 
         <!-- import library code (cellauto and pixi.js) and my own code -->
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/1.5.3/pixi.js"></script>
@@ -64,14 +65,149 @@
                 <button id="btn_reset" class="button-main">RESET</button>
                 <button id="btn_run" class="button-main">RUN</button>
                 <button id="btn_step" class="button-main">STEP</button>
+                <button id="btn_share" class="button-main">
+                    <i class="fas fa-share-alt"></i>
+                </button>
             </div>
 
         </div>
 
         <!-- game details -->
         <div class="div-main text-main">
-            <p>
-            </p>
+            <h1 class=>Basic Relf Types</h1>
+            
+            <!-- NOMAD -->
+            <div class="div-main div-border-acc1 border-nomad">
+                <h2 class="color-nomad">Nomads</h2>
+                <p>
+                Nomads are wanderers. They travel alone and only settle down
+                when the conditions are right.
+                </p>
+                <h3 class="color-nomad">Nomad Rules of Life</h3>
+                <ul>
+                    <li>
+                        If a nomad has <i>two</i> other nomad neighbors, it will
+                        become a <span class="color-settler">settler</span>.
+                    </li>
+                    <li>
+                        If a nomad has <i>one</i> or <i>two</i> neighboring
+                        settlers, it will become a
+                        <span class="color-settler">settler</span>.
+                    </li>
+                    <li>
+                        If a nomad is completely surrounded by settlers, it
+                        will revolt and become a
+                        <span class="color-hunter">hunter</span> in its panic.
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- SETTLER -->
+            <div class="div-main div-border-acc1 border-settler">
+                <h2 class="color-settler">Settlers</h2>
+                <p>
+                Settlers band together with other settlers and do not wander.
+                They are <i>so</i> reliant on one another, in fact, that a
+                settler will die if it has no neighbors of its kind. Under the
+                correct conditions, a settler will reproduce to create
+                new relves.
+                </p>
+                <h3 class="color-settler">Settler Rules of Life</h3>
+                <ul>
+                    <li>
+                        If a settler has no other neighboring settlers, it will
+                        die.
+                    </li>
+                    <li>
+                        If a settler can move to a nearby square to get more
+                        neighbors or position themselves closer to existing
+                        neighbors, it will do so.
+                    </li>
+                    <li>
+                        If a settler has exactly <i>three</i> neighboring settlers,
+                        it may reproduce to create a new
+                        <span class="color-nomad">nomad</span>.
+                        On rare occasions, the settler may instead reproduce to
+                        create a new
+                        <span class="color-hunter">hunter</span>.
+                    </li>
+                    <li>
+                        If a settler lives long enough, it will eventually
+                        corrupt and become a
+                        <span class="color-hunter">hunter</span>.
+                    </li>
+                    <li>
+                        On rare occasions, a settler may evolve into a
+                        <span class="color-noble">noble</span>.
+                    </li>
+                </ul>
+
+            </div>
+
+            <!-- HUNTER -->
+            <div class="div-main div-border-acc1 border-hunter">
+                <h2 class="color-hunter">Hunter</h2>
+                <p>
+                Hunters seek out and kill settlers. They travel like nomads, and
+                can kill a finite number of settlers before dying.
+                </p>
+                <h3 class="color-hunter">Hunter Rules of Life</h3>
+                <ul>
+                    <li>
+                        If a hunter has at least one neighboring settler, it
+                        will kill one and lose one hit point.
+                    </li>
+                    <li>
+                        If a hunter has zero hit points, it will die.
+                    </li>
+                    <li>
+                        If a hunter lives long enough, it will eventually calm
+                        down and become a <span class="color-nomad">nomad</span>.
+                    </li>
+                    <li>
+                        On rare occasions, a hunter may transform into a
+                        <span class="color-warlock">warlock</span>.
+                    </li>
+                </ul>
+            </div>
+ 
+            <h1 class=>Special Relf Types</h1>
+            
+            <!-- WARLOCK -->
+            <div class="div-main div-border-acc1 border-warlock">
+                <h2 class="color-warlock">Warlock</h2>
+                <p>
+                Warlocks use dark magic to summon hunters in bursts of magic.
+                They remain stationary, but will fire one or more bursts before
+                dying to the dark magic they wield. Each burst creates eight
+                <span class="color-hunter">hunters</span> from the warlock's
+                location.
+                </p>
+                <h3 class="color-warlock">Warlock Rules of Life</h3>
+                <ul>
+                    <li>
+                        If a warlock has completed all of its bursts, it will
+                        die.
+                    </li>
+                </ul>
+            </div>
+           
+            <!-- NOBLE -->
+            <div class="div-main div-border-acc1 border-noble">
+                <h2 class="color-noble">Nobles</h2>
+                <p>
+                Nobles are an evolved form of settler. They do not corrupt into
+                hunters and they cannot reproduce to create hunters. Nobles are
+                also stronger against hunter attacks: they can take multiple hits
+                before dying.
+                </p>
+                <!--
+                <h3 class="color-noble">Noble Rules of Life</h3>
+                <ul>
+                </ul>
+                -->
+            </div>
+
         </div>
 
         <!-- JS imports -->
