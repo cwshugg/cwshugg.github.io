@@ -141,6 +141,22 @@
     color: var(--color-text2);
 }
 
+/********************************* Borders ***********************************/
+.border-acc1
+{
+    border: 2px solid var(--color-acc1);
+}
+
+.border-acc2
+{
+    border: 2px solid var(--color-acc2);
+}
+
+.border-acc3
+{
+    border: 2px solid var(--color-acc3);;
+}
+
 /********************************* Dividers **********************************/
 .div-main
 {
@@ -183,7 +199,8 @@
 
 .div-btn-deck
 {
-    margin: 4px;
+    padding: 8px;
+    margin: 8px;
     justify-content: center;
 }
 
@@ -247,6 +264,36 @@
     color: var(--color-bg4);
 }
 
+.button-nav
+{
+    background-color: var(--color-bg1);
+    cursor: pointer;
+    padding: 12px;
+    margin: 8px;
+    text-align: center;
+    outline: none;
+    font-size: 16px;
+    font-weight: bold;
+    font-family: var(--font1);
+    border-radius: 4px;
+}
+
+.button-nav:hover:enabled
+{
+    background-color: var(--color-bg2);
+}
+
+.button-nav:focus
+{
+    outline: none;
+    box-shadow: none;
+}
+
+.button-nav:disabled
+{
+    color: var(--color-bg4);
+}
+
 /****************************** Mobile Screens *******************************/
 /* https://stackoverflow.com/questions/42025632/how-to-detect-only-with-css-mobile-screens */
 @media only screen and (hover: none) and (pointer: coarse)
@@ -302,6 +349,14 @@
     }
 
     .button-main
+    {
+        padding: 32px;
+        font-size: 32px;
+        margin: 16px;
+        border-radius: 8px;
+    }
+
+    .button-nav
     {
         padding: 32px;
         font-size: 32px;
