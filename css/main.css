@@ -1,8 +1,8 @@
 /********************************** Imports **********************************/
 @font-face
 {
-    font-family: "Cocomat";
-    src: url("../fonts/cocomat.ttf");
+    font-family: "Quicksand";
+    src: url("../fonts/quicksand.ttf");
     font-weight: normal;
     font-style: normal;
 }
@@ -12,6 +12,14 @@
     font-family: "Varela";
     src: url("../fonts/varela.ttf");
     font-weight: 0;
+    font-style: normal;
+}
+
+@font-face
+{
+    font-family: "RobotoMono";
+    src: url("../fonts/robotomono.ttf");
+    font-weight: normal;
     font-style: normal;
 }
 
@@ -29,9 +37,9 @@
     --color-acc2: rgb(205, 42, 58);     /* dark-ish red */
     --color-acc3: rgb(235, 154, 32);    /* yellow-gold */
     --color-acc4: rgb(95, 130, 218);    /* lighter blue */
-    --font1: "Cocomat", "Roboto", "Verdana";
+    --font1: "Quicksand", "Roboto", "Verdana";
     --font2: "Varela", "Roboto", "Arial";
-    --font-code: "Ubuntu Mono", "Consolas", "Courier";
+    --font-code: "RobotoMono", "Consolas", "Courier";
 }
 
 .body-main
@@ -196,7 +204,8 @@ h6
     font-family: var(--font-code);
     background-color: var(--color-bg2);
     border-radius: 6px;
-    margin: 8px;
+    margin: 2px;
+    padding: 8px;
 }
 
 /********************************* Borders ***********************************/
