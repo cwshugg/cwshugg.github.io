@@ -30,7 +30,11 @@ Hi. `Here's some code`.
 
 `Here's a small code snippet.`
 
-```
-Here's a lot of code.
-```
+{% highlight c linenos %}
+// Here's some C code.
+int main(int argc, char** argv)
+{
+    printf("Hi\n");
+}
+{% endhighlight %}
 
