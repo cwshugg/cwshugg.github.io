@@ -1,0 +1,31 @@
+<!-- A Jekyll theme for blog-ish posts (markdown files) I've added to my website. -->
+<!doctype html>
+<html lang="en">
+    <!-- Page Metadata -->
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <title>{{page.title}}</title>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+        <link rel="stylesheet" href="../css/main.css">
+    </head>
+
+    <!-- Page Body -->
+    <body class="body-main color-bg1">
+        <!-- Title -->
+        <h1 class="text-header1 color-text-header">
+            <span class="color-acc3">{{page.title}}</span>
+        </h1>
+        <!-- Date and Author -->
+        <h4 class="text-header3 color-text-header">
+            <span class="color-acc2">{{page.date}}</span>
+            <span class="color-text1">-</span>
+            <span class="color-acc1">{{page.author}}</span>
+        </h4>
+
+        <!-- Content -->
+        <div class="div-main text-main">
+            {{content}}
+        </div>
+    </body>
+</html>
+
