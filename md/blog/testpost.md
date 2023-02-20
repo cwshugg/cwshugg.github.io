@@ -1,5 +1,7 @@
 ---
-
+layout: blog
+title: Blog Post Test
+permalink: /blogname/test
 ---
 
 I'm testing a markdown file here to see if Jekyll is working properly.
