@@ -1,6 +1,8 @@
 ---
 layout: blog
 title: Blog Post Test
+date: 2023-2-20
+author: Connor Shugg
 permalink: /blogname/test
 ---
 

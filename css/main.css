@@ -29,8 +29,9 @@
     --color-acc2: rgb(205, 42, 58);     /* dark-ish red */
     --color-acc3: rgb(235, 154, 32);    /* yellow-gold */
     --color-acc4: rgb(95, 130, 218);    /* lighter blue */
-    --font1: Cocomat, "Roboto", "Verdana";
-    --font2: Varela, "Roboto", "Arial";
+    --font1: "Cocomat", "Roboto", "Verdana";
+    --font2: "Varela", "Roboto", "Arial";
+    --font-code: "Ubuntu Mono", "Consolas", "Courier";
 }
 
 .body-main
@@ -42,40 +43,40 @@
 
 /********************************** Defaults **********************************/
 h1
-{ color: var(--color-acc3); }
+{ color: var(--color-acc3) !important; }
 h2
-{ color: var(--color-acc2); }
+{ color: var(--color-acc2) !important; }
 h3
-{ color: var(--color-acc1); }
+{ color: var(--color-acc1) !important; }
 h4
-{ color: var(--color-acc3); }
+{ color: var(--color-acc3) !important; }
 h5
-{ color: var(--color-acc2); }
+{ color: var(--color-acc2) !important; }
 h6
-{ color: var(--color-acc1); }
+{ color: var(--color-acc1) !important; }
 
 
 /********************************** Colors ***********************************/
 .color-text1
-{ color: var(--color-text1); }
+{ color: var(--color-text1) !important; }
 .color-text2
-{ color: var(--color-text2); }
+{ color: var(--color-text2) !important; }
 .color-text3
-{ color: var(--color-text3); }
+{ color: var(--color-text3) !important; }
 .color-bg1
-{ background-color: var(--color-bg1); }
+{ background-color: var(--color-bg1) !important; }
 .color-bg2
-{ background-color: var(--color-bg2); }
+{ background-color: var(--color-bg2) !important; }
 .color-bg3
-{ background-color: var(--color-bg3); }
+{ background-color: var(--color-bg3) !important; }
 .color-acc1
-{ color: var(--color-acc1); }
+{ color: var(--color-acc1) !important; }
 .color-acc2
-{ color: var(--color-acc2); }
+{ color: var(--color-acc2) !important; }
 .color-acc3
-{ color: var(--color-acc3); } 
+{ color: var(--color-acc3) !important; } 
 .color-acc4
-{ color: var(--color-acc4); } 
+{ color: var(--color-acc4) !important; } 
 
 /****************************** Text Formatting ******************************/
 .text-header1, h1
@@ -188,6 +189,14 @@ h6
 {
     font-style: normal;
     color: var(--color-text2);
+}
+
+.text-code, code
+{
+    font-family: var(--font-code);
+    background-color: var(--color-bg2);
+    border-radius: 6px;
+    margin: 8px;
 }
 
 /********************************* Borders ***********************************/
