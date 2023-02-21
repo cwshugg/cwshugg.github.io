@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+    <!-- Page Metadata -->
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <title>{{page.title}}</title>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+        <link rel="stylesheet" href="{{site.baseurl}}/css/main.css">
+    </head>
+
+    <!-- Page Body -->
+    <body class="body-main color-bg1">
+        <!-- Title -->
+        <h2 class="text-header2 color-text-header">
+            <span class="color-acc3">{{page.title}}</span>
+        </h2>
+
+        {% if page.subtitle %}
+        <!-- Subtitle -->
+        <h4 class="text-header4 color-text-header">
+            <span class="color-acc2">{{page.subtitle}}</span>
+        </h4>
+        {% endif %}
+        
+        <!-- Content -->
+        {{content}}
+
+        <!-- Icons -->
+        <div class="div-icons">
+            <a href="https://github.com/cwshugg" class="text-icon">
+                <i class="fab fa-github icon-link"></i>
+            </a>
+            <a href="https://www.linkedin.com/in/connor-shugg/" class="text-icon">
+                <i class="fab fa-linkedin icon-link"></i>
+            </a>
+            <a href="mailto:connor@shugg.dev" class="text-icon">
+                <i class="fas fa-envelope icon-link"></i>
+            </a>
+        </div>
+    </body>
+</html>
+

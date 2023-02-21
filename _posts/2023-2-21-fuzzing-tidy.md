@@ -1,5 +1,5 @@
 ---
-layout: blog
+layout: post
 title: Fuzzing the Tidy HTML Tool
 subtitle: Bug Hunting with AFL++
 date: 2023.02.21
