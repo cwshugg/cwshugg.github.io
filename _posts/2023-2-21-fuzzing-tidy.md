@@ -5,6 +5,7 @@ subtitle: Bug Hunting with AFL++
 date: 2023.02.21
 author: Connor Shugg
 categories: Fuzzing
+tags: [Fuzzing, Security, AFL++, C]
 ---
 
 intro

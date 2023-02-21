@@ -39,11 +39,11 @@
         </h5>
         {% endif %}
         
-        {% if page.categories %}
+        {% if page.tags %}
         <!-- Post Tags -->
         <div class="div-main">
-            {% for category in page.categories %}
-            <p><code class="text-code">{{category}}</code></p>
+            {% for tag in page.tags %}
+            <p><b><code class="text-code">{{tag}}</code></b></p>
             {% endfor %}
         </div>
         {% endif %}
