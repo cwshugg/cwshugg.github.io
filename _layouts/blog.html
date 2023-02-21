@@ -26,7 +26,7 @@
         <!-- Date and Author -->
         <h5 class="text-header5 color-text-header">
             {% if page.date %}
-            <span class="color-acc1">{{page.date}}</span>
+            <span class="color-acc1">{{page.date | date: "%Y.%m.%d"}}</span>
             {% endif %}
             
             {% if page.date and page.author %}
@@ -37,6 +37,15 @@
             <span class="color-acc1">{{page.author}}</span>
             {% endif %}
         </h5>
+        {% endif %}
+        
+        {% if page.categories %}
+        <!-- Post Tags -->
+        <div class="div-main">
+            {% for category in page.categories %}
+            <p><code class="text-code">{{category}}</code></p>
+            {% endfor %}
+        </div>
         {% endif %}
 
         <!-- Content -->
