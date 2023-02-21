@@ -21,13 +21,23 @@
             <span class="color-acc2">{{page.subtitle}}</span>
         </h4>
         {% endif %}
-
+        
+        {% if page.date or page.author %}
         <!-- Date and Author -->
         <h5 class="text-header5 color-text-header">
+            {% if page.date %}
             <span class="color-acc1">{{page.date}}</span>
+            {% endif %}
+            
+            {% if page.date and page.author %}
             <span class="color-text1">-</span>
+            {% endif %}
+
+            {% if page.author %}
             <span class="color-acc1">{{page.author}}</span>
+            {% endif %}
         </h5>
+        {% endif %}
 
         <!-- Content -->
         <div class="div-main div-border-acc1 text-main">
