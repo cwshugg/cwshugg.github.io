@@ -14,12 +14,20 @@
         <h1 class="text-header1 color-text-header">
             <span class="color-acc3">{{page.title}}</span>
         </h1>
+
+        {% if page.subtitle %}
+        <!-- Subtitle -->
+        <h4 class="text-header4 color-text-header">
+            <span class="color-acc2">{{page.subtitle}}</span>
+        </h4>
+        {% endif %}
+
         <!-- Date and Author -->
-        <h4 class="text-header3 color-text-header">
-            <span class="color-acc2">{{page.date}}</span>
+        <h5 class="text-header5 color-text-header">
+            <span class="color-acc1">{{page.date}}</span>
             <span class="color-text1">-</span>
             <span class="color-acc1">{{page.author}}</span>
-        </h4>
+        </h5>
 
         <!-- Content -->
         <div class="div-main div-border-acc1 text-main">
