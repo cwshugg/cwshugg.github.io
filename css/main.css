@@ -382,8 +382,8 @@ h1 code, h2 code, h3 code, h4 code, h5 code, h6 code
 /********************************** Images ***********************************/
 img
 {
-    border: 2px solid var(--color-text1);
-    border-radius: 4px;
+    border: 1px solid var(--color-text2);
+    border-radius: 8px;
     
     display: block;
     margin-left: auto;
