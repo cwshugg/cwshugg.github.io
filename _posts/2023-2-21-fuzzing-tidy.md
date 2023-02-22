@@ -25,7 +25,7 @@ projects that use libtidy are listed on Tidy's website. Overall, it has a long
 history and is an interesting piece of software. It's also an easy target for
 fuzzing. Let's see if we can break it.
 
-#### `0.` Understanding The Target
+#### Understanding The Target
 
 We know what Tidy *does*, but we need to answer a few more questions before we
 can figure out how to fuzz it:
@@ -47,7 +47,7 @@ command line is by piping the contents of an HTML file directly into Tidy:
 tidy < ./index.html
 ```
 
-#### `1.` Building with AFL++
+#### Building with AFL++
 
 At this point all we need to do is build Tidy with AFL++'s compiler. First, we
 clone the `tidy-html5` GitHub repository. Then, we simply follow
@@ -70,7 +70,7 @@ the system. (Plus, this way we don't need `sudo` permission.)
 
 The instrumented binary will be stored in `tidy-install/bin/tidy`.
 
-#### `2.` Creating the Input Corpus
+#### Creating the Input Corpus
 
 Next we're going to need a small set of initial input files to hand to AFL++.
 Since Tidy parses HTML, we can simply download some HTML pages from live
@@ -86,30 +86,10 @@ urls=("google.com" \
       "youtube.com" \
       "facebook.com" \
       "twitter.com" \
+      ... \
       "instagram.com" \
       "wikipedia.org" \
-      "yahoo.com" \
-      "whatsapp.com" \
-      "amazon.com" \
-      "live.com" \
-      "reddit.com" \
-      "netflix.com" \
-      "linkedin.com" \
-      "office.com" \
-      "microsoftonline.com" \
-      "weather.com" \
-      "bing.com" \
-      "twitch.tv" \
-      "discord.com" \
-      "pinterest.com" \
-      "msn.com" \
-      "microsoft.com" \
-      "roblox.com" \
-      "zoom.us" \
-      "duckduckgo.com" \
-      "quora.com" \
-      "news.yaho" \
-      "ebay.com")
+      "duckduckgo.com")
 for url in ${urls[@]}; do \
     wget "https://${url}/" \
 done
