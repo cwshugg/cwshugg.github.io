@@ -8,29 +8,128 @@ categories: Fuzzing
 tags: [Fuzzing, Security, AFL++, C]
 ---
 
-intro
+**Tidy** is an open-source tool for cleaning up HTML and XML files. According to
+its [official website](https://www.html-tidy.org/), it's "the granddaddy of HTML
+tools," capable of modernizing old HTML/XML while also fixing markup errors.
+I've used the tool myself and it's incredibly handy - especially when I download
+a gigantic HTML file from a website or need to do a quick check of my website's
+HTML before pushing it up. 
+
+Tidy is maintained by the **HTACG** (**HTML Tidy Advocacy Community Group**).
+Their [GitHub page](https://github.com/htacg) has several repositories. Chief
+among these is [`tidy-html5`](https://github.com/htacg/tidy-html5). This is
+where the original implementation (updated to support HTML 5) lives.
+
+A library is also provided for use in other software projects. Some of the
+projects that use libtidy are listed on Tidy's website. Overall, it has a long
+history and is an interesting piece of software. It's also an easy target for
+fuzzing. Let's see if we can get it to break.
 
 #### `0.` Understanding The Target
 
-tidy
+We know what Tidy *does*, but we need to answer a few more questions before we
+can figure out how to fuzz it:
+
+###### 1. What language is Tidy implemented in?
+
+Taking a quick glance at the GitHub repository (linked above), we can see it's
+implemented in C. This means we can easily fuzz it with
+[AFL++](https://aflplus.plus).
+
+###### 2. How does Tidy receive input?
+
+In order to pass Tidy fuzzed test cases, we need to understand how it receives
+input from the user. Fortunately, passing HTML or XML to Tidy is as simple as
+giving it something to read from `stdin`. One way we can achieve this on the
+command line is by piping the contents of an HTML file directly into Tidy:
+
+```bash
+tidy < ./index.html
+```
 
 #### `1.` Building with AFL++
 
-cloning, building, and installing to local directory.
+At this point all we need to do is build Tidy with AFL++'s compiler. First, we
+clone the `tidy-html5` GitHub repository. Then, we simply follow
+[`README/BUILD.md`](https://github.com/htacg/tidy-html5/blob/next/README/BUILD.md),
+executing the following commands using `afl-clang-fast` as our compiler of
+choice:
 
-link back to AFL++ website and repo
+```bash
+cd build/cmake
+CC=afl-clang-fast -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=/path/to/local/tidy-install
+make
+make install
+```
+
+Note the `-DCMAKE_INSTALL_PREFIX` argument I've added. This allows us to install
+the AFL++-instrumented Tidy in a local directory without touching the rest of
+the system. (Plus, this way we don't need `sudo` permission.)
+
+The instrumented binary will be stored in `tidy-install/bin/tidy`.
 
 #### `2.` Creating the Input Corpus
 
-downloading HTML files from common websites to use as input
+Next we're going to need a small set of initial input files to hand to AFL++.
+Since Tidy parses HTML, we can simply download some HTML pages from live
+websites and drop them in a directory. I used `wget` and a simple bash loop to
+download HTML from a number of popular websites (and a few pages from my
+personal website):
+
+```bash
+mkdir fuzz_inputs
+cd fuzz_inputs
+
+urls=("google.com" \
+      "youtube.com" \
+      "facebook.com" \
+      "twitter.com" \
+      "instagram.com" \
+      "wikipedia.org" \
+      "yahoo.com" \
+      "whatsapp.com" \
+      "amazon.com" \
+      "live.com" \
+      "reddit.com" \
+      "netflix.com" \
+      "linkedin.com" \
+      "office.com" \
+      "microsoftonline.com" \
+      "weather.com" \
+      "bing.com" \
+      "twitch.tv" \
+      "discord.com" \
+      "pinterest.com" \
+      "msn.com" \
+      "microsoft.com" \
+      "roblox.com" \
+      "zoom.us" \
+      "duckduckgo.com" \
+      "quora.com" \
+      "news.yaho" \
+      "ebay.com")
+for url in ${urls[@]}; do \
+    wget "https://${url}/" \
+done
+```
 
 #### `3.` Fuzzing
 
-kicking off AFL++ and waiting
+Finally, all that remains is invoking AFL++ to kick off the fuzzing campaign:
+
+```bash
+afl-fuzz -D -i ./fuzz_inputs/ -o ./fuzz_run__0 ./tidy-install/bin/tidy
+```
+
+Watch it for a minute to make sure it's discovering new paths and updating its
+test case queue, then leave it be. In about seventeen minutes' time, we've found
+two crashes and a number of hangs:
+
+![The final AFL++ screen, revealing 2 crashes and 15 hangs.](/images/posts/fuzzing_tidy_aflpp.png)
 
 #### `4.` Inspecting the Crash
 
-using GDB to explore the bug
+up next: using GDB to explore the bug
 
 
 <!--
