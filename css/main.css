@@ -217,6 +217,7 @@ h6
     margin: 2px;
     padding: 8px;
     font-size: 12px !important;
+    line-height: 150%;
 }
 
 h1 code, h2 code, h3 code, h4 code, h5 code, h6 code
@@ -439,7 +440,7 @@ h1 code, h2 code, h3 code, h4 code, h5 code, h6 code
         border-radius: 8px;
         margin: 4px;
         padding: 12px;
-        font-size: 28px !important;
+        font-size: 24px !important;
         word-break: break-all;
     }
 

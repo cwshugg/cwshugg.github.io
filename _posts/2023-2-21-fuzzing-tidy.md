@@ -43,9 +43,9 @@ input from the user. Fortunately, passing HTML or XML to Tidy is as simple as
 giving it something to read from `stdin`. One way we can achieve this on the
 command line is by piping the contents of an HTML file directly into Tidy:
 
-```bash
+{% highlight bash %}
 tidy < ./index.html
-```
+{% endhighlight %}
 
 #### Building with AFL++
 
@@ -55,14 +55,14 @@ clone the `tidy-html5` GitHub repository. Then, we simply follow
 executing the following commands using `afl-clang-fast` as our compiler of
 choice:
 
-```bash
+{% highlight bash %}
 cd build/cmake
 CC=afl-clang-fast cmake ../../ \
     -DCMAKE_BUILD_TYPE=Debug \
     -DCMAKE_INSTALL_PREFIX=/path/to/local/tidy-install
 make
 make install
-```
+{% endhighlight %}
 
 Note the `-DCMAKE_INSTALL_PREFIX` argument I've added. This allows us to install
 the AFL++-instrumented Tidy in a local directory without touching the rest of
@@ -78,7 +78,7 @@ websites and drop them in a directory. I used `wget` and a simple bash loop to
 download HTML from a number of popular websites (and a few pages from my
 personal website):
 
-```bash
+{% highlight bash %}
 mkdir fuzz_inputs
 cd fuzz_inputs
 
@@ -93,18 +93,18 @@ urls=("google.com" \
 for url in ${urls[@]}; do \
     wget "https://${url}/" \
 done
-```
+{% endhighlight %}
 
 #### Fuzzing
 
 Finally, all that remains is invoking AFL++ to kick off the fuzzing campaign:
 
-```bash
+{% highlight bash %}
 afl-fuzz -D \
          -i ./fuzz_inputs/ \
          -o ./fuzz_run__0 \
          ./tidy-install/bin/tidy
-```
+{% endhighlight %}
 
 Watch it for a minute to make sure it's discovering new paths and updating its
 test case queue, then leave it be. In about seventeen minutes' time, we've found
@@ -115,15 +115,4 @@ two crashes and a number of hangs:
 #### Inspecting the Crash
 
 up next: using GDB to explore the bug
-
-
-<!--
-{% highlight c linenos %}
-// Here's some C code.
-int main(int argc, char** argv)
-{
-    printf("Hi\n");
-}
-{% endhighlight %}
--->
 
