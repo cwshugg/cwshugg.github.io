@@ -110,7 +110,7 @@ Watch it for a minute to make sure it's discovering new paths and updating its
 test case queue, then leave it be. In about seventeen minutes' time, we've found
 two crashes and a number of hangs:
 
-![The final AFL++ screen, revealing 2 crashes and 15 hangs.](/images/posts/fuzzing_tidy_aflpp.png){:width="100%"}
+![The final AFL++ screen, revealing 2 crashes and 15 hangs.](/images/posts/fuzzing_tidy_aflpp.png)
 
 #### Inspecting the Crash
 
