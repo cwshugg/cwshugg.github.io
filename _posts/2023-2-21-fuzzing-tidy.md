@@ -25,7 +25,7 @@ projects that use libtidy are listed on Tidy's website. Overall, it has a long
 history and is an interesting piece of software. It's also an easy target for
 fuzzing. Let's see if we can break it.
 
-#### Understanding The Target
+#### Fuzzing Tidy
 
 Fortunately for us, Tidy is implemented in C. This means we can easily fuzz it
 with [AFL++](https://aflplus.plus). If you haven't heard of AFL++, it's worth
@@ -46,7 +46,7 @@ tidy < ./index.html
 
 AFL++ will handle this piping on its own. So we're done here - time to compile!
 
-#### Building with AFL++
+##### Building with AFL++
 
 At this point all we need to do is build Tidy with AFL++'s compiler. First, we
 clone the `tidy-html5` GitHub repository. Then, we simply follow
@@ -67,7 +67,7 @@ the system. (Plus, this way we don't need `sudo` permission.)
 
 The instrumented binary will be stored in `tidy-install/bin/tidy`.
 
-#### Creating the Input Corpus
+##### Creating the Input Corpus
 
 Next we're going to need a small set of initial input files to hand to AFL++.
 Since Tidy parses HTML, we can simply download some HTML pages from live
@@ -92,7 +92,7 @@ for url in ${urls[@]}; do \
 done
 ```
 
-#### Fuzzing
+##### Fuzzing
 
 Finally, all that remains is invoking AFL++ to kick off the fuzzing campaign:
 

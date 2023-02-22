@@ -379,6 +379,18 @@ h1 code, h2 code, h3 code, h4 code, h5 code, h6 code
     color: var(--color-bg4);
 }
 
+/********************************** Images ***********************************/
+img
+{
+    border: 2px solid var(--color-text1);
+    border-radius: 4px;
+    
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 90%;
+}
+
 /****************************** Mobile Screens *******************************/
 /* https://stackoverflow.com/questions/42025632/how-to-detect-only-with-css-mobile-screens */
 @media only screen and (hover: none) and (pointer: coarse)
