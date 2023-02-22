@@ -205,7 +205,17 @@ h6
     background-color: var(--color-bg2);
     border-radius: 6px;
     margin: 2px;
-    padding: 4px;
+    padding: 2px;
+}
+
+.text-code-block, pre:has(code)
+{
+    font-family: var(--font-code);
+    background-color: var(--color-bg2);
+    border-radius: 6px;
+    margin: 2px;
+    padding: 2px;
+    width: 100%;
 }
 
 h1 code, h2 code, h3 code, h4 code, h5 code, h6 code
@@ -419,7 +429,15 @@ h1 code, h2 code, h3 code, h4 code, h5 code, h6 code
     {
         border-radius: 8px;
         margin: 4px;
-        padding: 8px;
+        padding: 4px;
+        font-size: 36px;
+    }
+    
+    .text-code-block, pre:has(code)
+    {
+        border-radius: 8px;
+        margin: 4px;
+        padding: 4px;
         font-size: 36px;
     }
 

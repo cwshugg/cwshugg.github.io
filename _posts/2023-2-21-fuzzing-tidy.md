@@ -23,20 +23,20 @@ where the original implementation (updated to support HTML 5) lives.
 A library is also provided for use in other software projects. Some of the
 projects that use libtidy are listed on Tidy's website. Overall, it has a long
 history and is an interesting piece of software. It's also an easy target for
-fuzzing. Let's see if we can get it to break.
+fuzzing. Let's see if we can break it.
 
 #### `0.` Understanding The Target
 
 We know what Tidy *does*, but we need to answer a few more questions before we
 can figure out how to fuzz it:
 
-###### 1. What language is Tidy implemented in?
+###### What language is Tidy implemented in?
 
 Taking a quick glance at the GitHub repository (linked above), we can see it's
 implemented in C. This means we can easily fuzz it with
 [AFL++](https://aflplus.plus).
 
-###### 2. How does Tidy receive input?
+###### How does Tidy receive input?
 
 In order to pass Tidy fuzzed test cases, we need to understand how it receives
 input from the user. Fortunately, passing HTML or XML to Tidy is as simple as
@@ -57,7 +57,9 @@ choice:
 
 ```bash
 cd build/cmake
-CC=afl-clang-fast -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=/path/to/local/tidy-install
+CC=afl-clang-fast cmake ../../ \
+    -DCMAKE_BUILD_TYPE=Debug \
+    -DCMAKE_INSTALL_PREFIX=/path/to/local/tidy-install
 make
 make install
 ```
@@ -118,7 +120,10 @@ done
 Finally, all that remains is invoking AFL++ to kick off the fuzzing campaign:
 
 ```bash
-afl-fuzz -D -i ./fuzz_inputs/ -o ./fuzz_run__0 ./tidy-install/bin/tidy
+afl-fuzz -D \
+         -i ./fuzz_inputs/ \
+         -o ./fuzz_run__0 \
+         ./tidy-install/bin/tidy
 ```
 
 Watch it for a minute to make sure it's discovering new paths and updating its
