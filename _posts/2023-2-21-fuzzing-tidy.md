@@ -27,25 +27,24 @@ fuzzing. Let's see if we can break it.
 
 #### Understanding The Target
 
-We know what Tidy *does*, but we need to answer a few more questions before we
-can figure out how to fuzz it:
+Fortunately for us, Tidy is implemented in C. This means we can easily fuzz it
+with [AFL++](https://aflplus.plus). If you haven't heard of AFL++, it's worth
+taking the time to read up. It's a phenomenal gray-box fuzzing tool that excels
+at finding bugs in software. AFL++'s greatest strength is its ability to
+instrument C code to detect control-flow changes in the target program during
+execution. This allows it to continually improve its test cases in-flight.
 
-###### What language is Tidy implemented in?
+In order for AFL++ to pass Tidy its test cases, we need to understand how Tidy
+receives input from the user. Fortunately, passing HTML or XML to Tidy is as
+simple as giving it something to read from `stdin`. One way we can achieve this
+on the command line is by piping the contents of an HTML file directly into
+Tidy:
 
-Taking a quick glance at the GitHub repository (linked above), we can see it's
-implemented in C. This means we can easily fuzz it with
-[AFL++](https://aflplus.plus).
-
-###### How does Tidy receive input?
-
-In order to pass Tidy fuzzed test cases, we need to understand how it receives
-input from the user. Fortunately, passing HTML or XML to Tidy is as simple as
-giving it something to read from `stdin`. One way we can achieve this on the
-command line is by piping the contents of an HTML file directly into Tidy:
-
-{% highlight bash %}
+```bash
 tidy < ./index.html
-{% endhighlight %}
+```
+
+AFL++ will handle this piping on its own. So we're done here - time to compile!
 
 #### Building with AFL++
 
@@ -55,14 +54,12 @@ clone the `tidy-html5` GitHub repository. Then, we simply follow
 executing the following commands using `afl-clang-fast` as our compiler of
 choice:
 
-{% highlight bash %}
+```bash
 cd build/cmake
-CC=afl-clang-fast cmake ../../ \
-    -DCMAKE_BUILD_TYPE=Debug \
-    -DCMAKE_INSTALL_PREFIX=/path/to/local/tidy-install
+CC=afl-clang-fast cmake ../../ -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=/path/to/local/tidy-install
 make
 make install
-{% endhighlight %}
+```
 
 Note the `-DCMAKE_INSTALL_PREFIX` argument I've added. This allows us to install
 the AFL++-instrumented Tidy in a local directory without touching the rest of
@@ -78,7 +75,7 @@ websites and drop them in a directory. I used `wget` and a simple bash loop to
 download HTML from a number of popular websites (and a few pages from my
 personal website):
 
-{% highlight bash %}
+```bash
 mkdir fuzz_inputs
 cd fuzz_inputs
 
@@ -93,18 +90,15 @@ urls=("google.com" \
 for url in ${urls[@]}; do \
     wget "https://${url}/" \
 done
-{% endhighlight %}
+```
 
 #### Fuzzing
 
 Finally, all that remains is invoking AFL++ to kick off the fuzzing campaign:
 
-{% highlight bash %}
-afl-fuzz -D \
-         -i ./fuzz_inputs/ \
-         -o ./fuzz_run__0 \
-         ./tidy-install/bin/tidy
-{% endhighlight %}
+```bash
+afl-fuzz -D -i ./fuzz_inputs -o ./fuzz_run__0 ./tidy-install/bin/tidy
+```
 
 Watch it for a minute to make sure it's discovering new paths and updating its
 test case queue, then leave it be. In about seventeen minutes' time, we've found
