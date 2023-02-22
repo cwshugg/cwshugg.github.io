@@ -206,7 +206,7 @@ h6
     border-radius: 6px;
     margin: 2px;
     padding: 2px;
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .text-code-block, pre:has(code)
@@ -216,6 +216,7 @@ h6
     border-radius: 6px;
     margin: 2px;
     padding: 2px;
+    font-size: 12px !important;
 }
 
 h1 code, h2 code, h3 code, h4 code, h5 code, h6 code
@@ -430,7 +431,7 @@ h1 code, h2 code, h3 code, h4 code, h5 code, h6 code
         border-radius: 8px;
         margin: 4px;
         padding: 4px;
-        font-size: 36px;
+        font-size: 32px;
     }
     
     .text-code-block, pre:has(code)
@@ -438,7 +439,8 @@ h1 code, h2 code, h3 code, h4 code, h5 code, h6 code
         border-radius: 8px;
         margin: 4px;
         padding: 4px;
-        font-size: 28px;
+        font-size: 28px !important;
+        word-break: break-all;
     }
 
     .text-quote

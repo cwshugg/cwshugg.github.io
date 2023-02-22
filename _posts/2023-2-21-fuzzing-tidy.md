@@ -95,7 +95,7 @@ for url in ${urls[@]}; do \
 done
 ```
 
-#### `3.` Fuzzing
+#### Fuzzing
 
 Finally, all that remains is invoking AFL++ to kick off the fuzzing campaign:
 
@@ -112,7 +112,7 @@ two crashes and a number of hangs:
 
 ![The final AFL++ screen, revealing 2 crashes and 15 hangs.](/images/posts/fuzzing_tidy_aflpp.png)
 
-#### `4.` Inspecting the Crash
+#### Inspecting the Crash
 
 up next: using GDB to explore the bug
 
