@@ -213,11 +213,12 @@ h6
 {
     font-family: var(--font-code);
     background-color: var(--color-bg2);
-    border-radius: 6px;
+    border-radius: 8px;
     margin: 2px;
     padding: 8px;
     font-size: 12px !important;
-    line-height: 150%;
+    line-height: 175%;
+    white-space: pre-wrap;
 }
 
 h1 code, h2 code, h3 code, h4 code, h5 code, h6 code
@@ -441,7 +442,6 @@ h1 code, h2 code, h3 code, h4 code, h5 code, h6 code
         margin: 4px;
         padding: 12px;
         font-size: 24px !important;
-        word-break: break-all;
     }
 
     .text-quote
