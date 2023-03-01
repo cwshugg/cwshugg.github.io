@@ -54,7 +54,7 @@
         {% for chunk in page.chunks %}
         <div class="div-main div-border-acc1 text-main">
             <p></p>
-            {% include chunk %}
+            {% include_relative {{chunk}} %}
             <p></p>
         </div>
         {% endfor %}
