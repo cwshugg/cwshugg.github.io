@@ -49,7 +49,23 @@
         {% endif %}
 
         <!-- Content -->
-        {{content}}
+        {% if page.chunks %}
+        <!-- CHUNKS: separte content with boxes -->
+        {% for chunk in page.chunks %}
+        <div class="div-main div-border-acc1 text-main">
+            <p></p>
+            {% include_relative chunk %}
+            <p></p>
+        </div>
+        {% endfor %}
+        {% else %}
+        <!-- DEFAULT: one box including the page content -->
+        <div class="div-main div-border-acc1 text-main">
+            <p></p>
+            {{content}}
+            <p></p>
+        </div>
+        {% endif %}
 
         <!-- Icons -->
         <div class="div-icons">

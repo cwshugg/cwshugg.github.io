@@ -8,9 +8,6 @@ categories: Fuzzing
 tags: [Fuzzing, Security, AFL++, C]
 ---
 
-<!-- ========================= SECTION 1 - FUZZING ========================= -->
-<div class="div-border-acc1">
-
 **Tidy** is an open-source tool for cleaning up HTML and XML files. According to
 its [official website](https://www.html-tidy.org/), it's "the granddaddy of HTML
 tools," capable of modernizing old HTML/XML while also fixing markup errors.
@@ -109,11 +106,6 @@ two crashes and a number of hangs:
 
 ![The final AFL++ screen, revealing 2 crashes and 15 hangs.](/images/posts/fuzzing_tidy_aflpp.png)
 
-</div>
-
-<!-- ===================== SECTION 2 - CRASH ANALYSIS ====================== -->
-<div class="div-border-acc1">
-
 #### Postmortem 1 - Inspecting the Crash
 
 So we've found a crash. Let's bust out GDB to take a closer look:
@@ -167,11 +159,6 @@ Tidy in May of 2022
 ([GitHub Issue #1038](https://github.com/htacg/tidy-html5/issues/1038)). The
 issue he/she created hasn't gotten any attention yet, which explains why the bug
 still exists a year later. But, still a nice find and a win for AFL++!
-
-</div>
-
-<!-- ====================== SECTION 2 - HANG ANALYSIS ====================== -->
-<div class="div-border-acc1">
 
 #### Postmortem 2 - Inspecting the Hang
 
@@ -231,6 +218,4 @@ been modified by a user. If this infinite-loop bug exists, a properly-crafted
 HTML payload could indefinitely hang one of the server's threads. Do this a few
 more times and an attacker could get several, if not *all* of the server threads
 stuck.
-
-</div>
 
