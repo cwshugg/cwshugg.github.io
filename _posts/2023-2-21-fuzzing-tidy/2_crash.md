@@ -13,13 +13,13 @@ pipe in the contents of the crash-inducing test case AFL++ saved for us.)
 At this point, we can `run`. This confirms that we got Tidy to crash with a
 `SIGSEGV` (Segmentation Fault). Nice!
 
-![GDB segmentation fault screen](/images/posts/fuzzing_tidy_gdb1.png)
+![GDB segmentation fault screen](/images/posts/2023-2-21-fuzzing-tidy/fuzzing_tidy_gdb1.png)
 
 The segfault occurred when `parser.c` line 143 was executed. This is a check
 within the `InsertNodeAsParent()` function. What part of the if-statement
 triggered an invalid memory access?
 
-![GDB null pointer dereference](/images/posts/fuzzing_tidy_gdb2.png)
+![GDB null pointer dereference](/images/posts/2023-2-21-fuzzing-tidy/fuzzing_tidy_gdb2.png)
 
 The `node` variable's `parent` field appears to be null. By attempting to access
 `node->parent->content`, the program wrongly assumes `node->parent` is *never*
