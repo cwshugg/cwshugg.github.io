@@ -44,7 +44,7 @@ passed into `malloc()`. A `size_t` represents an unsigned integer. From the
 previous function, we saw that the value being passed into `stbi__malloc()` was
 the multiplication of two integers:
 
-```C
+```c
 g->history = (stbi_uc *) stbi__malloc(g->w * g->h);
 ```
 
