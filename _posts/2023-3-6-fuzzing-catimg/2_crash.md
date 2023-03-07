@@ -70,3 +70,21 @@ gigabytes*.) Considering the system I'm running this on has exactly 8 gigabytes
 of RAM, this allocation request will most certainly fail. Thus, `malloc()`
 returns `NULL`, revealing the root cause of this bug.
 
+###### Integer Overflow Galore!
+
+Something else interesting - if we go back and look at the `g->out` and
+`g->background` allocations, their size is computed similarly to `g->history`:
+
+```c
+// src/stb_image.h line 6482
+g->out = (stbi_uc *) stbi__malloc(4 * g->w * g->h);
+g->background = (stbi_uc *) stbi__malloc(4 * g->w * g->h);
+g->history = (stbi_uc *) stbi__malloc(g->w * g->h);
+```
+
+The one difference is the multipcation of 4. It just so happens that multiplying
+the *negative* product of `g->w` and `g->h` by four results in a negative value
+so large, that the final result wraps back around to be positive 66714628. For
+this reason, the allocations for `g->out` and `g->background` each request 66.7
+megabytes, both of which succeed.
+

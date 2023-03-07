@@ -25,20 +25,20 @@ CC=afl-clang-fast cmake ./
 make
 ```
 
-The resulting instrumented binary will be stored in `catimg/bin/catimg`.
+The resulting instrumented binary will be stored at `catimg/bin/catimg`.
 
 ##### Creating the Input Corpus
 
-We need a small collection of images to use as an input corpus. We'll start by
-heading to [unsplash](https://unsplash.com/images/stock) to download a few stock
-photos:
+We need a small collection of images to use as an input corpus. We'll find some
+by heading to [unsplash](https://unsplash.com/images/stock) to download a few
+stock photos:
 
 * [A dog](https://unsplash.com/photos/U3aF7hgUSrk)
 * [Some cheese](https://unsplash.com/photos/jeAjT87nbjM)
 * [An angry man](https://unsplash.com/photos/r-enAOPw8Rs)
 * [An astronaut](https://unsplash.com/photos/Yj1M5riCKk4)
 
-Each of these images downloads as a `.jpg` image. This is a good start, but
+Each of these images download as a `.jpg`. This is a good start, but
 considering there are a multitude of formats catimg supports, we'll create
 copies of each one across four different image formats:
 
@@ -70,7 +70,7 @@ Placing these all inside a directory gives us our final set of inputs:
 
 ##### Fuzzing
 
-Finally, we'll fire up AFL++ with our input set. There's not much to this:
+Finally, we'll fire up AFL++ with our input set:
 
 ```bash
 afl-fuzz -D -i ./fuzz_inputs -o ./fuzz_run__0 ./catimg/bin/catimg @@
@@ -80,8 +80,7 @@ AFL++ interprets the `@@` symbol as the location into which it places the path
 to its current input file. With each iteration, the fuzzer will drop in the path
 to a new file.
 
-Sit back and relax. Four hours short of a day later, we've found ourselves a
-crash:
+Sit back and relax. Nearly a day later, we've found ourselves a crash:
 
 ![AFL++'s status screen, 20 hours later](/images/posts/2023-3-6-fuzzing-catimg/fuzzing_catimg_1_aflpp.png)
 
