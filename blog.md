@@ -17,6 +17,9 @@ permalink: /blog
         <p>
         {{post.date | date: "%Y.%m.%d"}} -
         <a href="{{site.baseurl}}{{post.url}}">{{post.title}}</a>
+        {% if post.subtitle %}
+        - <i>{{post.subtitle}}</i>
+        {% endif %}
         </p>
     </article>
     {% endfor %}

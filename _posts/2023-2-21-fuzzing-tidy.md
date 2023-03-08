@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Fuzzing the Tidy HTML Tool
-subtitle: Bug Hunting with AFL++
+subtitle: Null Pointer Dereference and Infinite Loop with AFL++
 date: 2023.02.21
 author: Connor Shugg
 categories: Fuzzing
