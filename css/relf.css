@@ -8,24 +8,24 @@
 }
 
 .color-nomad
-{ color: var(--color-nomad); }
+{ color: var(--color-nomad) !important; }
 .color-settler
-{ color: var(--color-settler); }
+{ color: var(--color-settler) !important; }
 .color-hunter
-{ color: var(--color-hunter); }
+{ color: var(--color-hunter) !important; }
 .color-warlock
-{ color: var(--color-warlock); }
+{ color: var(--color-warlock) !important; }
 .color-noble
-{ color: var(--color-noble); }
+{ color: var(--color-noble) !important; }
 
 .border-nomad
-{ border: 1px solid var(--color-nomad); }
+{ border: 1px solid var(--color-nomad) !important; }
 .border-settler
-{ border: 1px solid var(--color-settler); }
+{ border: 1px solid var(--color-settler) !important; }
 .border-hunter
-{ border: 1px solid var(--color-hunter); }
+{ border: 1px solid var(--color-hunter) !important; }
 .border-warlock
-{ border: 1px solid var(--color-warlock); }
+{ border: 1px solid var(--color-warlock) !important; }
 .border-noble
-{ border: 1px solid var(--color-noble); }
+{ border: 1px solid var(--color-noble) !important; }
 
