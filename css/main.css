@@ -189,6 +189,11 @@ h6
     color: var(--color-acc1);
 }
 
+.text-skill
+{
+    line-height: 32px; 
+}
+
 .text-book-title
 {
     font-style: italic;
@@ -492,6 +497,11 @@ img
     .text-quote-speaker
     {
         font-size: 36px;
+    }
+    
+    .text-skill
+    {
+       line-height: 64px; 
     }
     
     .div-deck
