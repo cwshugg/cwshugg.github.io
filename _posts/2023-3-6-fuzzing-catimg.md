@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Fuzzing Catimg
-subtitle: Bug Hunting with AFL++
+subtitle: Allocation Failure via Integer Overflow with AFL++
 date: 2023.03.06
 author: Connor Shugg
 categories: Fuzzing
