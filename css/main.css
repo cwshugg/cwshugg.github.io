@@ -37,6 +37,7 @@
     --color-acc2: rgb(205, 42, 58);     /* dark-ish red */
     --color-acc3: rgb(235, 154, 32);    /* yellow-gold */
     --color-acc4: rgb(95, 130, 218);    /* lighter blue */
+    --color-acc5: rgb(155, 104, 255);   /* light purple */
     --font1: "Quicksand", "Roboto", "Verdana";
     --font2: "Varela", "Roboto", "Arial";
     --font-code: "RobotoMono", "Consolas", "Courier";
@@ -85,6 +86,8 @@ h6
 { color: var(--color-acc3) !important; } 
 .color-acc4
 { color: var(--color-acc4) !important; } 
+.color-acc5
+{ color: var(--color-acc5) !important; } 
 
 /****************************** Text Formatting ******************************/
 .text-header1, h1
@@ -248,11 +251,24 @@ h1 code, h2 code, h3 code, h4 code, h5 code, h6 code
     margin: 8px;
 }
 
+.div-border
+{
+    margin: 16px;
+    margin-left: 4px;
+    margin-right: 4px;
+    border: 2px solid var(--color-text2);
+    padding-right: 12px;
+    padding-left: 12px;
+    border-radius: 6px;
+}
+
 .div-border-acc1
 {
     margin: 16px;
     margin-left: 4px;
+    margin-right: 4px;
     border: 2px solid var(--color-acc1);
+    padding-right: 12px;
     padding-left: 12px;
     border-radius: 6px;
 }
@@ -261,8 +277,10 @@ h1 code, h2 code, h3 code, h4 code, h5 code, h6 code
 {
     margin: 16px;
     margin-left: 4px;
+    margin-right: 4px;
     border: 2px solid var(--color-acc2);
     padding-left: 12px;
+    padding-right: 12px;
     border-radius: 6px;
 }
 
@@ -270,8 +288,10 @@ h1 code, h2 code, h3 code, h4 code, h5 code, h6 code
 {
     margin: 16px;
     margin-left: 4px;
+    margin-right: 4px;
     border: 2px solid var(--color-acc3);
     padding-left: 12px;
+    padding-right: 12px;
     border-radius: 6px;
 }
 
@@ -286,6 +306,15 @@ h1 code, h2 code, h3 code, h4 code, h5 code, h6 code
     padding: 8px;
     margin: 8px;
     justify-content: center;
+}
+
+.div-deck
+{
+    padding: 8px;
+    margin: 8px;
+    text-align: center;
+    justify-content: center;
+    display: flex;
 }
 
 /********************************** Inputs ***********************************/
@@ -465,6 +494,14 @@ img
         font-size: 36px;
     }
     
+    .div-deck
+    {
+        padding: 8px;
+        margin: 8px;
+        text-align: center;
+        justify-content: center;
+    }
+ 
     .input-main, input
     {
         font-size: 36px;
