@@ -14,7 +14,7 @@ gdb ./tidy-install/bin/tidy -ex "set args < fuzz_run__0/default/hangs/id:000000*
 
 With the arguments set, we `run` and observe something interesting:
 
-![GDB infinite loop](/images/posts/2023-2-21-fuzzing-tidy/fuzzing_tidy_gdb3.png)
+![GDB infinite loop](/images/posts/2023-02-21-fuzzing-tidy/fuzzing_tidy_gdb3.png)
 
 Whilst handling an anchor HTML tag (`<a></a>`), Tidy traps itself into
 infinitely looping. We won't spend time digging into *why* this is happening,

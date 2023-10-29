@@ -3,7 +3,7 @@ nifty tool for that: [catimg](https://github.com/posva/catimg). It's pretty
 simple: catimg accepts the path to an image file and prints the image to the
 terminal as accurately as possible:
 
-![Displaying my Alma Mater's logo with catimg](/images/posts/2023-3-6-fuzzing-catimg/fuzzing_catimg_0_example.png)
+![Displaying my Alma Mater's logo with catimg](/images/posts/2023-03-06-fuzzing-catimg/fuzzing_catimg_0_example.png)
 
 #### Fuzzing Catimg
 
@@ -82,5 +82,5 @@ to a new file.
 
 Sit back and relax. Nearly a day later, we've found ourselves a crash:
 
-![AFL++'s status screen, 20 hours later](/images/posts/2023-3-6-fuzzing-catimg/fuzzing_catimg_1_aflpp.png)
+![AFL++'s status screen, 20 hours later](/images/posts/2023-03-06-fuzzing-catimg/fuzzing_catimg_1_aflpp.png)
 
