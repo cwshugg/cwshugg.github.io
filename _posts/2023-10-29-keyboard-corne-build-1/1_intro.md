@@ -7,7 +7,7 @@ that use has left it with shiny keys, torn cloth on the wrist wrest, and several
 it continues to press on and refuses to fail. I might as well use this keyboard
 forever, right?
 
-![My tired and worn Razer Ornata Chroma](/images/posts/2023-10-29-keyboard-corne-build/razer_ornata_chroma.jpg)
+![My tired and worn Razer Ornata Chroma](/images/posts/2023-10-29-keyboard-corne-build-1/razer_ornata_chroma.jpg)
 
 Well, *enter physical health*. For the past few months, I've been experiencing
 wrist and finger pain that fades in and out depending on my computer usage.
@@ -53,7 +53,7 @@ sending them to the computer the keyboard is plugged in to.
 
 Here's what we're working with:
 
-![All the components of the corne keyboard](/images/posts/2023-10-29-keyboard-corne-build/kit_all.jpg)
+![All the components of the corne keyboard](/images/posts/2023-10-29-keyboard-corne-build-1/kit_all.jpg)
 
 Can't see the microcontrollers or OLED screens through those ESD bags? Don't
 worry, we'll get there.
