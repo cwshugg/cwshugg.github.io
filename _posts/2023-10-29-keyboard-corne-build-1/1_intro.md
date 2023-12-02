@@ -58,3 +58,20 @@ Here's what we're working with:
 Can't see the microcontrollers or OLED screens through those ESD bags? Don't
 worry, we'll get there.
 
+##### Switches and Keycaps
+
+The last component needed for the keyboard, aside from all the hardware, was of
+course mechanical switches and a set of keycaps. I went for Gateron G Pro 2.0
+red switches, which are linear in feel and *very* satisfying to use.
+
+![The switches sitting in a plastic jug](/images/posts/2023-10-29-keyboard-corne-build-1/switches_jug.jpg)
+
+![A GIF of me pressing the switch up and down with my finger](/images/posts/2023-10-29-keyboard-corne-build-1/switches_demo.gif)
+
+As for the keycaps, I found a nice set of PCB caps on Amazon and laid them out
+in a first-attempt pattern:
+
+![My first attempt at a layout for my keyboard, using keycaps laid out on a
+piece of paper](/images/posts/2023-10-29-keyboard-corne-build-1/keycaps_layout.jpg)
+
+
