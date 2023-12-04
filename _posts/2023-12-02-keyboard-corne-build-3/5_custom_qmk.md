@@ -42,7 +42,7 @@ I also spent some time writing code to customize the content on the two OLED
 screens. At the time of writing this, I've only given the left-hand OLED screen
 a job; the right-hand screen is off. Here's what I cooked up:
 
-![My final keycap layout, with all the keycaps installed on the keyboard](/images/posts/2023-12-02-keyboard-corne-build-3/keycaps.jpg)
+![My customized OLED screen on the Corne](/images/posts/2023-12-02-keyboard-corne-build-3/oled_custom.jpg)
 
 Eventually, I'd like to add a display of what modifiers are currently active
 (caps lock, ctrl, alt, shift, etc.), and I'd like to give the right-hand screen
