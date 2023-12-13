@@ -68,7 +68,7 @@ red switches, which are linear in feel and *very* satisfying to use.
 
 ![A GIF of me pressing the switch up and down with my finger](/images/posts/2023-10-29-keyboard-corne-build-1/switches_demo.gif)
 
-As for the keycaps, I found a nice set of PCB caps on Amazon and laid them out
+As for the keycaps, I found a nice set of PBT caps on Amazon and laid them out
 in a first-attempt pattern:
 
 ![My first attempt at a layout for my keyboard, using keycaps laid out on a
