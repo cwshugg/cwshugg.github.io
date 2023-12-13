@@ -7,7 +7,7 @@ that use has left it with shiny keys, torn cloth on the wrist wrest, and several
 it continues to press on and refuses to fail. I might as well use this keyboard
 forever, right?
 
-![My tired and worn Razer Ornata Chroma](/images/posts/2023-10-29-keyboard-corne-build-1/razer_ornata_chroma.jpg){:max-width="1200px"}
+![My tired and worn Razer Ornata Chroma](/images/posts/2023-10-29-keyboard-corne-build-1/razer_ornata_chroma.jpg){:width="1200px"}
 
 Well, *enter physical health*. For the past few months, I've been experiencing
 wrist and finger pain that fades in and out depending on my computer usage.
@@ -64,9 +64,9 @@ The last component needed for the keyboard, aside from all the hardware, was of
 course mechanical switches and a set of keycaps. I went for Gateron G Pro 2.0
 red switches, which are linear in feel and *very* satisfying to use.
 
-![The switches sitting in a plastic jug](/images/posts/2023-10-29-keyboard-corne-build-1/switches_jug.jpg){:max-height="600px"}
+![The switches sitting in a plastic jug](/images/posts/2023-10-29-keyboard-corne-build-1/switches_jug.jpg){:height="600px"}
 
-![A GIF of me pressing the switch up and down with my finger](/images/posts/2023-10-29-keyboard-corne-build-1/switches_demo.gif){:max-width="1200px"}
+![A GIF of me pressing the switch up and down with my finger](/images/posts/2023-10-29-keyboard-corne-build-1/switches_demo.gif){:width="1200px"}
 
 As for the keycaps, I found a nice set of PBT caps on Amazon and laid them out
 in a first-attempt pattern:
