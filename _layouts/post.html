@@ -1,85 +1,62 @@
-<!doctype html>
-<html lang="en">
-    <!-- Page Metadata -->
-    <head>
-        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-        <title>{{page.title}}</title>
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
-        <link rel="stylesheet" href="{{site.baseurl}}/css/main.css">
-    </head>
+---
+layout: default
+---
 
-    <!-- Page Body -->
-    <body class="body-main color-bg1">
-        <!-- Title -->
-        <h2 class="text-header2 color-text-header">
-            <span class="color-acc3">{{page.title}}</span>
-        </h2>
+<!-- Title -->
+<h2 class="text-header2 color-text-header">
+    <span class="color-acc3">{{page.title}}</span>
+</h2>
 
-        {% if page.subtitle %}
-        <!-- Subtitle -->
-        <h4 class="text-header4 color-text-header">
-            <span class="color-acc2">{{page.subtitle}}</span>
-        </h4>
-        {% endif %}
-        
-        {% if page.date or page.author %}
-        <!-- Date and Author -->
-        <h5 class="text-header5 color-text-header">
-            {% if page.date %}
-            <span class="color-acc1">{{page.date | date: "%Y.%m.%d"}}</span>
-            {% endif %}
-            
-            {% if page.date and page.author %}
-            <span class="color-text1">-</span>
-            {% endif %}
+{% if page.subtitle %}
+<!-- Subtitle -->
+<h4 class="text-header4 color-text-header">
+    <span class="color-acc2">{{page.subtitle}}</span>
+</h4>
+{% endif %}
 
-            {% if page.author %}
-            <span class="color-acc1">{{page.author}}</span>
-            {% endif %}
-        </h5>
-        {% endif %}
-        
-        {% if page.tags %}
-        <!-- Post Tags -->
-        <div class="div-main div-btn-deck">
-            {% for tag in page.tags %}
-            <b><code class="color-text1 text-code">{{tag}}</code></b>
-            {% endfor %}
-        </div>
-        {% endif %}
+{% if page.date or page.author %}
+<!-- Date and Author -->
+<h5 class="text-header5 color-text-header">
+    {% if page.date %}
+    <span class="color-acc1">{{page.date | date: "%Y.%m.%d"}}</span>
+    {% endif %}
 
-        <!-- Content -->
-        {% if page.chunks %}
-        <!-- CHUNKS: separte content with boxes -->
-        {% for chunk in page.chunks %}
-        <div class="div-main div-border-acc1 text-main">
-            <p></p>
-            {% capture chunk_markdown %}{% include_relative {{chunk}} %}{% endcapture %}
-            {{ chunk_markdown | markdownify }}
-            <p></p>
-        </div>
-        {% endfor %}
-        {% else %}
-        <!-- DEFAULT: one box including the page content -->
-        <div class="div-main div-border-acc1 text-main">
-            <p></p>
-            {{content}}
-            <p></p>
-        </div>
-        {% endif %}
+    {% if page.date and page.author %}
+    <span class="color-text1">-</span>
+    {% endif %}
 
-        <!-- Icons -->
-        <div class="div-icons">
-            <a href="https://github.com/cwshugg" class="text-icon">
-                <i class="fab fa-github icon-link"></i>
-            </a>
-            <a href="https://www.linkedin.com/in/connor-shugg/" class="text-icon">
-                <i class="fab fa-linkedin icon-link"></i>
-            </a>
-            <a href="mailto:connor@shugg.dev" class="text-icon">
-                <i class="fas fa-envelope icon-link"></i>
-            </a>
-        </div>
-    </body>
-</html>
+    {% if page.author %}
+    <span class="color-acc1">{{page.author}}</span>
+    {% endif %}
+</h5>
+{% endif %}
+
+{% if page.tags %}
+<!-- Post Tags -->
+<div class="div-main div-btn-deck">
+    {% for tag in page.tags %}
+    <b><code class="color-text1 text-code">{{tag}}</code></b>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- Content -->
+{% if page.chunks %}
+<!-- CHUNKS: separate content with boxes -->
+{% for chunk in page.chunks %}
+<div class="div-main div-border-acc1 text-main">
+    <p></p>
+    {% capture chunk_markdown %}{% include_relative {{chunk}} %}{% endcapture %}
+    {{ chunk_markdown | markdownify }}
+    <p></p>
+</div>
+{% endfor %}
+{% else %}
+<!-- DEFAULT: one box including the page content -->
+<div class="div-main div-border-acc1 text-main">
+    <p></p>
+    {{content}}
+    <p></p>
+</div>
+{% endif %}
 

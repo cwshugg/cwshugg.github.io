@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ page.title | default: "shugg.dev" }}</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+    <link rel="stylesheet" href="{{ '/css/main.css' | relative_url }}">
+    {% if page.extra_css %}
+    {% for css_file in page.extra_css %}
+    <link rel="stylesheet" href="{{ css_file | relative_url }}">
+    {% endfor %}
+    {% endif %}
+    <link rel="icon" href="{{ '/favicon.ico' | relative_url }}">
+</head>
+<body>
+    <header class="site-header">
+        <a href="{{ '/' | relative_url }}" class="site-title">shugg.dev</a>
+        <nav>
+            <a href="{{ '/' | relative_url }}" class="button-nav">Home</a>
+            <a href="{{ '/gurthang' | relative_url }}" class="button-nav">Gurthang</a>
+            <a href="{{ '/relf' | relative_url }}" class="button-nav">RELF</a>
+            <a href="{{ '/weather.html' | relative_url }}" class="button-nav">Weather</a>
+            <button class="theme-toggle" id="themeToggle" title="Toggle light/dark mode"><i class="fas fa-sun"></i></button>
+        </nav>
+    </header>
+    <main>
+        {{ content }}
+    </main>
+    <footer class="site-footer">
+        <div>
+            <a href="https://github.com/cwshugg" title="GitHub">
+                <i class="fab fa-github"></i>
+            </a>
+            <a href="https://www.linkedin.com/in/connor-shugg/" title="LinkedIn">
+                <i class="fab fa-linkedin"></i>
+            </a>
+            <a href="mailto:connor@shugg.dev" title="Email">
+                <i class="fas fa-envelope"></i>
+            </a>
+        </div>
+        <p>&copy; Connor Shugg</p>
+    </footer>
+    {% if page.extra_js %}
+    {% for js_file in page.extra_js %}
+    <script src="{{ js_file | relative_url }}"></script>
+    {% endfor %}
+    {% endif %}
+    <script src="{{ '/script/theme.js' | relative_url }}"></script>
+</body>
+</html>

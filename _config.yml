@@ -1,2 +1,11 @@
+title: "shugg.dev"
+description: "Connor Shugg's personal website — software engineering, security, and projects."
 permalink: /:categories/:title
 
+exclude:
+  - .cobots
+  - Gemfile
+  - Gemfile.lock
+  - vendor
+  - README.txt
+  - LICENSE.txt

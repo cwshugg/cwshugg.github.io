@@ -1,1 +1,18 @@
+# Vim swapfiles
 *.swp
+*.swo
+*.swn
+
+# My AI tooling
+.cobots/
+
+# Jekyll build output
+_site/
+.jekyll-cache/
+.jekyll-metadata
+
+# Ruby / Bundler
+vendor/
+.bundle/
+Gemfile.lock
+

@@ -1,6 +1,25 @@
-/********************************** Colors ***********************************/
-.color-gurthang1
-{ color: rgb(155, 127, 167) !important; }
-.color-gurthang2
-{ color: rgb(106, 157, 162) !important; }
+/* ==========================================================================
+ * gurthang.css — Page-specific styles for the Gurthang research page.
+ *
+ * These colors are unique to the Gurthang page and are designed to
+ * harmonize with the global palette defined in main.css:
+ *   --color-accent1: #227C9D (Cerulean)
+ *   --color-accent2: #FFCB77 (Apricot Cream)
+ *   --color-accent3: #FE6D73 (Grapefruit)
+ *
+ * Gurthang uses a cool purple/teal pair that sits alongside the
+ * global accents without clashing.
+ * ======================================================================== */
+
+/* ---- Gurthang accent colors ------------------------------------------- */
+
+/* Soft wisteria purple — used for the page title */
+.color-gurthang1 {
+    color: #b39ddb !important;
+}
+
+/* Muted teal — used for section headings */
+.color-gurthang2 {
+    color: #5fb8c2 !important;
+}
 

@@ -1,0 +1,42 @@
+---
+layout: default
+---
+
+{{ content }}
+
+<!-- pixi.js from CDN (required by RELF renderer) -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/1.5.3/pixi.js"></script>
+
+<!-- Game board -->
+<div class="div-main text-main" style="text-align: center">
+    <canvas id="board" style="border: 1px solid var(--color-acc3); padding-bottom: 8px"></canvas>
+</div>
+
+<!-- Game settings -->
+<div class="div-border-acc1 text-main"
+     style="max-width: 600px; margin: 0 auto">
+    <h2 class="color-acc1">Game Settings</h2>
+    <!-- world width -->
+    <input id="in_world_width" class="input-main" placeholder="World Width"
+            type="number" step="any" min="1.0" style="width: 95%">
+    <!-- world height -->
+    <input id="in_world_height" class="input-main" placeholder="World Height"
+            type="number" step="any" min="1.0" style="width: 95%">
+    <!-- pixel size -->
+    <input id="in_world_size" class="input-main" placeholder="World Pixel Size"
+            type="number" step="any" min="1.0" style="width: 95%">
+    <!-- world seed -->
+    <input id="in_world_seed" class="input-main" placeholder="World Seed"
+            type="number" step="any" min="1.0" style="width: 95%">
+    <p></p>
+
+    <!-- buttons -->
+    <div class="div-btn-deck" style="text-align: center">
+        <button id="btn_reset" class="button-main">RESET</button>
+        <button id="btn_run" class="button-main">RUN</button>
+        <button id="btn_step" class="button-main">STEP</button>
+        <button id="btn_share" class="button-main">
+            <i class="fas fa-share-alt"></i>
+        </button>
+    </div>
+</div>

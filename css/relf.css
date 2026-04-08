@@ -1,31 +1,33 @@
-:root
-{
-    --color-nomad: rgb(140, 123, 84);
-    --color-settler: rgb(210, 129, 7);
-    --color-hunter: rgb(180, 17, 33);
-    --color-warlock: rgb(233, 18, 153);
-    --color-noble: rgb(240, 224, 32);
+/* ==========================================================================
+ * relf.css — Page-specific styles for the RELF cellular automata game.
+ *
+ * Each relf type has its own signature color. These are kept distinct
+ * from the global palette but have been adjusted to harmonize with the
+ * dark Carbon Black (#222222) background and Floral White (#FEF9EF) text
+ * defined in main.css.
+ * ======================================================================== */
+
+:root {
+    /* Relf-type signature colors — warm/earthy tones with enough contrast
+       against the dark background for readability */
+    --color-nomad:   #b89d5c;   /* Sandy gold — wanderers              */
+    --color-settler: #e09520;   /* Warm amber — community builders     */
+    --color-hunter:  #d42030;   /* Deep crimson — aggressive hunters   */
+    --color-warlock: #e040a0;   /* Vivid magenta — dark magic wielders */
+    --color-noble:   #f0e040;   /* Bright gold — evolved settlers     */
 }
 
-.color-nomad
-{ color: var(--color-nomad) !important; }
-.color-settler
-{ color: var(--color-settler) !important; }
-.color-hunter
-{ color: var(--color-hunter) !important; }
-.color-warlock
-{ color: var(--color-warlock) !important; }
-.color-noble
-{ color: var(--color-noble) !important; }
+/* ---- Text color utilities --------------------------------------------- */
+.color-nomad   { color: var(--color-nomad)   !important; }
+.color-settler { color: var(--color-settler) !important; }
+.color-hunter  { color: var(--color-hunter)  !important; }
+.color-warlock { color: var(--color-warlock) !important; }
+.color-noble   { color: var(--color-noble)   !important; }
 
-.border-nomad
-{ border: 1px solid var(--color-nomad) !important; }
-.border-settler
-{ border: 1px solid var(--color-settler) !important; }
-.border-hunter
-{ border: 1px solid var(--color-hunter) !important; }
-.border-warlock
-{ border: 1px solid var(--color-warlock) !important; }
-.border-noble
-{ border: 1px solid var(--color-noble) !important; }
+/* ---- Border utilities ------------------------------------------------- */
+.border-nomad   { border: 1px solid var(--color-nomad)   !important; }
+.border-settler { border: 1px solid var(--color-settler) !important; }
+.border-hunter  { border: 1px solid var(--color-hunter)  !important; }
+.border-warlock { border: 1px solid var(--color-warlock) !important; }
+.border-noble   { border: 1px solid var(--color-noble)   !important; }
 
