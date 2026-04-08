@@ -4,13 +4,14 @@ title: "shugg.dev"
 permalink: /
 ---
 
-## Hello there.
+# Howdy
 
-I'm Connor, and this is my website. I do computer stuff and I like security.
+Hey, I'm Connor.
+Welcome to my corner of the internet.
 
----
+<hr class="retro-divider">
 
-### <i class="fa fa-scroll"></i> Background
+## <i class="fa fa-scroll"></i> Background
 
 I'm a computer scientist with a passion for invention and security.
 I graduated from Virginia Tech in 2021 with a B.S. in computer science and a minor in cyber security.
@@ -19,9 +20,9 @@ security, with an emphasis on fuzzing.
 
 I enjoy software development, exploring software security, and creating things in my free time.
 
-#### Career
+### Career
 
-###### Microsoft — Software Engineer
+##### Microsoft — Software Engineer
 
 I'm an engineer at Microsoft. I currently work on the
 [Azure Confidential Compute](https://azure.microsoft.com/en-us/solutions/confidential-compute/)
@@ -30,7 +31,7 @@ using hardware-based Trusted Execution Environments.
 (If you'd like to learn more about the field, take a look at the
 [Confidential Computing Consortium](https://confidentialcomputing.io/).)
 
-###### Microsoft — Security Verification Engineer
+##### Microsoft — Security Verification Engineer
 
 In my previous role at Microsoft, I contributed to some exciting
 security work involving speculative-execution side-channel attacks
@@ -46,7 +47,7 @@ given Microsoft's position in the AI frenzy, I developed new
 AI-based tools and helped lead the usage of LLMs in my
 organization's day-to-day engineering workflows.
 
-###### Virginia Tech Computer Science — Teaching Assistant
+##### Virginia Tech Computer Science — Teaching Assistant
 
 I also worked as a Teaching Assistant with the Virginia Tech Computer Science
 department for five semesters. I spent four of those five semesters working on
@@ -61,7 +62,7 @@ multithreading, memory management, virtualization, security, and
 networking, all with a heavy emphasis on writing robust and
 high-performing code.
 
-#### Research
+### Research
 
 During my M.S. degree at Virginia Tech (2020–2022), I created Gurthang,
 a fuzzing framework designed specifically for fuzz-testing web servers.
@@ -70,7 +71,7 @@ payloads to a web server simultaneously, allowing for effective testing for
 concurrency-related bugs induced when servers handle multiple requests at once.
 [Read more about it here!](/gurthang)
 
-#### Skills
+### Skills
 
 <div class="div-deck">
 <div class="div-main">
@@ -142,7 +143,7 @@ concurrency-related bugs induced when servers handle multiple requests at once.
 
 ---
 
-### <i class="fas fa-hammer"></i> Projects
+## <i class="fas fa-hammer"></i> Projects
 
 Creating things — especially things I dreamed up myself — is one of
 my greatest passions in life. Mix that with a couple of computer
