@@ -170,11 +170,13 @@
         var thSpacer = document.createElement("th");
         thSpacer.style.width = "1.5rem";
         thSpacer.style.borderBottom = "none";
+        thSpacer.className = "ascii-right";
         headerRow.appendChild(thSpacer);
         // Right half
         cols.forEach(function (col) {
             var th = document.createElement("th");
             th.textContent = col;
+            th.className = "ascii-right";
             headerRow.appendChild(th);
         });
         thead.appendChild(headerRow);
@@ -186,39 +188,47 @@
             var tr = document.createElement("tr");
 
             // Left half: codes 0-63
-            appendCharCells(tr, i);
+            appendCharCells(tr, i, false);
 
             // Spacer cell
             var tdSpacer = document.createElement("td");
             tdSpacer.style.borderLeft = "none";
             tdSpacer.style.borderRight = "none";
+            tdSpacer.className = "ascii-right";
             tr.appendChild(tdSpacer);
 
             // Right half: codes 64-127
-            appendCharCells(tr, i + 64);
+            appendCharCells(tr, i + 64, true);
 
             tbody.appendChild(tr);
         }
 
         /**
          * Appends Dec, Hex, Oct, Bin, Char cells for a given code to a row.
+         * If isRight is true, adds the "ascii-right" class for mobile hiding.
          */
-        function appendCharCells(row, code) {
+        function appendCharCells(row, code, isRight) {
+            var cls = isRight ? "ascii-right" : "";
+
             var tdDec = document.createElement("td");
             tdDec.textContent = code;
+            if (cls) tdDec.className = cls;
             row.appendChild(tdDec);
 
             var tdHex = document.createElement("td");
             tdHex.textContent = "0x" + toHex(code);
+            if (cls) tdHex.className = cls;
             row.appendChild(tdHex);
 
             var tdOct = document.createElement("td");
             tdOct.textContent = "0o" + toOct(code);
+            if (cls) tdOct.className = cls;
             row.appendChild(tdOct);
 
             var tdBin = document.createElement("td");
             tdBin.textContent = "0b" + toBin(code);
             tdBin.style.fontFamily = "var(--font-code)";
+            if (cls) tdBin.className = cls;
             row.appendChild(tdBin);
 
             var tdChar = document.createElement("td");
@@ -226,14 +236,14 @@
             if (code <= 31 || code === 127 || code === 32) {
                 var span = document.createElement("span");
                 span.textContent = label;
-                span.style.color = "var(--color-accent2)";
-                span.style.fontFamily = "var(--font-heading)";
+                span.className = "ascii-ctrl";
                 tdChar.appendChild(span);
             } else {
                 var strong = document.createElement("strong");
                 strong.textContent = label;
                 tdChar.appendChild(strong);
             }
+            if (cls) tdChar.className = cls;
             row.appendChild(tdChar);
         }
         table.appendChild(tbody);

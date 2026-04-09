@@ -52,6 +52,8 @@
                 button.innerHTML = LABEL_DARK;
             }
         }
+        var sidebarBtn = document.getElementById("themeToggleSidebar");
+        if (sidebarBtn) { sidebarBtn.innerHTML = (theme === "light") ? LABEL_LIGHT : LABEL_DARK; }
     }
 
     // ---------------------------------------------------------------

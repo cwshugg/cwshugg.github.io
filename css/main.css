@@ -789,7 +789,7 @@ hr.retro-divider {
     position: relative;
     height: 3px;
     border: none;
-    background: var(--color-accent2);
+    background: #FFCB77;
     margin: 2rem 0;
     padding: 0;
     overflow: visible;
@@ -803,7 +803,7 @@ hr.retro-divider::before {
     left: 0;
     right: 0;
     height: 3px;
-    background: var(--color-accent1);
+    background: #227C9D;
 }
 
 .retro-divider::after,
@@ -814,7 +814,7 @@ hr.retro-divider::after {
     left: 0;
     right: 0;
     height: 3px;
-    background: var(--color-accent3);
+    background: #FE6D73;
 }
 
 /* ---- Color utilities -------------------------------------------------- */
@@ -1042,6 +1042,7 @@ body.light-mode {
     --color-border:     #C4B99A;
     --color-bg-sunken:  #E0D7BF;
     --color-bg-code:    #E5DCCA;
+    --color-accent2:    var(--color-accent3);
 }
 
 /* ---- Links: Cerulean stays readable on both backgrounds --------------- */
@@ -1049,17 +1050,10 @@ body.light-mode a {
     color: var(--color-accent1);
 }
 
-/* ---- Headings: swap yellow (accent2) to blue/red for light bg --------- */
-body.light-mode h1 {
-    color: var(--color-accent1);
-}
-
-body.light-mode h4 {
-    color: var(--color-accent3);
-}
-
-body.light-mode th {
-    color: var(--color-accent1);
+/* ASCII control character label */
+.ascii-ctrl {
+    color: var(--color-accent2);
+    font-family: var(--font-heading);
 }
 
 /* ---- Header: solid light background ----------------------------------- */
@@ -1088,6 +1082,154 @@ body.light-mode .site-title {
     color: var(--color-accent3);
 }
 
+/* ---- Sidebar (light mode) --------------------------------------------- */
+body.light-mode .sidebar {
+    background: var(--color-bg);
+    border-right-color: var(--color-accent1);
+}
+
+body.light-mode .sidebar-header .site-title {
+    color: var(--color-accent3);
+}
+
+
+/* ==========================================================================
+ * Mobile Sidebar
+ * ======================================================================== */
+
+/* Hamburger toggle — hidden on desktop */
+.sidebar-toggle {
+    display: none;
+    background: transparent;
+    border: none;
+    color: var(--color-text);
+    font-size: 1.4rem;
+    cursor: pointer;
+    padding: 0.25em;
+    box-shadow: none;
+}
+
+.sidebar-toggle:hover {
+    color: var(--color-accent1);
+    background: transparent;
+    box-shadow: none;
+    transform: none;
+}
+
+/* Overlay */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 199;
+}
+
+.sidebar-overlay.active {
+    display: block;
+}
+
+/* Sidebar panel */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -280px;
+    width: 260px;
+    height: 100%;
+    background: var(--color-bg);
+    border-right: 3px solid var(--color-accent1);
+    z-index: 200;
+    transition: left 0.15s linear;
+    overflow: hidden;
+    padding: 0;
+}
+
+.sidebar.active {
+    left: 0;
+}
+
+/* Retro falling stripes — thin repeating bands scroll downward */
+.sidebar::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 200%;
+    z-index: 10;
+    pointer-events: none;
+    opacity: 0;
+    background: repeating-linear-gradient(
+        to bottom,
+        #227C9D 0, #227C9D 1.667%,
+        #FFCB77 1.667%, #FFCB77 3.333%,
+        #FE6D73 3.333%, #FE6D73 5%
+    );
+}
+
+.sidebar.active::before {
+    animation: stripe-fall 0.15s linear forwards;
+}
+
+@keyframes stripe-fall {
+    0%   { opacity: 1; top: -100%; }
+    100% { opacity: 0; top: 0%; }
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-bottom: 3px solid var(--color-accent1);
+}
+
+.sidebar-header .site-title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--color-accent2);
+}
+
+.sidebar-close {
+    background: transparent;
+    border: none;
+    color: var(--color-text);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.25em;
+    box-shadow: none;
+}
+
+.sidebar-close:hover {
+    color: var(--color-accent3);
+    background: transparent;
+    box-shadow: none;
+    transform: none;
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    gap: 0.5rem;
+}
+
+.sidebar-nav .button-nav {
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin: 0;
+}
+
+.sidebar-nav .theme-toggle {
+    width: 100%;
+    margin: 0;
+}
+
 
 /* ==========================================================================
  * 17. Responsive / mobile breakpoints
@@ -1112,6 +1254,19 @@ body.light-mode .site-title {
 
     .div-deck > div {
         flex: 1 1 100%;
+    }
+
+    .sidebar-toggle {
+        display: block;
+    }
+
+    .site-header nav {
+        display: none;
+    }
+
+    /* ASCII table: single column on mobile */
+    .ascii-right {
+        display: none;
     }
 }
 
