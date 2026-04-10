@@ -4,6 +4,12 @@ title: "About Me"
 permalink: /me
 ---
 
+<div style="text-align: center;">
+    <div style="width: 280px; height: 280px; border-radius: 50%; overflow: hidden; margin: 0 auto;">
+        <img src="/images/polygon_guy.png" alt="polygon guy" style="width: 100%; height: 100%; object-fit: cover; object-position: center 60%; border: none; box-shadow: none;">
+    </div>
+</div>
+
 # About Me
 
 ## <span style="color: var(--color-accent2);"><i class="fa fa-scroll"></i></span> Background
