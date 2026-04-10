@@ -254,6 +254,14 @@ a:focus {
     text-underline-offset: 3px;
 }
 
+/* Remove underline from anchors styled as buttons */
+a.button-nav:hover,
+a.button-nav:focus,
+a.button-main:hover,
+a.button-main:focus {
+    text-decoration: none;
+}
+
 a:active {
     color: var(--color-accent2);
 }
@@ -449,15 +457,23 @@ main {
 .site-header .site-title {
     font-family: var(--font-heading);
     font-weight: 700;
-    font-size: 1.25rem;
-    color: var(--color-accent2);
+    font-size: 1.5rem;
     text-decoration: none;
     letter-spacing: 0.02em;
 }
 
+.site-header .site-title .title-shugg { color: var(--color-accent2); }
+.site-header .site-title .title-dot   { color: var(--color-accent1); }
+.site-header .site-title .title-dev   { color: var(--color-accent3); }
+
 .site-header .site-title:hover {
-    color: var(--color-text);
     text-decoration: none;
+}
+
+.site-header .site-title:hover .title-shugg,
+.site-header .site-title:hover .title-dot,
+.site-header .site-title:hover .title-dev {
+    color: var(--color-text);
 }
 
 .site-header nav {
@@ -667,6 +683,15 @@ table {
     box-shadow: none;
     margin: 0;
     font-size: 0.85rem;
+}
+
+/* Tool card — title and button on same line */
+.tool-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
 }
 
 .box table th,
@@ -1095,8 +1120,11 @@ hr.divider::after {
     font-family: var(--font-heading);
     font-weight: 700;
     font-size: 1.25rem;
-    color: var(--color-accent2);
 }
+
+.sidebar-header .site-title .title-shugg { color: var(--color-accent1); }
+.sidebar-header .site-title .title-dot   { color: var(--color-accent3); }
+.sidebar-header .site-title .title-dev   { color: var(--color-accent2); }
 
 .sidebar-close {
     background: transparent;

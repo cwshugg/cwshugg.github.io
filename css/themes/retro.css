@@ -9,7 +9,7 @@
  *   Warm Charcoal  #2D2B28  — background (dark mode)
  *   Parchment      #F5ECD7  — primary text (dark mode) / background (light mode)
  *   Cerulean       #227C9D  — accent 1 (links, cool tones)
- *   Apricot Cream  #FFCB77  — accent 2 (warm highlights)
+ *   Apricot Cream  #FFCB77  — accent 2 (warm highlights, dark mode)
  *   Grapefruit     #FE6D73  — accent 3 (alerts, emphasis)
  *
  * Fonts:
@@ -120,7 +120,8 @@
     --color-border:     #C4B99A;
     --color-bg-sunken:  #E0D7BF;
     --color-bg-code:    #E5DCCA;
-    --color-accent2:    var(--color-accent3);
+    --color-accent2:    #B8922F;
+    --divider-color2:   #B8922F;
 }
 
 
@@ -157,10 +158,7 @@
     color: var(--color-accent1);
 }
 
-/* ---- Light-mode site title -------------------------------------------- */
-.retro-theme.light-mode .site-title {
-    color: var(--color-accent3);
-}
+/* ---- Light-mode site title: colors come from accent variables --------- */
 
 /* ---- Light-mode sidebar ----------------------------------------------- */
 .retro-theme.light-mode .sidebar {
