@@ -1,102 +1,40 @@
 /* ==========================================================================
- * main.css — shugg.dev global stylesheet
+ * base.css — shugg.dev structural skeleton
  * ==========================================================================
  *
- * Design system for shugg.dev. This stylesheet defines the color scheme,
- * typography, layout, and component styles used across all pages.
+ * Layout, reset, responsive, and structural styles. All visual properties
+ * (colors, fonts, shadows) reference CSS variables that are set by theme
+ * files (css/themes/*.css).
  *
- * Color palette:
- *   Warm Charcoal  #2D2B28  — background (dark mode)
- *   Parchment      #F5ECD7  — primary text (dark mode) / background (light mode)
- *   Cerulean       #227C9D  — accent 1 (links, cool tones)
- *   Apricot Cream  #FFCB77  — accent 2 (warm highlights)
- *   Grapefruit     #FE6D73  — accent 3 (alerts, emphasis)
- *
- * Fonts:
- *   Aldrich    — headings
- *   Jost       — body text (all modes; Futura substitute)
- *   Vintage Legacy — headings (cool mode; toggled via Cool Mode)
+ * The :root block provides sensible fallback defaults (retro dark values)
+ * so pages render even without a theme loaded.
  *
  * Table of contents:
- *   1. Font faces
- *   2. CSS custom properties
- *   3. Reset & base styles
- *   4. Typography
- *   5. Links
- *   6. Buttons
- *   7. Layout & containers
- *   8. Site header & navigation
- *   9. Footer
- *  10. Forms & inputs
- *  11. Code blocks
- *  12. Tables
- *  13. Images
- *  14. Utility classes (colors, borders, text helpers)
- *  15. Syntax highlighting (Monokai)
+ *   1. CSS custom properties (fallback defaults)
+ *   2. Reset & base styles
+ *   3. Typography
+ *   4. Links
+ *   5. Buttons
+ *   6. Layout & containers
+ *   7. Site header & navigation
+ *   8. Footer
+ *   9. Forms & inputs
+ *  10. Code blocks
+ *  11. Tables
+ *  12. Images
+ *  13. Utility classes
+ *  14. Syntax highlighting (Monokai)
+ *  15. Mobile sidebar
  *  16. Responsive / mobile breakpoints
  * ======================================================================== */
 
 
 /* ==========================================================================
- * 1. Font faces
- * ======================================================================== */
-
-@font-face {
-    font-family: "Aldrich";
-    src: url("../fonts/Aldrich-Regular.ttf") format("truetype");
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "Jost";
-    src: url("../fonts/Jost-Regular.ttf") format("truetype");
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "Jost";
-    src: url("../fonts/Jost-Bold.ttf") format("truetype");
-    font-weight: 700;
-    font-style: normal;
-    font-display: swap;
-}
-
-/* Legacy font references — kept so old pages don't break */
-@font-face {
-    font-family: "Quicksand";
-    src: url("../fonts/quicksand.ttf") format("truetype");
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "Varela";
-    src: url("../fonts/varela.ttf") format("truetype");
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "RobotoMono";
-    src: url("../fonts/robotomono.ttf") format("truetype");
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-}
-
-
-/* ==========================================================================
- * 2. CSS custom properties
+ * 1. CSS custom properties (fallback defaults)
  * ======================================================================== */
 
 :root {
-    /* ---- Core palette ------------------------------------------------- */
+    /* ---- Core palette (retro dark defaults) ---------------------------- */
     --color-bg:      #2D2B28;   /* Warm Charcoal    */
     --color-text:    #F5ECD7;   /* Parchment        */
     --color-accent1: #227C9D;   /* Cerulean         */
@@ -104,13 +42,13 @@
     --color-accent3: #FE6D73;   /* Grapefruit       */
 
     /* ---- Derived / surface colors ------------------------------------- */
-    --color-bg-raised:  #3A3735;   /* Slightly lighter warm gray       */
-    --color-bg-sunken:  #24221F;   /* Slightly darker warm tone        */
-    --color-bg-code:    #33302D;   /* Code block background            */
-    --color-text-muted: #C4B99A;   /* De-emphasized warm cream         */
-    --color-border:     #4A4744;   /* Warm-toned borders               */
+    --color-bg-raised:  #3A3735;
+    --color-bg-sunken:  #24221F;
+    --color-bg-code:    #33302D;
+    --color-text-muted: #C4B99A;
+    --color-border:     #4A4744;
 
-    /* ---- Legacy variable aliases (used by existing HTML pages) -------- */
+    /* ---- Legacy variable aliases (used by existing HTML pages) --------- */
     --color-bg1:   var(--color-bg);
     --color-bg2:   var(--color-bg-raised);
     --color-bg3:   #524E4A;
@@ -141,11 +79,19 @@
     /* ---- Transitions -------------------------------------------------- */
     --transition-fast:   0.1s ease;
     --transition-normal: 0.15s linear;
+
+    /* ---- Component variables (Tier 2 — overridable by themes) --------- */
+    --sidebar-stripe1: var(--color-accent1);
+    --sidebar-stripe2: var(--color-accent2);
+    --sidebar-stripe3: var(--color-accent3);
+    --divider-color1: var(--color-accent1);
+    --divider-color2: var(--color-accent2);
+    --divider-color3: var(--color-accent3);
 }
 
 
 /* ==========================================================================
- * 3. Reset & base styles
+ * 2. Reset & base styles
  * ======================================================================== */
 
 *,
@@ -195,7 +141,7 @@ body {
 
 
 /* ==========================================================================
- * 4. Typography
+ * 3. Typography
  * ======================================================================== */
 
 h1, h2, h3, h4, h5, h6 {
@@ -290,7 +236,7 @@ em, i {
 
 
 /* ==========================================================================
- * 5. Links
+ * 4. Links
  * ======================================================================== */
 
 a {
@@ -329,7 +275,7 @@ a:active {
 
 
 /* ==========================================================================
- * 6. Buttons
+ * 5. Buttons
  *
  * Floating box style: thick single-color border with matching offset shadow.
  * Hover "press" effect: button translates toward its shadow.
@@ -403,7 +349,7 @@ button:disabled,
 
 
 /* ==========================================================================
- * 7. Layout & containers
+ * 6. Layout & containers
  * ======================================================================== */
 
 main {
@@ -484,14 +430,14 @@ main {
 
 
 /* ==========================================================================
- * 8. Site header & navigation
+ * 7. Site header & navigation
  * ======================================================================== */
 
 .site-header {
     position: sticky;
     top: 0;
     z-index: 100;
-    background-color: #24221F;
+    background-color: var(--color-bg-sunken);
     border-bottom: 1px solid var(--color-border);
     padding: 1rem 1.5rem;
     height: var(--header-height);
@@ -536,7 +482,7 @@ main {
 
 
 /* ==========================================================================
- * 9. Footer
+ * 8. Footer
  * ======================================================================== */
 
 .site-footer {
@@ -567,7 +513,7 @@ main {
 
 
 /* ==========================================================================
- * 10. Forms & inputs
+ * 9. Forms & inputs
  * ======================================================================== */
 
 input,
@@ -644,7 +590,7 @@ select:focus {
 
 
 /* ==========================================================================
- * 11. Code blocks
+ * 10. Code blocks
  * ======================================================================== */
 
 code,
@@ -702,7 +648,7 @@ pre:has(code) {
 
 
 /* ==========================================================================
- * 12. Tables
+ * 11. Tables
  * ======================================================================== */
 
 table {
@@ -754,7 +700,7 @@ tbody tr:hover {
 
 
 /* ==========================================================================
- * 13. Images
+ * 12. Images
  * ======================================================================== */
 
 img {
@@ -770,7 +716,7 @@ img {
 
 
 /* ==========================================================================
- * 14. Utility classes (colors, borders, text helpers)
+ * 13. Utility classes (colors, borders, text helpers)
  *
  * These include both the new design-system classes and backward-compatible
  * classes from the old stylesheet that are still referenced by HTML pages.
@@ -787,22 +733,24 @@ img {
 }
 
 /* Single-color box variants.
- *   1 = Cerulean (#227C9D)
- *   2 = Apricot Cream (#FFCB77)
- *   3 = Grapefruit (#FE6D73)
+ *   1 = accent1
+ *   2 = accent2
+ *   3 = accent3
  */
 .box-1 { border-color: var(--color-accent1); box-shadow: 5px 5px 0 var(--color-accent1); }
 .box-2 { border-color: var(--color-accent2); box-shadow: 5px 5px 0 var(--color-accent2); }
 .box-3 { border-color: var(--color-accent3); box-shadow: 5px 5px 0 var(--color-accent3); }
 
-/* ---- Retro triple-color divider --------------------------------------- */
-/* Three stacked solid-color bars using the accent palette */
+/* ---- Divider (structural) --------------------------------------------- */
+/* The visual pattern (triple-bar, dot, etc.) is defined in theme files.
+ * Base provides the structural positioning for pseudo-elements.
+ */
 .divider,
 hr.divider {
     position: relative;
     height: 3px;
     border: none;
-    background: #FFCB77;
+    background: var(--divider-color2);
     margin: 2rem 0;
     padding: 0;
     overflow: visible;
@@ -816,7 +764,7 @@ hr.divider::before {
     left: 0;
     right: 0;
     height: 3px;
-    background: #227C9D;
+    background: var(--divider-color1);
 }
 
 .divider::after,
@@ -827,7 +775,7 @@ hr.divider::after {
     left: 0;
     right: 0;
     height: 3px;
-    background: #FE6D73;
+    background: var(--divider-color3);
 }
 
 /* ---- Color utilities -------------------------------------------------- */
@@ -970,9 +918,15 @@ hr.divider::after {
     /* intentional no-op */
 }
 
+/* ASCII control character label */
+.ascii-ctrl {
+    color: var(--color-accent2);
+    font-family: var(--font-heading);
+}
+
 
 /* ==========================================================================
- * 15. Syntax highlighting (Monokai-inspired)
+ * 14. Syntax highlighting (Monokai-inspired)
  *
  * Used by Jekyll/Rouge for fenced code blocks.
  * ======================================================================== */
@@ -1044,70 +998,7 @@ hr.divider::after {
 
 
 /* ==========================================================================
- * 16. Light Mode
- * ======================================================================== */
-
-body.light-mode {
-    --color-bg:         #F5ECD7;
-    --color-text:       #2D2B28;
-    --color-text-muted: #5A5347;
-    --color-bg-raised:  #EAE1C8;
-    --color-border:     #C4B99A;
-    --color-bg-sunken:  #E0D7BF;
-    --color-bg-code:    #E5DCCA;
-    --color-accent2:    var(--color-accent3);
-}
-
-/* ---- Links: Cerulean stays readable on both backgrounds --------------- */
-body.light-mode a {
-    color: var(--color-accent1);
-}
-
-/* ASCII control character label */
-.ascii-ctrl {
-    color: var(--color-accent2);
-    font-family: var(--font-heading);
-}
-
-/* ---- Header: solid light background ----------------------------------- */
-body.light-mode .site-header {
-    background-color: #E8DFC7;
-    border-bottom-color: var(--color-border);
-}
-
-/* ---- Buttons: same single-color style in light mode ------------------- */
-/* Buttons use --color-accent1 which is readable on both backgrounds.
-   On hover, they flip to accent1 bg with the current bg color as text. */
-
-/* ---- Code blocks: light background ------------------------------------ */
-body.light-mode pre {
-    background-color: var(--color-bg-code);
-    border-color: var(--color-border);
-    box-shadow: 5px 5px 0 var(--color-border);
-}
-
-body.light-mode code {
-    background-color: var(--color-bg-code);
-}
-
-/* ---- Site title ------------------------------------------------------- */
-body.light-mode .site-title {
-    color: var(--color-accent3);
-}
-
-/* ---- Sidebar (light mode) --------------------------------------------- */
-body.light-mode .sidebar {
-    background: var(--color-bg);
-    border-right-color: var(--color-accent1);
-}
-
-body.light-mode .sidebar-header .site-title {
-    color: var(--color-accent3);
-}
-
-
-/* ==========================================================================
- * Mobile Sidebar
+ * 15. Mobile Sidebar
  * ======================================================================== */
 
 /* Hamburger toggle — hidden on desktop */
@@ -1164,7 +1055,7 @@ body.light-mode .sidebar-header .site-title {
     left: 0;
 }
 
-/* Retro falling stripes — thin repeating bands scroll downward */
+/* Falling stripes — thin repeating bands scroll downward */
 .sidebar::before {
     content: "";
     position: absolute;
@@ -1177,9 +1068,9 @@ body.light-mode .sidebar-header .site-title {
     opacity: 0;
     background: repeating-linear-gradient(
         to bottom,
-        #227C9D 0, #227C9D 1.667%,
-        #FFCB77 1.667%, #FFCB77 3.333%,
-        #FE6D73 3.333%, #FE6D73 5%
+        var(--sidebar-stripe1) 0, var(--sidebar-stripe1) 1.667%,
+        var(--sidebar-stripe2) 1.667%, var(--sidebar-stripe2) 3.333%,
+        var(--sidebar-stripe3) 3.333%, var(--sidebar-stripe3) 5%
     );
 }
 
@@ -1245,7 +1136,7 @@ body.light-mode .sidebar-header .site-title {
 
 
 /* ==========================================================================
- * 17. Responsive / mobile breakpoints
+ * 16. Responsive / mobile breakpoints
  * ======================================================================== */
 
 /* ---- Tablets & small desktops (max-width 768px) ----------------------- */

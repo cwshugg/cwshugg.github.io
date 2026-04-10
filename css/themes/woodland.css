@@ -1,0 +1,808 @@
+/* ==========================================================================
+ * woodland.css — Woodland theme
+ * ==========================================================================
+ *
+ * A cozy, paper-and-ink themed style for pages with `.woodland-theme` on body.
+ * Layers on top of base.css — overrides variables and adds woodland-specific
+ * component patterns.
+ *
+ * Color palette:
+ *   Espresso       #502419  — deep warm brown (headings, borders)
+ *   Dusty Olive    #5B7553  — muted green (accents, secondary)
+ *   Muted Teal     #8EB897  — soft green (highlights, labels)
+ *   Peach Glow     #FECDAA  — warm peach (accents, warm highlights)
+ *   Wisteria Blue  #72A1E5  — soft blue (links, interactive)
+ *
+ * Fonts:
+ *   Quintessential — headings (elegant, handwritten feel)
+ *   Lexend         — body text
+ *
+ * Design rules:
+ *   - Retro flat aesthetic: no gradients, no blur, sharp shadows
+ *   - Paper-like boxes that feel like sheets on a woodland writing desk
+ *   - Works in both dark mode (default) and light mode
+ * ======================================================================== */
+
+
+/* ==========================================================================
+ * Font faces
+ * ======================================================================== */
+
+@font-face {
+    font-family: "Quintessential";
+    src: url("../../fonts/Quintessential-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Lexend";
+    src: url("../../fonts/Lexend-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Lexend";
+    src: url("../../fonts/Lexend-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+/* ==========================================================================
+ * Dark mode variables (default)
+ * ======================================================================== */
+
+.woodland-theme {
+    /* Core palette */
+    --color-bg:         #2A2523;
+    --color-text:       #F5ECD7;
+    --color-accent1:    #5B7553;   /* Dusty Olive */
+    --color-accent2:    #FECDAA;   /* Peach Glow */
+    --color-accent3:    #8EB897;   /* Muted Teal */
+
+    /* Derived / surface colors */
+    --color-bg-raised:  #3A3530;
+    --color-bg-sunken:  #33302B;
+    --color-bg-code:    #33302D;
+    --color-text-muted: #8EB897;
+    --color-border:     #502419;   /* Espresso */
+
+    /* Fonts */
+    --font-heading: "Quintessential", "Georgia", serif;
+    --font-body:    "Lexend", "Helvetica Neue", Arial, sans-serif;
+
+    /* Sidebar stripes */
+    --sidebar-stripe1: #502419;
+    --sidebar-stripe2: #5B7553;
+    --sidebar-stripe3: #FECDAA;
+
+    /* Divider: woodland uses a different visual pattern (overridden below),
+     * but we set variables for consistency */
+    --divider-color1: #5B7553;
+    --divider-color2: #5B7553;
+    --divider-color3: #5B7553;
+}
+
+
+/* ==========================================================================
+ * Light mode variables
+ * ======================================================================== */
+
+.woodland-theme.light-mode {
+    --color-bg:         #F0E8D6;
+    --color-text:       #2D2B28;
+    --color-accent1:    #502419;   /* Espresso (swapped for light) */
+    --color-accent2:    #502419;   /* Espresso */
+    --color-accent3:    #5B7553;   /* Dusty Olive */
+
+    /* Derived / surface colors */
+    --color-bg-raised:  #FFFDF7;
+    --color-bg-sunken:  #FFFDF7;
+    --color-bg-code:    #E5DCCA;
+    --color-text-muted: #5B7553;
+    --color-border:     #5B7553;   /* Olive borders in light mode */
+
+    /* Sidebar stripes — same woodland palette */
+    --sidebar-stripe1: #502419;
+    --sidebar-stripe2: #5B7553;
+    --sidebar-stripe3: #FECDAA;
+}
+
+
+/* ==========================================================================
+ * Component overrides — dark mode
+ *
+ * Woodland-specific visual effects that go beyond CSS variables.
+ * ======================================================================== */
+
+/* ---- Font family overrides -------------------------------------------- */
+
+.woodland-theme {
+    font-family: "Lexend", "Helvetica Neue", Arial, sans-serif;
+}
+
+.woodland-theme p,
+.woodland-theme li,
+.woodland-theme td,
+.woodland-theme label,
+.woodland-theme input,
+.woodland-theme textarea,
+.woodland-theme select {
+    font-family: "Lexend", "Helvetica Neue", Arial, sans-serif;
+}
+
+.woodland-theme h1,
+.woodland-theme h2,
+.woodland-theme h3,
+.woodland-theme h4,
+.woodland-theme h5,
+.woodland-theme h6,
+.woodland-theme th {
+    font-family: "Quintessential", "Georgia", serif;
+}
+
+
+/* ---- Heading colors: Peach / Teal alternating ------------------------- */
+
+.woodland-theme h1 { color: #FECDAA; }
+.woodland-theme h2 { color: #8EB897; }
+.woodland-theme h3 { color: #FECDAA; }
+.woodland-theme h4 { color: #8EB897; }
+.woodland-theme h5 { color: #FECDAA; }
+.woodland-theme h6 { color: #8EB897; }
+
+
+/* ---- Site header / nav ------------------------------------------------ */
+
+.woodland-theme .site-header {
+    background-color: #2A2523;
+    border-bottom-color: #502419;
+}
+
+.woodland-theme .site-header .site-title {
+    color: #FECDAA;
+    font-family: "Quintessential", "Georgia", serif;
+}
+
+.woodland-theme .site-header .site-title:hover {
+    color: #8EB897;
+}
+
+.woodland-theme .site-header a.button-nav,
+.woodland-theme .site-header button:not(.sidebar-toggle):not(.sidebar-close) {
+    color: var(--color-text);
+    border-color: #5B7553;
+    box-shadow: 4px 4px 0 #5B7553;
+}
+
+.woodland-theme .site-header a.button-nav:hover,
+.woodland-theme .site-header button:not(.sidebar-toggle):not(.sidebar-close):hover {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 #5B7553;
+}
+
+.woodland-theme .site-header a.button-nav:active,
+.woodland-theme .site-header button:not(.sidebar-toggle):not(.sidebar-close):active {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    transform: translate(4px, 4px);
+    box-shadow: 0 0 0 #5B7553;
+}
+
+
+/* ---- Footer ----------------------------------------------------------- */
+
+.woodland-theme .site-footer a {
+    color: #8EB897;
+}
+
+.woodland-theme .site-footer a:hover {
+    color: #FECDAA;
+}
+
+
+/* ---- Links ------------------------------------------------------------ */
+
+.woodland-theme a {
+    color: #72A1E5;
+}
+
+.woodland-theme a:hover,
+.woodland-theme a:focus {
+    color: #96BBEE;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.woodland-theme a:active {
+    color: #FECDAA;
+}
+
+.woodland-theme .text-link {
+    color: #72A1E5;
+}
+
+.woodland-theme .text-link:hover,
+.woodland-theme .text-link:focus {
+    color: #96BBEE;
+}
+
+
+/* ---- Labels / muted text ---------------------------------------------- */
+
+.woodland-theme label,
+.woodland-theme .label-main {
+    color: #8EB897;
+}
+
+
+/* ---- Boxes (paper sheets) --------------------------------------------- */
+
+.woodland-theme .box {
+    background: #3A3530;
+    border: 3px solid #502419;
+    box-shadow: 5px 5px 0 #502419;
+    border-top: 3px solid #6B3A2A;
+}
+
+.woodland-theme .box-1 {
+    border-color: #502419;
+    box-shadow: 5px 5px 0 #502419;
+    border-top-color: #6B3A2A;
+}
+
+.woodland-theme .box-2 {
+    border-color: #5B7553;
+    box-shadow: 5px 5px 0 #5B7553;
+    border-top-color: #6E8C65;
+}
+
+.woodland-theme .box-3 {
+    border-color: #8EB897;
+    box-shadow: 5px 5px 0 #8EB897;
+    border-top-color: #A3CAAB;
+}
+
+
+/* ---- Buttons ---------------------------------------------------------- */
+
+.woodland-theme button,
+.woodland-theme .button-main,
+.woodland-theme .button-nav {
+    border-color: #5B7553;
+    box-shadow: 4px 4px 0 #5B7553;
+}
+
+.woodland-theme button:hover:enabled,
+.woodland-theme .button-main:hover:enabled,
+.woodland-theme .button-nav:hover:enabled,
+.woodland-theme button:hover,
+.woodland-theme .button-main:hover,
+.woodland-theme .button-nav:hover {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 #5B7553;
+}
+
+.woodland-theme button:active:enabled,
+.woodland-theme .button-main:active:enabled,
+.woodland-theme .button-nav:active:enabled,
+.woodland-theme button:active,
+.woodland-theme .button-main:active,
+.woodland-theme .button-nav:active {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    transform: translate(4px, 4px);
+    box-shadow: 0 0 0 #5B7553;
+}
+
+.woodland-theme button:focus-visible,
+.woodland-theme .button-main:focus-visible,
+.woodland-theme .button-nav:focus-visible {
+    outline-color: #72A1E5;
+}
+
+
+/* ---- Inputs ----------------------------------------------------------- */
+
+.woodland-theme input,
+.woodland-theme .input-main {
+    background-color: #33302B;
+    border-bottom-color: #502419;
+}
+
+.woodland-theme input:focus,
+.woodland-theme .input-main:focus {
+    border-bottom-color: #72A1E5;
+    box-shadow: 0 1px 0 #72A1E5;
+}
+
+.woodland-theme input::placeholder {
+    color: #8EB897;
+    opacity: 0.6;
+}
+
+
+/* ---- Textarea --------------------------------------------------------- */
+
+.woodland-theme textarea {
+    background-color: #33302B;
+    border: 1px solid #502419;
+    color: #F5ECD7;
+}
+
+.woodland-theme textarea:focus {
+    border-color: #5B7553;
+}
+
+
+/* ---- Select ----------------------------------------------------------- */
+
+.woodland-theme select {
+    background-color: #33302B;
+    border-color: #502419;
+}
+
+.woodland-theme select:focus {
+    border-color: #5B7553;
+}
+
+
+/* ---- Tables ----------------------------------------------------------- */
+
+.woodland-theme table {
+    border-color: #502419;
+    box-shadow: 5px 5px 0 #502419;
+}
+
+.woodland-theme .box table {
+    border: none;
+    box-shadow: none;
+}
+
+.woodland-theme thead {
+    border-bottom-color: #502419;
+}
+
+.woodland-theme th {
+    color: #FECDAA;
+}
+
+.woodland-theme td {
+    border-bottom-color: #3D3832;
+}
+
+.woodland-theme tbody tr:hover {
+    background-color: rgba(80, 36, 25, 0.1);
+}
+
+
+/* ---- Woodland divider: two thick lines pointing to a center dot ------- */
+/*       ═══════════════ ● ═══════════════                                 */
+
+.woodland-theme .divider,
+.woodland-theme hr.divider {
+    position: relative;
+    height: 0;
+    border: none;
+    border-top: 3px solid #5B7553;
+    border-bottom: 3px solid #5B7553;
+    padding: 2px 0;
+    background: none;
+    margin: 2.5rem 0;
+    overflow: visible;
+    border-radius: 0;
+    width: auto;
+}
+
+/* Center dot with gap — uses a bg-colored mask behind the dot */
+.woodland-theme .divider::before,
+.woodland-theme hr.divider::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #5B7553;
+    outline: 8px solid var(--color-bg);
+    z-index: 1;
+}
+
+.woodland-theme .divider::after,
+.woodland-theme hr.divider::after {
+    content: none;
+    display: none;
+}
+
+
+/* ---- Code blocks ------------------------------------------------------ */
+
+.woodland-theme pre {
+    border-color: #502419;
+    box-shadow: 5px 5px 0 #502419;
+}
+
+
+/* ---- Images ----------------------------------------------------------- */
+
+.woodland-theme img {
+    border-color: #502419;
+    box-shadow: 5px 5px 0 #502419;
+}
+
+
+/* ---- Sidebar (dark mode) ---------------------------------------------- */
+
+.woodland-theme .sidebar {
+    background: #2A2523;
+    border-right-color: #502419;
+}
+
+.woodland-theme .sidebar-header {
+    border-bottom-color: #502419;
+}
+
+.woodland-theme .sidebar-header .site-title {
+    color: #FECDAA;
+    font-family: "Quintessential", "Georgia", serif;
+}
+
+.woodland-theme .sidebar-close,
+.woodland-theme .sidebar-toggle {
+    color: var(--color-text);
+    border: none;
+    box-shadow: none;
+}
+
+.woodland-theme .sidebar-close:hover,
+.woodland-theme .sidebar-toggle:hover {
+    color: #FECDAA;
+    background: transparent;
+    transform: none;
+    box-shadow: none;
+}
+
+.woodland-theme .sidebar-nav .button-nav {
+    border-color: #5B7553;
+    box-shadow: 4px 4px 0 #5B7553;
+    color: var(--color-text);
+}
+
+.woodland-theme .sidebar-nav .button-nav:hover {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    box-shadow: 2px 2px 0 #5B7553;
+}
+
+.woodland-theme .sidebar-nav button {
+    border-color: #5B7553;
+    box-shadow: 4px 4px 0 #5B7553;
+    color: var(--color-text);
+}
+
+.woodland-theme .sidebar-nav button:hover {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    box-shadow: 2px 2px 0 #5B7553;
+}
+
+
+/* ==========================================================================
+ * Light mode overrides
+ * ======================================================================== */
+
+/* ---- Headings: Espresso / Olive alternating --------------------------- */
+
+.woodland-theme.light-mode h1 { color: #502419; }
+.woodland-theme.light-mode h2 { color: #5B7553; }
+.woodland-theme.light-mode h3 { color: #502419; }
+.woodland-theme.light-mode h4 { color: #5B7553; }
+.woodland-theme.light-mode h5 { color: #502419; }
+.woodland-theme.light-mode h6 { color: #5B7553; }
+
+
+/* ---- Site header / nav (light mode) ----------------------------------- */
+
+.woodland-theme.light-mode .site-header {
+    background-color: #F0E8D6;
+    border-bottom-color: #5B7553;
+}
+
+.woodland-theme.light-mode .site-header .site-title {
+    color: #502419;
+}
+
+.woodland-theme.light-mode .site-header .site-title:hover {
+    color: #5B7553;
+}
+
+.woodland-theme.light-mode .site-header a.button-nav,
+.woodland-theme.light-mode .site-header button:not(.sidebar-toggle):not(.sidebar-close) {
+    color: var(--color-text);
+    border-color: #502419;
+    box-shadow: 4px 4px 0 #502419;
+}
+
+.woodland-theme.light-mode .site-header a.button-nav:hover,
+.woodland-theme.light-mode .site-header button:not(.sidebar-toggle):not(.sidebar-close):hover {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 #502419;
+}
+
+.woodland-theme.light-mode .site-header a.button-nav:active,
+.woodland-theme.light-mode .site-header button:not(.sidebar-toggle):not(.sidebar-close):active {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    transform: translate(4px, 4px);
+    box-shadow: 0 0 0 #502419;
+}
+
+
+/* ---- Footer (light mode) ---------------------------------------------- */
+
+.woodland-theme.light-mode .site-footer a {
+    color: #5B7553;
+}
+
+.woodland-theme.light-mode .site-footer a:hover {
+    color: #502419;
+}
+
+
+/* ---- Links (light mode) ----------------------------------------------- */
+
+.woodland-theme.light-mode a {
+    color: #5A8BD4;
+}
+
+.woodland-theme.light-mode a:hover,
+.woodland-theme.light-mode a:focus {
+    color: #72A1E5;
+}
+
+.woodland-theme.light-mode a:active {
+    color: #502419;
+}
+
+.woodland-theme.light-mode .text-link {
+    color: #5A8BD4;
+}
+
+.woodland-theme.light-mode .text-link:hover,
+.woodland-theme.light-mode .text-link:focus {
+    color: #72A1E5;
+}
+
+
+/* ---- Labels / muted text (light mode) --------------------------------- */
+
+.woodland-theme.light-mode label,
+.woodland-theme.light-mode .label-main {
+    color: #5B7553;
+}
+
+
+/* ---- Boxes (cream paper, light mode) ---------------------------------- */
+
+.woodland-theme.light-mode .box {
+    background: #FFFDF7;
+    border: 3px solid #5B7553;
+    box-shadow: 5px 5px 0 #5B7553;
+    border-top: 3px solid #8EB897;
+}
+
+.woodland-theme.light-mode .box-1 {
+    border-color: #502419;
+    box-shadow: 5px 5px 0 #502419;
+    border-top-color: #6B3A2A;
+}
+
+.woodland-theme.light-mode .box-2 {
+    border-color: #5B7553;
+    box-shadow: 5px 5px 0 #5B7553;
+    border-top-color: #8EB897;
+}
+
+.woodland-theme.light-mode .box-3 {
+    border-color: #8EB897;
+    box-shadow: 5px 5px 0 #8EB897;
+    border-top-color: #A3CAAB;
+}
+
+
+/* ---- Buttons (light mode) --------------------------------------------- */
+
+.woodland-theme.light-mode button,
+.woodland-theme.light-mode .button-main,
+.woodland-theme.light-mode .button-nav {
+    border-color: #502419;
+    box-shadow: 4px 4px 0 #502419;
+    color: #2D2B28;
+}
+
+.woodland-theme.light-mode button:hover:enabled,
+.woodland-theme.light-mode .button-main:hover:enabled,
+.woodland-theme.light-mode .button-nav:hover:enabled,
+.woodland-theme.light-mode button:hover,
+.woodland-theme.light-mode .button-main:hover,
+.woodland-theme.light-mode .button-nav:hover {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 #502419;
+}
+
+.woodland-theme.light-mode button:active:enabled,
+.woodland-theme.light-mode .button-main:active:enabled,
+.woodland-theme.light-mode .button-nav:active:enabled,
+.woodland-theme.light-mode button:active,
+.woodland-theme.light-mode .button-main:active,
+.woodland-theme.light-mode .button-nav:active {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    transform: translate(4px, 4px);
+    box-shadow: 0 0 0 #502419;
+}
+
+.woodland-theme.light-mode button:focus-visible,
+.woodland-theme.light-mode .button-main:focus-visible,
+.woodland-theme.light-mode .button-nav:focus-visible {
+    outline-color: #5A8BD4;
+}
+
+
+/* ---- Inputs (light mode) ---------------------------------------------- */
+
+.woodland-theme.light-mode input,
+.woodland-theme.light-mode .input-main {
+    background-color: #FFFDF7;
+    color: #2D2B28;
+    border-bottom-color: #5B7553;
+}
+
+.woodland-theme.light-mode input:focus,
+.woodland-theme.light-mode .input-main:focus {
+    border-bottom-color: #5A8BD4;
+    box-shadow: 0 1px 0 #5A8BD4;
+}
+
+.woodland-theme.light-mode input::placeholder {
+    color: #5B7553;
+    opacity: 0.7;
+}
+
+
+/* ---- Textarea (light mode) -------------------------------------------- */
+
+.woodland-theme.light-mode textarea {
+    background-color: #FFFDF7;
+    color: #2D2B28;
+    border-color: #5B7553;
+}
+
+.woodland-theme.light-mode textarea:focus {
+    border-color: #502419;
+}
+
+
+/* ---- Select (light mode) ---------------------------------------------- */
+
+.woodland-theme.light-mode select {
+    background-color: #FFFDF7;
+    color: #2D2B28;
+    border-color: #5B7553;
+}
+
+.woodland-theme.light-mode select:focus {
+    border-color: #502419;
+}
+
+
+/* ---- Tables (light mode) ---------------------------------------------- */
+
+.woodland-theme.light-mode table {
+    border-color: #5B7553;
+    box-shadow: 5px 5px 0 #5B7553;
+}
+
+.woodland-theme.light-mode .box table {
+    border: none;
+    box-shadow: none;
+}
+
+.woodland-theme.light-mode thead {
+    border-bottom-color: #5B7553;
+}
+
+.woodland-theme.light-mode th {
+    color: #502419;
+}
+
+.woodland-theme.light-mode td {
+    border-bottom-color: #E0D7BF;
+}
+
+.woodland-theme.light-mode tbody tr:hover {
+    background-color: rgba(91, 117, 83, 0.08);
+}
+
+
+/* ---- Woodland divider (light mode) ------------------------------------ */
+
+.woodland-theme.light-mode .divider,
+.woodland-theme.light-mode hr.divider {
+    border-top-color: #5B7553;
+    border-bottom-color: #5B7553;
+}
+
+.woodland-theme.light-mode .divider::before,
+.woodland-theme.light-mode hr.divider::before {
+    background: #5B7553;
+}
+
+
+/* ---- Code blocks (light mode) ----------------------------------------- */
+
+.woodland-theme.light-mode pre {
+    border-color: #5B7553;
+    box-shadow: 5px 5px 0 #5B7553;
+}
+
+
+/* ---- Images (light mode) ---------------------------------------------- */
+
+.woodland-theme.light-mode img {
+    border-color: #5B7553;
+    box-shadow: 5px 5px 0 #5B7553;
+}
+
+
+/* ---- Sidebar (light mode) --------------------------------------------- */
+
+.woodland-theme.light-mode .sidebar {
+    background: #F0E8D6;
+    border-right-color: #5B7553;
+}
+
+.woodland-theme.light-mode .sidebar-header {
+    border-bottom-color: #5B7553;
+}
+
+.woodland-theme.light-mode .sidebar-header .site-title {
+    color: #502419;
+}
+
+.woodland-theme.light-mode .sidebar-close:hover,
+.woodland-theme.light-mode .sidebar-toggle:hover {
+    color: #502419;
+    background: transparent;
+    transform: none;
+    box-shadow: none;
+}
+
+.woodland-theme.light-mode .sidebar-nav .button-nav,
+.woodland-theme.light-mode .sidebar-nav button {
+    border-color: #502419;
+    box-shadow: 4px 4px 0 #502419;
+    color: var(--color-text);
+}
+
+.woodland-theme.light-mode .sidebar-nav .button-nav:hover,
+.woodland-theme.light-mode .sidebar-nav button:hover {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    box-shadow: 2px 2px 0 #502419;
+}

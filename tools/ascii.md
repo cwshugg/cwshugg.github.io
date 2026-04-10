@@ -8,9 +8,9 @@ extra_js:
 
 ## ASCII Table
 
-A complete reference of all 128 ASCII characters with decimal, hexadecimal, octal, and binary values. Use the converter for quick lookups or browse the full table below.
+Use this tool to lookup ASCII characters and their decimal, hex, octal, and binary values.
 
-<hr class="retro-divider">
+<hr class="divider">
 
 ### Converter
 
@@ -19,8 +19,6 @@ A complete reference of all 128 ASCII characters with decimal, hexadecimal, octa
     <input type="text" id="ascii-converter-input" placeholder="e.g. 65, 0x41, 0o101, 0b1000001, or A" autocomplete="off">
     <div id="ascii-converter-result"></div>
 </div>
-
-<hr class="retro-divider">
 
 ### Full Table
 

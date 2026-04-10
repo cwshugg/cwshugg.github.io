@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ page.title | default: "shugg.dev" }}</title>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
-    <link rel="stylesheet" href="{{ '/css/main.css' | relative_url }}">
+    <link rel="stylesheet" href="{{ '/css/base.css' | relative_url }}">
+    {% assign theme = page.theme | default: "retro" %}
+    <link rel="stylesheet" href="{{ '/css/themes/' | append: theme | append: '.css' | relative_url }}">
     {% if page.extra_css %}
     {% for css_file in page.extra_css %}
     <link rel="stylesheet" href="{{ css_file | relative_url }}">
@@ -13,7 +15,7 @@
     {% endif %}
     <link rel="icon" href="{{ '/favicon.ico' | relative_url }}">
 </head>
-<body>
+<body class="{{ theme }}-theme">
     <header class="site-header">
         <a href="{{ '/' | relative_url }}" class="site-title">shugg.dev</a>
         <button class="sidebar-toggle" id="sidebarToggle" aria-label="Open menu">

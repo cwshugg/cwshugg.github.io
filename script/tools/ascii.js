@@ -149,12 +149,12 @@
         filterInput.autocomplete = "off";
         tableContainer.appendChild(filterInput);
 
-        // Table container — no extra box wrapper since <table> already has box styling
+        // Wrap the table in a box
         var tableWrap = document.createElement("div");
+        tableWrap.className = "box";
         tableWrap.style.overflowX = "auto";
 
         var table = document.createElement("table");
-        table.style.margin = "0";
 
         // Header — two sets of columns side by side
         var thead = document.createElement("thead");
@@ -168,7 +168,7 @@
         });
         // Spacer
         var thSpacer = document.createElement("th");
-        thSpacer.style.width = "1.5rem";
+        thSpacer.style.width = "0.5rem";
         thSpacer.style.borderBottom = "none";
         thSpacer.className = "ascii-right";
         headerRow.appendChild(thSpacer);

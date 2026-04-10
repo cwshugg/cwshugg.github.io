@@ -1,0 +1,173 @@
+/* ==========================================================================
+ * retro.css — Retro 80s theme
+ * ==========================================================================
+ *
+ * The default theme for shugg.dev. 80s-inspired retro flat aesthetic with
+ * sharp shadows, bold geometric fonts, and a warm charcoal + neon palette.
+ *
+ * Color palette:
+ *   Warm Charcoal  #2D2B28  — background (dark mode)
+ *   Parchment      #F5ECD7  — primary text (dark mode) / background (light mode)
+ *   Cerulean       #227C9D  — accent 1 (links, cool tones)
+ *   Apricot Cream  #FFCB77  — accent 2 (warm highlights)
+ *   Grapefruit     #FE6D73  — accent 3 (alerts, emphasis)
+ *
+ * Fonts:
+ *   Aldrich    — headings (geometric, monoline)
+ *   Jost       — body text (Futura substitute)
+ * ======================================================================== */
+
+
+/* ==========================================================================
+ * Font faces
+ * ======================================================================== */
+
+@font-face {
+    font-family: "Aldrich";
+    src: url("../../fonts/Aldrich-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Jost";
+    src: url("../../fonts/Jost-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Jost";
+    src: url("../../fonts/Jost-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Legacy font references — kept so old pages don't break */
+@font-face {
+    font-family: "Quicksand";
+    src: url("../../fonts/quicksand.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Varela";
+    src: url("../../fonts/varela.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "RobotoMono";
+    src: url("../../fonts/robotomono.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+/* ==========================================================================
+ * Dark mode variables (default)
+ * ======================================================================== */
+
+.retro-theme {
+    /* Core palette */
+    --color-bg:      #2D2B28;   /* Warm Charcoal    */
+    --color-text:    #F5ECD7;   /* Parchment        */
+    --color-accent1: #227C9D;   /* Cerulean         */
+    --color-accent2: #FFCB77;   /* Apricot Cream    */
+    --color-accent3: #FE6D73;   /* Grapefruit       */
+
+    /* Derived / surface colors */
+    --color-bg-raised:  #3A3735;
+    --color-bg-sunken:  #24221F;
+    --color-bg-code:    #33302D;
+    --color-text-muted: #C4B99A;
+    --color-border:     #4A4744;
+
+    /* Fonts */
+    --font-heading:    "Aldrich", "Helvetica Neue", Arial, sans-serif;
+    --font-body:       "Jost", "Futura", "Helvetica Neue", Arial, sans-serif;
+    --font-code:       "RobotoMono", "Consolas", "Courier New", monospace;
+
+    /* Sidebar stripes */
+    --sidebar-stripe1: var(--color-accent1);
+    --sidebar-stripe2: var(--color-accent2);
+    --sidebar-stripe3: var(--color-accent3);
+
+    /* Divider colors */
+    --divider-color1: #227C9D;
+    --divider-color2: #FFCB77;
+    --divider-color3: #FE6D73;
+}
+
+
+/* ==========================================================================
+ * Light mode variables
+ * ======================================================================== */
+
+.retro-theme.light-mode {
+    --color-bg:         #F5ECD7;
+    --color-text:       #2D2B28;
+    --color-text-muted: #5A5347;
+    --color-bg-raised:  #EAE1C8;
+    --color-border:     #C4B99A;
+    --color-bg-sunken:  #E0D7BF;
+    --color-bg-code:    #E5DCCA;
+    --color-accent2:    var(--color-accent3);
+}
+
+
+/* ==========================================================================
+ * Retro-specific component overrides
+ *
+ * These are visual effects that go beyond what CSS variables can express.
+ * ======================================================================== */
+
+/* ---- Site header: dark sunken background ------------------------------ */
+.retro-theme .site-header {
+    background-color: #24221F;
+}
+
+/* ---- Light-mode header ------------------------------------------------ */
+.retro-theme.light-mode .site-header {
+    background-color: #E8DFC7;
+    border-bottom-color: var(--color-border);
+}
+
+/* ---- Light-mode code blocks ------------------------------------------- */
+.retro-theme.light-mode pre {
+    background-color: var(--color-bg-code);
+    border-color: var(--color-border);
+    box-shadow: 5px 5px 0 var(--color-border);
+}
+
+.retro-theme.light-mode code {
+    background-color: var(--color-bg-code);
+}
+
+/* ---- Light-mode link color -------------------------------------------- */
+.retro-theme.light-mode a {
+    color: var(--color-accent1);
+}
+
+/* ---- Light-mode site title -------------------------------------------- */
+.retro-theme.light-mode .site-title {
+    color: var(--color-accent3);
+}
+
+/* ---- Light-mode sidebar ----------------------------------------------- */
+.retro-theme.light-mode .sidebar {
+    background: var(--color-bg);
+    border-right-color: var(--color-accent1);
+}
+
+.retro-theme.light-mode .sidebar-header .site-title {
+    color: var(--color-accent3);
+}
