@@ -1036,6 +1036,7 @@ hr.divider::after {
     cursor: pointer;
     padding: 0.25em;
     box-shadow: none;
+    margin-left: auto;
 }
 
 .sidebar-toggle:hover {
