@@ -50,3 +50,10 @@ A collection of small tools.
         <a href="/tools/moon" class="button-nav" style="width: auto; margin: 0;">Open →</a>
     </div>
 </div>
+
+<div class="box">
+    <div class="tool-card">
+        <h3 style="margin: 0;"><a href="/tools/seasons" style="color: var(--color-accent2); text-decoration: none;">Earth Seasons</a></h3>
+        <a href="/tools/seasons" class="button-nav" style="width: auto; margin: 0;">Open →</a>
+    </div>
+</div>

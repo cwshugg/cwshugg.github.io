@@ -33,7 +33,12 @@
         shadingIntensity: 0.25,       // Strength of 3D gradient (0.0–1.0)
         background:       null,       // Canvas background (null = transparent)
         image:            null,       // Optional image overlay (HTMLImageElement, URL string, or null)
-        shadowOpacity:    1.0         // Shadow alpha: 0.0 (invisible) – 1.0 (opaque)
+        shadowOpacity:    1.0,        // Shadow alpha: 0.0 (invisible) – 1.0 (opaque)
+        tilt:             0,          // Image rotation in degrees (positive = clockwise)
+        axisLine:         false,      // Draw a pole-to-pole axis indicator line
+        axisLineColor:    "#FFFFFF",  // Axis line stroke color
+        axisLineWidth:    1.5,        // Axis line stroke width (px)
+        axisLineExtend:   1.0         // Axis line length multiplier (1.0 = sphere boundary, 1.3 = 30% beyond)
     };
 
     // ================================================================== //
@@ -67,6 +72,15 @@
         this._background       = (opts.background !== undefined) ? opts.background : DEFAULTS.background;
 
         this._shadowOpacity    = clamp(opts.shadowOpacity !== undefined ? opts.shadowOpacity : DEFAULTS.shadowOpacity, 0, 1);
+
+        // Tilt angle for image rotation (degrees, default 0)
+        this._tilt = Number(opts.tilt) || DEFAULTS.tilt;
+
+        // Axis line (pole-to-pole indicator)
+        this._axisLine      = (opts.axisLine !== undefined) ? !!opts.axisLine : DEFAULTS.axisLine;
+        this._axisLineColor = (opts.axisLineColor !== undefined) ? opts.axisLineColor : DEFAULTS.axisLineColor;
+        this._axisLineWidth = Math.max(0, Number(opts.axisLineWidth !== undefined ? opts.axisLineWidth : DEFAULTS.axisLineWidth) || 0);
+        this._axisLineExtend = Math.max(0, Number(opts.axisLineExtend !== undefined ? opts.axisLineExtend : DEFAULTS.axisLineExtend) || 1.0);
 
         // Load image overlay (HTMLImageElement, URL string, or null)
         this._initImage(opts.image);
@@ -178,6 +192,64 @@
     };
 
     /**
+     * Sets the tilt angle for the image (degrees).
+     * Positive values rotate clockwise; negative rotate counter-clockwise.
+     * Only affects the image/color in Layer 2, NOT the shadow or edge.
+     *
+     * @param {number} degrees
+     * @returns {CelestialSphere} this
+     */
+    CelestialSphere.prototype.setTilt = function (degrees) {
+        this._tilt = Number(degrees) || 0;
+        return this;
+    };
+
+    /**
+     * Enables or disables the pole-to-pole axis indicator line.
+     *
+     * @param {boolean} enabled
+     * @returns {CelestialSphere} this
+     */
+    CelestialSphere.prototype.setAxisLine = function (enabled) {
+        this._axisLine = !!enabled;
+        return this;
+    };
+
+    /**
+     * Sets the axis line stroke color.
+     *
+     * @param {string} color
+     * @returns {CelestialSphere} this
+     */
+    CelestialSphere.prototype.setAxisLineColor = function (color) {
+        this._axisLineColor = color || null;
+        return this;
+    };
+
+    /**
+     * Sets the axis line stroke width in pixels.
+     *
+     * @param {number} width
+     * @returns {CelestialSphere} this
+     */
+    CelestialSphere.prototype.setAxisLineWidth = function (width) {
+        this._axisLineWidth = Math.max(0, Number(width) || 0);
+        return this;
+    };
+
+    /**
+     * Sets the axis line length multiplier.
+     * 1.0 = line stops at sphere boundary, 1.3 = extends 30% beyond.
+     *
+     * @param {number} value
+     * @returns {CelestialSphere} this
+     */
+    CelestialSphere.prototype.setAxisLineExtend = function (value) {
+        this._axisLineExtend = Math.max(0, Number(value) || 1.0);
+        return this;
+    };
+
+    /**
      * Internal helper to initialize the image property.
      * If a URL string is given, creates a new Image element and sets up an
      * onload callback that triggers a re-render when the image is ready.
@@ -223,7 +295,12 @@
             edgeWidth:        "setEdgeWidth",
             background:       "setBackground",
             image:            "setImage",
-            shadowOpacity:    "setShadowOpacity"
+            shadowOpacity:    "setShadowOpacity",
+            tilt:             "setTilt",
+            axisLine:         "setAxisLine",
+            axisLineColor:    "setAxisLineColor",
+            axisLineWidth:    "setAxisLineWidth",
+            axisLineExtend:   "setAxisLineExtend"
         };
 
         for (var key in setters) {
@@ -273,6 +350,13 @@
             ctx.arc(cx, cy, R, 0, Math.PI * 2);
             ctx.clip();
 
+            // Apply tilt rotation to image only (clip path stays un-rotated)
+            if (this._tilt !== 0) {
+                ctx.translate(cx, cy);
+                ctx.rotate(this._tilt * Math.PI / 180);
+                ctx.translate(-cx, -cy);
+            }
+
             // "Cover" scaling: scale the image so it fully covers the
             // sphere circle, handling non-square images (e.g. 992×1078).
             var img = this._image;
@@ -286,15 +370,51 @@
             ctx.restore();
         } else {
             // No image or image not yet loaded — flat color fill (fallback)
-            ctx.beginPath();
-            ctx.arc(cx, cy, R, 0, Math.PI * 2);
-            ctx.fillStyle = this._color;
-            ctx.fill();
+            if (this._tilt !== 0) {
+                // When tilted, clip to sphere and rotate the fill for consistency
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(cx, cy, R, 0, Math.PI * 2);
+                ctx.clip();
+                ctx.translate(cx, cy);
+                ctx.rotate(this._tilt * Math.PI / 180);
+                ctx.translate(-cx, -cy);
+                ctx.beginPath();
+                ctx.arc(cx, cy, R, 0, Math.PI * 2);
+                ctx.fillStyle = this._color;
+                ctx.fill();
+                ctx.restore();
+            } else {
+                // No tilt — simple fill (preserves original draw call sequence)
+                ctx.beginPath();
+                ctx.arc(cx, cy, R, 0, Math.PI * 2);
+                ctx.fillStyle = this._color;
+                ctx.fill();
+            }
         }
 
         // ---- Layer 3: 3D shading gradient (optional) ---- //
         if (this._shading) {
             this._renderShading(ctx, cx, cy, R);
+        }
+
+        // ---- Layer 3.5: Axis line (pole-to-pole indicator, optional) ---- //
+        // Drawn AFTER the image/shading but BEFORE the shadow, so the line
+        // is visible on the lit side and dimmed by the shadow on the dark side.
+        // Drawn WITHOUT a clip path so the line can extend beyond the sphere.
+        if (this._axisLine && this._axisLineColor) {
+            var ext = this._axisLineExtend;
+            ctx.save();
+            // Rotate the line with the same tilt as the image
+            ctx.translate(cx, cy);
+            ctx.rotate(this._tilt * Math.PI / 180);
+            ctx.beginPath();
+            ctx.moveTo(0, -R * ext);
+            ctx.lineTo(0, R * ext);
+            ctx.strokeStyle = this._axisLineColor;
+            ctx.lineWidth = this._axisLineWidth;
+            ctx.stroke();
+            ctx.restore();
         }
 
         // ---- Layer 4: Phase shadow (terminator) ---- //

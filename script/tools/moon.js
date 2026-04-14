@@ -505,7 +505,7 @@
                 // Update illumination label
                 var illumPercent = Math.round(illumination * 100);
                 if (illumLabel) {
-                    illumLabel.textContent = illumPercent + "% illuminated";
+                    illumLabel.textContent = phaseName + " \u2014 " + illumPercent + "% illuminated";
                 }
 
                 // Render phase details table

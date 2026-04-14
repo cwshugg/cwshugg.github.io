@@ -585,6 +585,74 @@ label,
     margin-bottom: 0.25em;
 }
 
+/* In dark mode (default, no .light-mode class), the date input's calendar
+   picker icon is black and nearly invisible on dark backgrounds. Invert it
+   so it becomes white. In light mode the default black icon is fine. */
+body:not(.light-mode) input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
+/* ---- Custom checkboxes ------------------------------------------------- */
+/* Replaces the default browser checkbox with a flat, retro-styled version
+   that adapts to every theme via CSS custom properties.                    */
+
+input[type="checkbox"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 1.25em;
+    height: 1.25em;
+    min-width: 1.25em;          /* prevent flex shrink */
+    min-height: 1.25em;
+    padding: 0;                 /* override generic input padding */
+    margin: 0;
+    border: 2px solid var(--color-border);
+    border-bottom: 2px solid var(--color-border);   /* override underline-only style */
+    background: var(--color-bg-sunken);
+    cursor: pointer;
+    position: relative;
+    vertical-align: middle;
+    border-radius: 2px;
+    transition: background-color var(--transition-fast),
+                border-color var(--transition-fast);
+}
+
+input[type="checkbox"]:checked {
+    background: var(--color-accent1);
+    border-color: var(--color-accent1);
+}
+
+input[type="checkbox"]:checked::after {
+    content: "✓";
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-bg);
+    font-size: 0.85em;
+    font-weight: 700;
+    line-height: 1;
+}
+
+input[type="checkbox"]:hover {
+    border-color: var(--color-accent1);
+}
+
+input[type="checkbox"]:focus-visible {
+    outline: 2px solid var(--color-accent1);
+    outline-offset: 2px;
+}
+
+/* Expand touch target to ~44 × 44 px for mobile accessibility */
+@media (pointer: coarse) {
+    input[type="checkbox"] {
+        width: 1.5em;
+        height: 1.5em;
+        min-width: 1.5em;
+        min-height: 1.5em;
+    }
+}
+
 select {
     font-family: var(--font-body);
     font-size: 1rem;

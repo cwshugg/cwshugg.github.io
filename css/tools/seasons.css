@@ -1,0 +1,120 @@
+/* ==========================================================================
+ * seasons.css — Earth Seasons tool styles
+ * ==========================================================================
+ * Tool-specific CSS for the Earth Seasons page. Leverages base.css box,
+ * button, and layout utilities. Only adds styles specific to this tool's
+ * layout.
+ * ======================================================================== */
+
+/* Controls row: date picker, timezone input, DST checkbox */
+.seasons-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+/* Timezone and DST sub-groups — inline label + input pairs */
+.seasons-tz-group,
+.seasons-dst-group {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+/* Prevent the "UTC offset:" label from wrapping on narrow viewports */
+.seasons-tz-group label {
+    white-space: nowrap;
+}
+
+/* Canvas container — centers the scene canvas */
+.seasons-canvas-wrap {
+    text-align: center;
+    padding: 1rem 0;
+}
+
+/* Canvas element — block-centered, responsive max-width, 2:1 aspect */
+#seasons-canvas {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    height: auto;
+}
+
+/* Season name label below the globe */
+.seasons-label {
+    text-align: center;
+    margin-top: 0.75rem;
+    font-family: var(--font-body);
+}
+
+/* Individual hemisphere label line */
+.seasons-label-line {
+    font-size: 1.05rem;
+    margin: 0.2rem 0;
+    line-height: 1.4;
+}
+
+/* "Northern Hemisphere:" / "Southern Hemisphere:" text */
+.seasons-label-hemisphere {
+    color: var(--color-text-muted);
+}
+
+/* Season name (e.g. "🌸 Spring") */
+.seasons-label-season {
+    color: var(--color-accent1);
+    font-weight: 600;
+}
+
+/* Countdown text (e.g. "— 47 days until Summer") */
+.seasons-label-countdown {
+    color: var(--color-text-muted);
+    font-size: 0.9em;
+}
+
+/* Progress bar — sunken background with accent fill */
+.seasons-progress-bar {
+    width: 100%;
+    height: 0.75rem;
+    background: var(--color-bg-sunken);
+    border-radius: 0.375rem;
+    overflow: hidden;
+    margin: 0.5rem 0;
+}
+
+.seasons-progress-fill {
+    height: 100%;
+    background: var(--color-accent1);
+    border-radius: 0.375rem;
+    transition: width 0.3s ease;
+}
+
+/* Loading indicator shown while API data is being fetched */
+.seasons-loading {
+    text-align: center;
+    color: var(--color-text-muted);
+    font-style: italic;
+    padding: 1rem;
+}
+
+/* Focus-visible states for keyboard navigation */
+#seasons-date-input:focus-visible,
+#seasons-tz-input:focus-visible,
+#seasons-dst-checkbox:focus-visible {
+    outline: 2px solid var(--color-accent1);
+    outline-offset: 2px;
+}
+
+/* Responsive: narrow viewports */
+@media screen and (max-width: 480px) {
+    .seasons-controls {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .seasons-controls input[type="date"],
+    .seasons-controls input[type="number"] {
+        width: 100%;
+    }
+}
