@@ -85,6 +85,13 @@
     var earthCY     = 0;      // Earth center Y on main canvas
     var currentTilt = 0;      // Last computed tilt angle (for re-render on image load)
 
+    // HiDPI scaling state
+    var dpr         = 1;      // Device pixel ratio (1 on standard displays)
+    var canvasCssW  = 0;      // Main canvas CSS width (logical pixels)
+    var canvasCssH  = 0;      // Main canvas CSS height (logical pixels)
+    var earthCssW   = 0;      // Offscreen Earth canvas CSS width (logical pixels)
+    var earthCssH   = 0;      // Offscreen Earth canvas CSS height (logical pixels)
+
     // ================================================================== //
     //  Date Utilities                                                     //
     // ================================================================== //
@@ -656,8 +663,8 @@
         sphere.render();
 
         var ctx = mainCtx;
-        var w   = canvasEl.width;
-        var h   = canvasEl.height;
+        var w   = canvasCssW;
+        var h   = canvasCssH;
 
         // Sun geometry: 109× Earth radius, positioned so only a sliver
         // of the leftmost arc peeks in from the right edge.
@@ -682,10 +689,15 @@
         ctx.fillRect(0, 0, w, h);
 
         // ── 3. Earth (composited from offscreen canvas) ───────── //
+        // Draw the high-res offscreen canvas at CSS pixel size.
+        // The mainCtx is scaled by dpr, so specifying CSS dimensions
+        // for the destination maps correctly to backing-store pixels.
         ctx.drawImage(
             earthCanvas,
-            earthCX - earthCanvas.width  / 2,
-            earthCY - earthCanvas.height / 2
+            earthCX - earthCssW / 2,
+            earthCY - earthCssH / 2,
+            earthCssW,
+            earthCssH
         );
 
         // ── 4. Shadow cone behind Earth ───────────────────────── //
@@ -875,13 +887,19 @@
             return;
         }
 
-        // 4. Set responsive canvas size (2:1 aspect ratio)
+        // 4. Set responsive canvas size (2:1 aspect ratio) with HiDPI scaling
+        dpr = window.devicePixelRatio || 1;
         var containerWidth = canvasEl.parentElement.clientWidth;
         var canvasWidth  = Math.min(CANVAS_MAX_W, containerWidth - 32);
         var canvasHeight = Math.round(canvasWidth / CANVAS_ASPECT);
-        canvasEl.width  = canvasWidth;
-        canvasEl.height = canvasHeight;
+        canvasCssW = canvasWidth;
+        canvasCssH = canvasHeight;
+        canvasEl.width  = canvasWidth  * dpr;
+        canvasEl.height = canvasHeight * dpr;
+        canvasEl.style.width  = canvasWidth  + "px";
+        canvasEl.style.height = canvasHeight + "px";
         mainCtx = canvasEl.getContext("2d");
+        mainCtx.scale(dpr, dpr);
 
         // Compute Earth position and size
         earthRadius = Math.round(canvasHeight * 0.38);
@@ -899,13 +917,18 @@
         //    padding for the edge stroke and extended axis line.
         //    CelestialSphere renders here, then the result is composited
         //    onto the main visible canvas.
+        //    The offscreen canvas backing store is scaled by devicePixelRatio
+        //    so CelestialSphere renders at full resolution, matching the
+        //    main canvas sharpness on HiDPI displays.
         var earthPad = Math.ceil(earthRadius * (AXIS_EXTEND - 1.0) * 2) + 10;
+        earthCssW = earthRadius * 2 + earthPad;
+        earthCssH = earthRadius * 2 + earthPad;
         earthCanvas = document.createElement("canvas");
-        earthCanvas.width  = earthRadius * 2 + earthPad;
-        earthCanvas.height = earthRadius * 2 + earthPad;
+        earthCanvas.width  = earthCssW * dpr;
+        earthCanvas.height = earthCssH * dpr;
 
         sphere = new CelestialSphere(earthCanvas, {
-            radius:           earthRadius,
+            radius:           earthRadius * dpr,
             color:            "#4A90D9",    // Ocean blue fallback while image loads
             shadowColor:      "#0a0a1a",    // Deep space black for nightside
             illumination:     0.5,          // Half the Earth is always lit
@@ -913,13 +936,13 @@
             shading:          true,         // 3D depth shading
             shadingIntensity: 0.20,         // Subtle — let the Earth texture dominate
             edgeColor:        "#1E4D6E",    // Dark ocean blue edge glow
-            edgeWidth:        4,            // Match moon tool thickness
+            edgeWidth:        4 * dpr,      // Scale stroke for HiDPI
             background:       null,         // Transparent (composited onto scene)
             shadowOpacity:    0.75,         // Slightly translucent shadow (show terrain)
             tilt:             0,            // Updated dynamically per selected date
             axisLine:         true,         // Show pole-to-pole axis indicator
             axisLineColor:    "#FFFFFF",    // White axis line
-            axisLineWidth:    1.5,          // Thin but visible
+            axisLineWidth:    1.5 * dpr,    // Scale stroke for HiDPI
             axisLineExtend:   AXIS_EXTEND   // Extend 30% beyond sphere
         });
 

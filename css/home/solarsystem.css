@@ -1,0 +1,19 @@
+/* ==========================================================================
+ * solarsystem.css — Solar system canvas container styling
+ * ========================================================================== */
+
+.solarsystem-wrap {
+    width: 100%;
+    max-width: var(--content-max-width, 800px);
+    margin: 0 auto 1.5rem auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem 0 0;
+}
+
+#solarsystem-canvas {
+    display: block;
+    max-width: 100%;
+    cursor: default;
+}
