@@ -96,11 +96,6 @@
     --font-body:       "Jost", "Futura", "Helvetica Neue", Arial, sans-serif;
     --font-code:       "RobotoMono", "Consolas", "Courier New", monospace;
 
-    /* Sidebar stripes */
-    --sidebar-stripe1: var(--color-accent1);
-    --sidebar-stripe2: var(--color-accent2);
-    --sidebar-stripe3: var(--color-accent3);
-
     /* Divider colors */
     --divider-color1: #227C9D;
     --divider-color2: #FFCB77;

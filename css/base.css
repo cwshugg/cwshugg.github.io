@@ -81,9 +81,6 @@
     --transition-normal: 0.15s linear;
 
     /* ---- Component variables (Tier 2 — overridable by themes) --------- */
-    --sidebar-stripe1: var(--color-accent1);
-    --sidebar-stripe2: var(--color-accent2);
-    --sidebar-stripe3: var(--color-accent3);
     --divider-color1: var(--color-accent1);
     --divider-color2: var(--color-accent2);
     --divider-color3: var(--color-accent3);
@@ -1066,47 +1063,30 @@ hr.divider::after {
 .sidebar {
     position: fixed;
     top: 0;
-    left: -280px;
+    left: 0;
     width: 260px;
     height: 100%;
     background: var(--color-bg);
     border-right: 3px solid var(--color-accent1);
     z-index: 200;
-    transition: left 0.15s linear;
+    transform: translateX(-100%);
+    transition: transform 0.2s ease-in;
     overflow: hidden;
     padding: 0;
 }
 
 .sidebar.active {
-    left: 0;
+    transform: translateX(0);
+    animation: sidebar-bounce-in 0.3s ease-out;
 }
 
-/* Falling stripes — thin repeating bands scroll downward */
-.sidebar::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 200%;
-    z-index: 10;
-    pointer-events: none;
-    opacity: 0;
-    background: repeating-linear-gradient(
-        to bottom,
-        var(--sidebar-stripe1) 0, var(--sidebar-stripe1) 1.667%,
-        var(--sidebar-stripe2) 1.667%, var(--sidebar-stripe2) 3.333%,
-        var(--sidebar-stripe3) 3.333%, var(--sidebar-stripe3) 5%
-    );
-}
-
-.sidebar.active::before {
-    animation: stripe-fall 0.15s linear forwards;
-}
-
-@keyframes stripe-fall {
-    0%   { opacity: 1; top: -100%; }
-    100% { opacity: 0; top: 0%; }
+/* Bounce-in keyframes — sidebar flies in from the left and bounces before settling */
+@keyframes sidebar-bounce-in {
+    0%   { transform: translateX(-100%); }
+    50%  { transform: translateX(8%); }
+    70%  { transform: translateX(-4%); }
+    85%  { transform: translateX(2%); }
+    100% { transform: translateX(0); }
 }
 
 .sidebar-header {
@@ -1123,9 +1103,9 @@ hr.divider::after {
     font-size: 1.25rem;
 }
 
-.sidebar-header .site-title .title-shugg { color: var(--color-accent1); }
-.sidebar-header .site-title .title-dot   { color: var(--color-accent3); }
-.sidebar-header .site-title .title-dev   { color: var(--color-accent2); }
+.sidebar-header .site-title .title-shugg { color: var(--color-accent2); }
+.sidebar-header .site-title .title-dot   { color: var(--color-accent1); }
+.sidebar-header .site-title .title-dev   { color: var(--color-accent3); }
 
 .sidebar-close {
     background: transparent;
@@ -1156,6 +1136,14 @@ hr.divider::after {
     width: 100%;
     text-align: center;
     margin: 0;
+    text-decoration: none;
+}
+
+/* Override theme-level a:hover underlines for sidebar nav buttons.
+   Specificity (0,3,1) beats theme generic a:hover (0,2,1). */
+.sidebar-nav a.button-nav:hover,
+.sidebar-nav a.button-nav:focus {
+    text-decoration: none;
 }
 
 .sidebar-nav .theme-toggle {

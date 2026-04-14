@@ -1,0 +1,76 @@
+/* ==========================================================================
+ * moon.css — Moon Phase tool styles
+ * ==========================================================================
+ * Tool-specific CSS for the Moon Phase page. Leverages base.css box, button,
+ * and layout utilities. Only adds styles specific to this tool's layout.
+ * ======================================================================== */
+
+/* Date navigation row: prev/next buttons flanking the date input */
+.moon-date-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+/* Canvas container — centers the canvas element */
+.moon-canvas-wrap {
+    text-align: center;
+    padding: 1rem 0;
+}
+
+/* Canvas element — block-centered, responsive max-width */
+#moon-canvas {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    height: auto;
+}
+
+/* Illumination percentage label below the canvas */
+.moon-illum-label {
+    text-align: center;
+    margin-top: 0.75rem;
+    font-size: 1.1rem;
+    color: var(--color-text-muted);
+    font-family: var(--font-heading);
+}
+
+/* Navigation button sizing — consolidated from inline styles */
+.moon-date-nav .button-nav {
+    width: auto;
+    min-width: 3.5rem;
+    text-align: center;
+}
+
+/* Loading indicator shown while API data is being fetched */
+.moon-loading {
+    text-align: center;
+    color: var(--color-text-muted);
+    font-style: italic;
+    padding: 1rem;
+}
+
+/* Focus-visible states for keyboard navigation */
+#moon-date-input:focus-visible,
+.moon-date-nav .button-nav:focus-visible {
+    outline: 2px solid var(--color-accent1);
+    outline-offset: 2px;
+}
+
+/* Responsive: narrow viewports */
+@media screen and (max-width: 480px) {
+    .moon-date-nav {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .moon-date-nav .button-nav {
+        width: 100%;
+    }
+
+    #moon-date-input {
+        width: 100%;
+    }
+}

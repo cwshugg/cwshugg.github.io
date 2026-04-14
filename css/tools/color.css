@@ -1,0 +1,375 @@
+/* ==========================================================================
+ * color.css — RGB Color Picker tool-specific styles
+ * ==========================================================================
+ *
+ * All selectors are prefixed with #cp- or .cp- (color picker) to avoid
+ * collisions with base styles.
+ *
+ * Uses existing CSS custom properties from the theme system:
+ *   --color-bg-raised, --color-bg-sunken, --color-border, --color-text,
+ *   --color-text-muted, --color-accent1, --color-accent2, --font-code,
+ *   --transition-fast
+ *
+ * Table of contents:
+ *   1. Picker layout (wheel + preview row)
+ *   2. Canvas & wheel
+ *   3. Preview swatch
+ *   4. Slider groups (R/G/B)
+ *   5. Range input custom styling
+ *   6. Text inputs (Hex, RGB)
+ *   7. Color values display
+ *   8. Xterm 256-color grid
+ *   9. Responsive breakpoints
+ * ======================================================================== */
+
+
+/* ==========================================================================
+ * 1. Picker layout — wheel and preview side by side, controls below
+ * ======================================================================== */
+
+.cp-picker-row {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+.cp-controls {
+    width: 100%;
+}
+
+
+/* ==========================================================================
+ * 2. Canvas & wheel
+ * ======================================================================== */
+
+.cp-wheel-wrap {
+    flex: 0 0 auto;
+    position: relative;
+}
+
+#cp-wheel-canvas {
+    cursor: crosshair;
+    display: block;
+    border: none;
+    box-shadow: none;
+    max-width: 100%;
+    touch-action: none;     /* prevent browser gestures on canvas */
+}
+
+
+/* ==========================================================================
+ * 3. Preview swatch
+ * ======================================================================== */
+
+#cp-preview {
+    /* Dimensions are set by JS to match the color wheel canvas height.
+       aspect-ratio keeps it square if only one dimension is set. */
+    aspect-ratio: 1 / 1;
+    border: 3px solid var(--color-border);
+    box-shadow: 4px 4px 0 var(--color-border);
+    flex-shrink: 0;
+}
+
+
+/* ==========================================================================
+ * 4. Slider groups (R/G/B)
+ * ======================================================================== */
+
+.cp-sliders {
+    margin-bottom: 1rem;
+}
+
+.cp-slider-group {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.cp-slider-group label {
+    width: 1.5em;
+    font-weight: 700;
+    font-family: var(--font-code);
+    color: var(--color-text);
+    flex-shrink: 0;
+}
+
+.cp-slider-group input[type="range"] {
+    flex: 1;
+    min-width: 0;
+}
+
+.cp-slider-group input[type="number"] {
+    width: 4em;
+    text-align: center;
+    flex-shrink: 0;
+    padding: 0.3em 0.4em;
+    margin: 0;
+    font-family: var(--font-code);
+    font-size: 0.9rem;
+}
+
+/* Hide number input spinners for a cleaner look */
+.cp-slider-group input[type="number"]::-webkit-inner-spin-button,
+.cp-slider-group input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.cp-slider-group input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+
+/* -- Lightness (V) slider — visual separator from RGB channels -- */
+.cp-slider-group-v {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--color-border);
+}
+
+
+/* ==========================================================================
+ * 5. Range input custom styling — retro theme
+ * ======================================================================== */
+
+.cp-slider-group input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 8px;
+    background: var(--color-bg-sunken);
+    border: 1px solid var(--color-border);
+    border-radius: 0;
+    outline: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Webkit track (already styled via appearance:none above) */
+.cp-slider-group input[type="range"]::-webkit-slider-runnable-track {
+    height: 8px;
+    border: none;
+    border-radius: 0;
+}
+
+/* Webkit thumb */
+.cp-slider-group input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: var(--color-accent1);
+    border: 2px solid var(--color-border);
+    border-radius: 0;
+    cursor: pointer;
+    margin-top: -4px;
+}
+
+.cp-slider-group input[type="range"]::-webkit-slider-thumb:hover {
+    background: var(--color-accent2);
+}
+
+/* Firefox track */
+.cp-slider-group input[type="range"]::-moz-range-track {
+    height: 8px;
+    background: var(--color-bg-sunken);
+    border: 1px solid var(--color-border);
+    border-radius: 0;
+}
+
+/* Firefox thumb */
+.cp-slider-group input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: var(--color-accent1);
+    border: 2px solid var(--color-border);
+    border-radius: 0;
+    cursor: pointer;
+}
+
+.cp-slider-group input[type="range"]::-moz-range-thumb:hover {
+    background: var(--color-accent2);
+}
+
+/* Focus ring on slider */
+.cp-slider-group input[type="range"]:focus-visible {
+    outline: 2px solid var(--color-accent1);
+    outline-offset: 2px;
+}
+
+
+/* ==========================================================================
+ * 6. Text inputs (Hex, RGB)
+ * ======================================================================== */
+
+.cp-text-inputs {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.cp-text-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.cp-text-group label {
+    font-weight: 700;
+    font-family: var(--font-code);
+    color: var(--color-text);
+    flex-shrink: 0;
+    font-size: 0.9rem;
+}
+
+.cp-text-group input[type="text"] {
+    width: 10em;
+    padding: 0.3em 0.5em;
+    margin: 0;
+    font-family: var(--font-code);
+    font-size: 0.9rem;
+}
+
+
+/* ==========================================================================
+ * 7. Color values display (read-only)
+ * ======================================================================== */
+
+#cp-values {
+    font-family: var(--font-code);
+    font-size: 0.9rem;
+    line-height: 1.8;
+    color: var(--color-text-muted);
+    background: var(--color-bg-sunken);
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--color-border);
+}
+
+#cp-values span {
+    display: block;
+}
+
+/* Labels within the values display */
+.cp-val-label {
+    color: var(--color-accent1);
+    font-weight: 700;
+}
+
+
+/* ==========================================================================
+ * 8. Xterm 256-color grid
+ * ======================================================================== */
+
+#cp-xterm-grid {
+    /* Container for all xterm sections */
+}
+
+.cp-xterm-label {
+    font-family: var(--font-code);
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    margin-top: 0.75rem;
+    margin-bottom: 0.25rem;
+}
+
+.cp-xterm-row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.cp-xterm-cube-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.cp-xterm-cube-block {
+    display: flex;
+    flex-wrap: wrap;
+    width: calc(6 * 36px);   /* 6 cells wide */
+}
+
+.cp-xterm-cell {
+    width: 36px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-family: var(--font-code);
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color var(--transition-fast),
+                box-shadow var(--transition-fast),
+                transform var(--transition-fast);
+    user-select: none;
+    position: relative;
+}
+
+.cp-xterm-cell:hover {
+    border-color: var(--color-text);
+    box-shadow: 2px 2px 0 var(--color-text);
+    transform: scale(1.15);
+    z-index: 1;
+}
+
+.cp-xterm-nearest {
+    border-color: #E7E247 !important;
+    box-shadow: 2px 2px 0 #E7E247;
+    transform: scale(1.2);
+    z-index: 2;
+}
+
+.cp-xterm-exact {
+    border-color: #FF4444 !important;
+    box-shadow: 2px 2px 0 #FF4444;
+    transform: scale(1.2);
+    z-index: 2;
+}
+
+
+/* ==========================================================================
+ * 9. Responsive breakpoints
+ * ======================================================================== */
+
+@media screen and (max-width: 768px) {
+    .cp-picker-row {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* #cp-preview dimensions are handled by JS to match the wheel canvas */
+
+    .cp-xterm-cell {
+        width: 28px;
+        height: 22px;
+        font-size: 0.55rem;
+    }
+
+    .cp-xterm-cube-block {
+        width: calc(6 * 28px);
+    }
+
+    .cp-text-inputs {
+        flex-direction: column;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .cp-xterm-cell {
+        width: 22px;
+        height: 18px;
+        font-size: 0.5rem;
+    }
+
+    .cp-xterm-cube-block {
+        width: calc(6 * 22px);
+    }
+
+    .cp-slider-group {
+        gap: 0.5rem;
+    }
+}

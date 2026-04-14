@@ -1,0 +1,788 @@
+/* ==========================================================================
+ * galactic.css — Galactic space theme
+ * ==========================================================================
+ *
+ * A cosmic, space-themed style for astronomy tool pages. Dark mode feels
+ * like deep space; light mode is a lighter take on the same stellar palette.
+ * Layers on top of base.css — overrides variables and adds galactic-specific
+ * component patterns.
+ *
+ * Color palette:
+ *   Black          #000000  — deep space void (background, dark mode)
+ *   Alabaster Gray #DFE0E2  — starlight (text dark mode / background light mode)
+ *   Slate Gray     #6B717E  — asteroid gray (muted text, borders, secondary)
+ *   Yellow         #E7E247  — stellar yellow (warm highlights, accents)
+ *   Blue           #88CCF1  — nebula blue (links, cool accents)
+ *
+ * Fonts:
+ *   Audiowide  — headings (wide, futuristic display font)
+ *   Jost       — body text (clean, modern Futura substitute)
+ *
+ * Design rules:
+ *   - Retro flat aesthetic: no gradients, no blur, sharp shadows
+ *   - Dark mode feels like gazing into deep space
+ *   - Light mode feels like a star chart on bright paper
+ *   - Works in both dark mode (default) and light mode
+ * ======================================================================== */
+
+
+/* ==========================================================================
+ * Font faces
+ * ======================================================================== */
+
+@font-face {
+    font-family: "Audiowide";
+    src: url("../../fonts/Audiowide-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Aldrich";
+    src: url("../../fonts/Aldrich-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Jost";
+    src: url("../../fonts/Jost-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Jost";
+    src: url("../../fonts/Jost-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Legacy font references — kept so old pages don't break */
+@font-face {
+    font-family: "RobotoMono";
+    src: url("../../fonts/robotomono.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+/* ==========================================================================
+ * Dark mode variables (default)
+ *
+ * Deep space: pure black background, starlight-gray text, nebula blue
+ * and stellar yellow accents, slate gray for muted/secondary elements.
+ * ======================================================================== */
+
+.galactic-theme {
+    /* Core palette */
+    --color-bg:      #000000;   /* Black — deep space void          */
+    --color-text:    #DFE0E2;   /* Alabaster Gray — starlight        */
+    --color-accent1: #88CCF1;   /* Blue — nebula blue (links, cool)  */
+    --color-accent2: #E7E247;   /* Yellow — stellar yellow (warm)    */
+    --color-accent3: #6B717E;   /* Slate Gray — asteroid gray        */
+
+    /* Derived / surface colors */
+    --color-bg-raised:  #111118;  /* Slightly lifted space surface    */
+    --color-bg-sunken:  #08080D;  /* Even deeper void                 */
+    --color-bg-code:    #0D0D14;  /* Dark with faint cosmic blue tint */
+    --color-text-muted: #6B717E;  /* Slate Gray — subdued starlight   */
+    --color-border:     #3A3D46;  /* Midpoint: black ↔ slate gray     */
+
+    /* Fonts */
+    --font-heading: "Audiowide", "Aldrich", "Helvetica Neue", Arial, sans-serif;
+    --font-body:    "Jost", "Futura", "Helvetica Neue", Arial, sans-serif;
+    --font-code:    "RobotoMono", "Consolas", "Courier New", monospace;
+
+    /* Divider colors */
+    --divider-color1: #88CCF1;
+    --divider-color2: #E7E247;
+    --divider-color3: #6B717E;
+}
+
+
+/* ==========================================================================
+ * Light mode variables
+ *
+ * Star-chart mode: alabaster background, black text, darkened accent
+ * variants for readability on the bright surface.
+ * ======================================================================== */
+
+.galactic-theme.light-mode {
+    --color-bg:         #DFE0E2;   /* Alabaster Gray — bright paper     */
+    --color-text:       #000000;   /* Black — ink                       */
+    --color-accent1:    #2A7BA3;   /* Darkened blue for contrast        */
+    --color-accent2:    #9E9D12;   /* Darkened yellow for contrast      */
+    --color-accent3:    #6B717E;   /* Slate Gray — unchanged            */
+
+    /* Derived / surface colors */
+    --color-bg-raised:  #EDEEF0;   /* Slightly lighter than alabaster   */
+    --color-bg-sunken:  #D0D1D4;   /* Slightly darker than alabaster    */
+    --color-bg-code:    #CCCDD0;   /* Code block surface                */
+    --color-text-muted: #6B717E;   /* Slate Gray                        */
+    --color-border:     #6B717E;   /* Slate Gray borders                */
+
+    /* Divider colors — darkened for readability on light background */
+    --divider-color1: #2A7BA3;   /* Darkened blue   */
+    --divider-color2: #9E9D12;   /* Darkened yellow  */
+    --divider-color3: #6B717E;   /* Slate Gray       */
+}
+
+
+/* ==========================================================================
+ * Component overrides — dark mode
+ *
+ * Galactic-specific visual effects that go beyond CSS variables.
+ * ======================================================================== */
+
+/* ---- Font family overrides -------------------------------------------- */
+
+.galactic-theme {
+    font-family: var(--font-body);
+}
+
+.galactic-theme p,
+.galactic-theme li,
+.galactic-theme td,
+.galactic-theme label,
+.galactic-theme input,
+.galactic-theme textarea,
+.galactic-theme select {
+    font-family: var(--font-body);
+}
+
+.galactic-theme h1,
+.galactic-theme h2,
+.galactic-theme h3,
+.galactic-theme h4,
+.galactic-theme h5,
+.galactic-theme h6,
+.galactic-theme th {
+    font-family: var(--font-heading);
+}
+
+
+/* ---- Heading colors: Yellow / Blue alternating (star ↔ nebula) -------- */
+
+.galactic-theme h1 { color: #E7E247; }   /* Stellar yellow */
+.galactic-theme h2 { color: #88CCF1; }   /* Nebula blue    */
+.galactic-theme h3 { color: #E7E247; }
+.galactic-theme h4 { color: #88CCF1; }
+.galactic-theme h5 { color: #E7E247; }
+.galactic-theme h6 { color: #88CCF1; }
+
+
+/* ---- Site header / nav ------------------------------------------------ */
+
+.galactic-theme .site-header {
+    background-color: #08080D;          /* Deep void behind header */
+    border-bottom-color: #3A3D46;
+}
+
+.galactic-theme .site-header .site-title {
+    font-family: var(--font-heading);
+}
+
+.galactic-theme .site-header .site-title .title-shugg { color: #88CCF1; }  /* Nebula blue    */
+.galactic-theme .site-header .site-title .title-dot   { color: #E7E247; }  /* Stellar yellow */
+.galactic-theme .site-header .site-title .title-dev   { color: #6B717E; }  /* Slate gray     */
+
+.galactic-theme .site-header .site-title:hover .title-shugg,
+.galactic-theme .site-header .site-title:hover .title-dot,
+.galactic-theme .site-header .site-title:hover .title-dev {
+    color: var(--color-text);
+}
+
+.galactic-theme .site-header a.button-nav,
+.galactic-theme .site-header button:not(.sidebar-toggle):not(.sidebar-close) {
+    color: var(--color-text);
+    border-color: #6B717E;
+    box-shadow: 4px 4px 0 #6B717E;
+}
+
+.galactic-theme .site-header a.button-nav:hover,
+.galactic-theme .site-header button:not(.sidebar-toggle):not(.sidebar-close):hover {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 #6B717E;
+}
+
+.galactic-theme .site-header a.button-nav:active,
+.galactic-theme .site-header button:not(.sidebar-toggle):not(.sidebar-close):active {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    transform: translate(4px, 4px);
+    box-shadow: 0 0 0 #6B717E;
+}
+
+
+/* ---- Footer ----------------------------------------------------------- */
+
+.galactic-theme .site-footer a {
+    color: #88CCF1;    /* Nebula blue */
+}
+
+.galactic-theme .site-footer a:hover {
+    color: #E7E247;    /* Stellar yellow */
+}
+
+
+/* ---- Links ------------------------------------------------------------ */
+
+.galactic-theme a {
+    color: #88CCF1;    /* Nebula blue */
+}
+
+.galactic-theme a:hover,
+.galactic-theme a:focus {
+    color: #B0DEF6;    /* Lighter blue — hover glow */
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.galactic-theme a:active {
+    color: #E7E247;    /* Stellar yellow on click */
+}
+
+.galactic-theme .text-link {
+    color: #88CCF1;
+}
+
+.galactic-theme .text-link:hover,
+.galactic-theme .text-link:focus {
+    color: #B0DEF6;
+}
+
+
+/* ---- Labels / muted text ---------------------------------------------- */
+
+.galactic-theme label,
+.galactic-theme .label-main {
+    color: #6B717E;    /* Slate Gray */
+}
+
+
+/* ---- Boxes (space panels) --------------------------------------------- */
+
+.galactic-theme .box {
+    background: #111118;              /* Raised space surface */
+    border: 3px solid #3A3D46;
+    box-shadow: 5px 5px 0 #3A3D46;
+    border-top: 3px solid #6B717E;    /* Lighter top edge */
+}
+
+.galactic-theme .box-1 {
+    border-color: #6B717E;            /* Slate Gray */
+    box-shadow: 5px 5px 0 #6B717E;
+    border-top-color: #848A98;        /* Lighter slate */
+}
+
+.galactic-theme .box-2 {
+    border-color: #88CCF1;            /* Nebula blue */
+    box-shadow: 5px 5px 0 #88CCF1;
+    border-top-color: #A4D8F5;        /* Lighter blue */
+}
+
+.galactic-theme .box-3 {
+    border-color: #E7E247;            /* Stellar yellow */
+    box-shadow: 5px 5px 0 #E7E247;
+    border-top-color: #EDEC7A;        /* Lighter yellow */
+}
+
+
+/* ---- Buttons ---------------------------------------------------------- */
+
+.galactic-theme button,
+.galactic-theme .button-main,
+.galactic-theme .button-nav {
+    border-color: #6B717E;
+    box-shadow: 4px 4px 0 #6B717E;
+}
+
+.galactic-theme button:hover:enabled,
+.galactic-theme .button-main:hover:enabled,
+.galactic-theme .button-nav:hover:enabled,
+.galactic-theme button:hover,
+.galactic-theme .button-main:hover,
+.galactic-theme .button-nav:hover {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 #6B717E;
+}
+
+.galactic-theme button:active:enabled,
+.galactic-theme .button-main:active:enabled,
+.galactic-theme .button-nav:active:enabled,
+.galactic-theme button:active,
+.galactic-theme .button-main:active,
+.galactic-theme .button-nav:active {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    transform: translate(4px, 4px);
+    box-shadow: 0 0 0 #6B717E;
+}
+
+.galactic-theme button:focus-visible,
+.galactic-theme .button-main:focus-visible,
+.galactic-theme .button-nav:focus-visible {
+    outline-color: #88CCF1;
+}
+
+
+/* ---- Inputs ----------------------------------------------------------- */
+
+.galactic-theme input,
+.galactic-theme .input-main {
+    background-color: #0D0D14;
+    border-bottom-color: #3A3D46;
+}
+
+.galactic-theme input:focus,
+.galactic-theme .input-main:focus {
+    border-bottom-color: #88CCF1;
+    box-shadow: 0 1px 0 #88CCF1;
+}
+
+.galactic-theme input::placeholder {
+    color: #6B717E;
+    opacity: 0.6;
+}
+
+
+/* ---- Textarea --------------------------------------------------------- */
+
+.galactic-theme textarea {
+    background-color: #0D0D14;
+    border: 1px solid #3A3D46;
+    color: #DFE0E2;
+}
+
+.galactic-theme textarea:focus {
+    border-color: #88CCF1;
+}
+
+
+/* ---- Select ----------------------------------------------------------- */
+
+.galactic-theme select {
+    background-color: #0D0D14;
+    border-color: #3A3D46;
+}
+
+.galactic-theme select:focus {
+    border-color: #88CCF1;
+}
+
+
+/* ---- Tables ----------------------------------------------------------- */
+
+.galactic-theme table {
+    border-color: #3A3D46;
+    box-shadow: 5px 5px 0 #3A3D46;
+}
+
+.galactic-theme .box table {
+    border: none;
+    box-shadow: none;
+}
+
+.galactic-theme thead {
+    border-bottom-color: #3A3D46;
+}
+
+.galactic-theme th {
+    color: #E7E247;    /* Stellar yellow for table headers */
+}
+
+.galactic-theme td {
+    border-bottom-color: #1A1A22;
+}
+
+.galactic-theme tbody tr:hover {
+    background-color: rgba(136, 204, 241, 0.06);   /* Faint nebula blue glow */
+}
+
+
+/* ---- Code blocks ------------------------------------------------------ */
+
+.galactic-theme pre {
+    border-color: #3A3D46;
+    box-shadow: 5px 5px 0 #3A3D46;
+}
+
+
+/* ---- Images ----------------------------------------------------------- */
+
+.galactic-theme img {
+    border-color: #3A3D46;
+    box-shadow: 5px 5px 0 #3A3D46;
+}
+
+
+/* ---- Sidebar (dark mode) ---------------------------------------------- */
+
+.galactic-theme .sidebar {
+    background: #08080D;
+    border-right-color: #3A3D46;
+}
+
+.galactic-theme .sidebar-header {
+    border-bottom-color: #3A3D46;
+}
+
+.galactic-theme .sidebar-header .site-title {
+    color: #E7E247;
+    font-family: var(--font-heading);
+}
+
+.galactic-theme .sidebar-header .site-title .title-shugg { color: #88CCF1; }
+.galactic-theme .sidebar-header .site-title .title-dot   { color: #E7E247; }
+.galactic-theme .sidebar-header .site-title .title-dev   { color: #6B717E; }
+
+.galactic-theme .sidebar-close,
+.galactic-theme .sidebar-toggle {
+    color: var(--color-text);
+    border: none;
+    box-shadow: none;
+}
+
+.galactic-theme .sidebar-close:hover,
+.galactic-theme .sidebar-toggle:hover {
+    color: #E7E247;
+    background: transparent;
+    transform: none;
+    box-shadow: none;
+}
+
+.galactic-theme .sidebar-nav .button-nav {
+    border-color: #6B717E;
+    box-shadow: 4px 4px 0 #6B717E;
+    color: var(--color-text);
+}
+
+.galactic-theme .sidebar-nav .button-nav:hover {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    box-shadow: 2px 2px 0 #6B717E;
+}
+
+.galactic-theme .sidebar-nav button {
+    border-color: #6B717E;
+    box-shadow: 4px 4px 0 #6B717E;
+    color: var(--color-text);
+}
+
+.galactic-theme .sidebar-nav button:hover {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    box-shadow: 2px 2px 0 #6B717E;
+}
+
+
+/* ==========================================================================
+ * Light mode overrides
+ * ======================================================================== */
+
+/* ---- Headings: Darkened Blue / Slate alternating ----------------------- */
+
+.galactic-theme.light-mode h1 { color: #2A7BA3; }   /* Dark nebula blue */
+.galactic-theme.light-mode h2 { color: #6B717E; }   /* Slate gray       */
+.galactic-theme.light-mode h3 { color: #2A7BA3; }
+.galactic-theme.light-mode h4 { color: #6B717E; }
+.galactic-theme.light-mode h5 { color: #2A7BA3; }
+.galactic-theme.light-mode h6 { color: #6B717E; }
+
+
+/* ---- Site header / nav (light mode) ----------------------------------- */
+
+.galactic-theme.light-mode .site-header {
+    background-color: #DFE0E2;
+    border-bottom-color: #6B717E;
+}
+
+.galactic-theme.light-mode .site-header .site-title .title-shugg { color: #2A7BA3; }  /* Dark blue  */
+.galactic-theme.light-mode .site-header .site-title .title-dot   { color: #9E9D12; }  /* Dark yellow */
+.galactic-theme.light-mode .site-header .site-title .title-dev   { color: #6B717E; }  /* Slate gray  */
+
+.galactic-theme.light-mode .site-header .site-title:hover .title-shugg,
+.galactic-theme.light-mode .site-header .site-title:hover .title-dot,
+.galactic-theme.light-mode .site-header .site-title:hover .title-dev {
+    color: var(--color-text);
+}
+
+.galactic-theme.light-mode .site-header a.button-nav,
+.galactic-theme.light-mode .site-header button:not(.sidebar-toggle):not(.sidebar-close) {
+    color: var(--color-text);
+    border-color: #6B717E;
+    box-shadow: 4px 4px 0 #6B717E;
+}
+
+.galactic-theme.light-mode .site-header a.button-nav:hover,
+.galactic-theme.light-mode .site-header button:not(.sidebar-toggle):not(.sidebar-close):hover {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 #6B717E;
+}
+
+.galactic-theme.light-mode .site-header a.button-nav:active,
+.galactic-theme.light-mode .site-header button:not(.sidebar-toggle):not(.sidebar-close):active {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    transform: translate(4px, 4px);
+    box-shadow: 0 0 0 #6B717E;
+}
+
+
+/* ---- Footer (light mode) ---------------------------------------------- */
+
+.galactic-theme.light-mode .site-footer a {
+    color: #2A7BA3;
+}
+
+.galactic-theme.light-mode .site-footer a:hover {
+    color: #9E9D12;
+}
+
+
+/* ---- Links (light mode) ----------------------------------------------- */
+
+.galactic-theme.light-mode a {
+    color: #2A7BA3;    /* Darkened nebula blue */
+}
+
+.galactic-theme.light-mode a:hover,
+.galactic-theme.light-mode a:focus {
+    color: #88CCF1;    /* Full nebula blue on hover */
+}
+
+.galactic-theme.light-mode a:active {
+    color: #9E9D12;    /* Dark yellow on click */
+}
+
+.galactic-theme.light-mode .text-link {
+    color: #2A7BA3;
+}
+
+.galactic-theme.light-mode .text-link:hover,
+.galactic-theme.light-mode .text-link:focus {
+    color: #88CCF1;
+}
+
+
+/* ---- Labels / muted text (light mode) --------------------------------- */
+
+.galactic-theme.light-mode label,
+.galactic-theme.light-mode .label-main {
+    color: #6B717E;
+}
+
+
+/* ---- Boxes (star-chart panels, light mode) ---------------------------- */
+
+.galactic-theme.light-mode .box {
+    background: #EDEEF0;
+    border: 3px solid #6B717E;
+    box-shadow: 5px 5px 0 #6B717E;
+    border-top: 3px solid #848A98;     /* Lighter slate top */
+}
+
+.galactic-theme.light-mode .box-1 {
+    border-color: #6B717E;
+    box-shadow: 5px 5px 0 #6B717E;
+    border-top-color: #848A98;
+}
+
+.galactic-theme.light-mode .box-2 {
+    border-color: #2A7BA3;
+    box-shadow: 5px 5px 0 #2A7BA3;
+    border-top-color: #88CCF1;
+}
+
+.galactic-theme.light-mode .box-3 {
+    border-color: #9E9D12;
+    box-shadow: 5px 5px 0 #9E9D12;
+    border-top-color: #E7E247;
+}
+
+
+/* ---- Buttons (light mode) --------------------------------------------- */
+
+.galactic-theme.light-mode button,
+.galactic-theme.light-mode .button-main,
+.galactic-theme.light-mode .button-nav {
+    border-color: #6B717E;
+    box-shadow: 4px 4px 0 #6B717E;
+    color: #000000;
+}
+
+.galactic-theme.light-mode button:hover:enabled,
+.galactic-theme.light-mode .button-main:hover:enabled,
+.galactic-theme.light-mode .button-nav:hover:enabled,
+.galactic-theme.light-mode button:hover,
+.galactic-theme.light-mode .button-main:hover,
+.galactic-theme.light-mode .button-nav:hover {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 #6B717E;
+}
+
+.galactic-theme.light-mode button:active:enabled,
+.galactic-theme.light-mode .button-main:active:enabled,
+.galactic-theme.light-mode .button-nav:active:enabled,
+.galactic-theme.light-mode button:active,
+.galactic-theme.light-mode .button-main:active,
+.galactic-theme.light-mode .button-nav:active {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    transform: translate(4px, 4px);
+    box-shadow: 0 0 0 #6B717E;
+}
+
+.galactic-theme.light-mode button:focus-visible,
+.galactic-theme.light-mode .button-main:focus-visible,
+.galactic-theme.light-mode .button-nav:focus-visible {
+    outline-color: #2A7BA3;
+}
+
+
+/* ---- Inputs (light mode) ---------------------------------------------- */
+
+.galactic-theme.light-mode input,
+.galactic-theme.light-mode .input-main {
+    background-color: #EDEEF0;
+    color: #000000;
+    border-bottom-color: #6B717E;
+}
+
+.galactic-theme.light-mode input:focus,
+.galactic-theme.light-mode .input-main:focus {
+    border-bottom-color: #2A7BA3;
+    box-shadow: 0 1px 0 #2A7BA3;
+}
+
+.galactic-theme.light-mode input::placeholder {
+    color: #6B717E;
+    opacity: 0.7;
+}
+
+
+/* ---- Textarea (light mode) -------------------------------------------- */
+
+.galactic-theme.light-mode textarea {
+    background-color: #EDEEF0;
+    color: #000000;
+    border-color: #6B717E;
+}
+
+.galactic-theme.light-mode textarea:focus {
+    border-color: #2A7BA3;
+}
+
+
+/* ---- Select (light mode) ---------------------------------------------- */
+
+.galactic-theme.light-mode select {
+    background-color: #EDEEF0;
+    color: #000000;
+    border-color: #6B717E;
+}
+
+.galactic-theme.light-mode select:focus {
+    border-color: #2A7BA3;
+}
+
+
+/* ---- Tables (light mode) ---------------------------------------------- */
+
+.galactic-theme.light-mode table {
+    border-color: #6B717E;
+    box-shadow: 5px 5px 0 #6B717E;
+}
+
+.galactic-theme.light-mode .box table {
+    border: none;
+    box-shadow: none;
+}
+
+.galactic-theme.light-mode thead {
+    border-bottom-color: #6B717E;
+}
+
+.galactic-theme.light-mode th {
+    color: #2A7BA3;
+}
+
+.galactic-theme.light-mode td {
+    border-bottom-color: #D0D1D4;
+}
+
+.galactic-theme.light-mode tbody tr:hover {
+    background-color: rgba(42, 123, 163, 0.08);
+}
+
+
+/* ---- Code blocks (light mode) ----------------------------------------- */
+
+.galactic-theme.light-mode pre {
+    border-color: #6B717E;
+    box-shadow: 5px 5px 0 #6B717E;
+}
+
+
+/* ---- Images (light mode) ---------------------------------------------- */
+
+.galactic-theme.light-mode img {
+    border-color: #6B717E;
+    box-shadow: 5px 5px 0 #6B717E;
+}
+
+
+/* ---- Sidebar (light mode) --------------------------------------------- */
+
+.galactic-theme.light-mode .sidebar {
+    background: #DFE0E2;
+    border-right-color: #6B717E;
+}
+
+.galactic-theme.light-mode .sidebar-header {
+    border-bottom-color: #6B717E;
+}
+
+.galactic-theme.light-mode .sidebar-header .site-title {
+    color: #2A7BA3;
+}
+
+.galactic-theme.light-mode .sidebar-header .site-title .title-shugg { color: #2A7BA3; }
+.galactic-theme.light-mode .sidebar-header .site-title .title-dot   { color: #9E9D12; }
+.galactic-theme.light-mode .sidebar-header .site-title .title-dev   { color: #6B717E; }
+
+.galactic-theme.light-mode .sidebar-close:hover,
+.galactic-theme.light-mode .sidebar-toggle:hover {
+    color: #2A7BA3;
+    background: transparent;
+    transform: none;
+    box-shadow: none;
+}
+
+.galactic-theme.light-mode .sidebar-nav .button-nav,
+.galactic-theme.light-mode .sidebar-nav button {
+    border-color: #6B717E;
+    box-shadow: 4px 4px 0 #6B717E;
+    color: var(--color-text);
+}
+
+.galactic-theme.light-mode .sidebar-nav .button-nav:hover,
+.galactic-theme.light-mode .sidebar-nav button:hover {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    box-shadow: 2px 2px 0 #6B717E;
+}
