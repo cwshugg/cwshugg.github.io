@@ -20,7 +20,7 @@
 //   3. Sun body (image clipped to circle, or flat color fill)
 //   4. Planet bodies (image clipped or flat color fill)
 //   5. Labels (sun + planets)
-//   6. Hover / Click rims (flat stroked circles around hovered/clicked bodies)
+//   6. Hover / Press rims (flat stroked circles around hovered/pressed bodies)
 
 (function (global) {
     "use strict";
@@ -31,6 +31,11 @@
 
     var PI  = Math.PI;
     var TAU = 2 * PI;
+
+    // Hover animation constants
+    var HOVER_MAX_WIDTH  = 6;    // Maximum rim width when fully hovered (px)
+    var HOVER_GROW_MS    = 150;  // Duration to grow from base to max width (ms)
+    var HOVER_SHRINK_MS  = 100;  // Duration to shrink back to 0 (ms)
 
     var DEFAULTS = {
         sun: {
@@ -57,12 +62,6 @@
             color:   "rgba(255, 255, 255, 0.7)",        // Rim stroke color
             width:   2,                                 // Rim stroke thickness
             gap:     4                                  // Pixels between sphere edge and rim
-        },
-        clickStyle: {
-            color: "#E7E247",                           // Click feedback color (yellow accent)
-            width: 3,                                   // Click rim thickness
-            gap:   4,                                   // Gap between sphere edge and rim
-            delay: 250                                  // ms to show click feedback before navigating
         },
         background:     null,                       // Canvas background color (null = transparent)
         animate:        true,                       // Whether to animate (false = static render)
@@ -94,6 +93,69 @@
             }
         }
         return dst;
+    }
+
+    /**
+     * Returns a lighter shade of a hex color by blending it toward white.
+     *
+     * @param {string} hexColor - Hex color string (e.g. "#4A90D9")
+     * @param {number} amount   - Blend amount: 0.0 = no change, 1.0 = white
+     * @returns {string} CSS rgb() color string
+     */
+    function lightenColor(hexColor, amount) {
+        var r = parseInt(hexColor.slice(1, 3), 16);
+        var g = parseInt(hexColor.slice(3, 5), 16);
+        var b = parseInt(hexColor.slice(5, 7), 16);
+        r = Math.round(r + (255 - r) * amount);
+        g = Math.round(g + (255 - g) * amount);
+        b = Math.round(b + (255 - b) * amount);
+        return "rgb(" + r + "," + g + "," + b + ")";
+    }
+
+    /**
+     * Returns a contrasting text color (dark or light) for a given hex
+     * background color, based on perceived luminance. Attempts to read
+     * the current theme's --color-text and --color-bg CSS custom properties
+     * for best visual consistency; falls back to hardcoded dark/light values.
+     *
+     * @param {string} hexColor - Hex color string (e.g. "#4A90D9")
+     * @returns {string} A contrasting hex color string
+     */
+    function getContrastColor(hexColor) {
+        var r = parseInt(hexColor.slice(1, 3), 16);
+        var g = parseInt(hexColor.slice(3, 5), 16);
+        var b = parseInt(hexColor.slice(5, 7), 16);
+        var luminance = 0.299 * r + 0.587 * g + 0.114 * b;
+
+        // Try to read theme colors from CSS custom properties
+        var darkColor  = "#2D2B28";
+        var lightColor = "#F5F5F5";
+        try {
+            var styles = getComputedStyle(document.documentElement);
+            var textColor = styles.getPropertyValue("--color-text").trim();
+            var bgColor   = styles.getPropertyValue("--color-bg").trim();
+            if (textColor) darkColor  = textColor;
+            if (bgColor)   lightColor = bgColor;
+        } catch (_e) { /* ignore */ }
+
+        return luminance > 128 ? darkColor : lightColor;
+    }
+
+    /**
+     * Darken a hex color by blending it toward black.
+     *
+     * @param {string} hexColor - Hex color string (e.g. "#4A90D9")
+     * @param {number} amount   - Darken amount: 0.0 = no change, 1.0 = black
+     * @returns {string} CSS rgb() color string
+     */
+    function darkenColor(hexColor, amount) {
+        var r = parseInt(hexColor.slice(1, 3), 16);
+        var g = parseInt(hexColor.slice(3, 5), 16);
+        var b = parseInt(hexColor.slice(5, 7), 16);
+        r = Math.round(r * (1 - amount));
+        g = Math.round(g * (1 - amount));
+        b = Math.round(b * (1 - amount));
+        return "rgb(" + r + "," + g + "," + b + ")";
     }
 
     /**
@@ -162,9 +224,14 @@
         // Hover state
         this._hoveredBody = null;
 
-        // Click animation state
-        this._clickedBody   = null;   // { body: <config>, time: <performance.now timestamp> }
-        this._clickTimeout  = null;   // setTimeout ID for delayed navigation
+        // Press state (rim color change only — no animation)
+        this._pressedBody      = null;   // Body config currently pressed (for white/black rim)
+
+        // Hover animation state
+        this._hoverAnimState   = null;   // "growing" | "shrinking" | null
+        this._hoverAnimStart   = 0;      // performance.now() when current animation began
+        this._hoverShrinkFrom  = 0;      // Rim width at the moment shrink animation began
+        this._lastHoveredBody  = null;   // Last hovered body (used during shrink after cursor leaves)
 
         // Compute layout values
         this._recomputeLayout();
@@ -175,14 +242,22 @@
         // Bind event handlers (store references for removal in destroy())
         var self = this;
 
-        this._onClickBound = function (e) { self._onClick(e); };
-        this._onMoveBound  = function (e) { self._onMouseMove(e); };
-        this._onResizeBound = function ()  { self._onResize(); };
-        this._onVisibilityBound = function () { self._onVisibilityChange(); };
+        this._onClickBound       = function (e) { self._onClick(e); };
+        this._onMoveBound        = function (e) { self._onMouseMove(e); };
+        this._onResizeBound      = function ()  { self._onResize(); };
+        this._onVisibilityBound  = function ()  { self._onVisibilityChange(); };
+        this._onMouseDownBound   = function (e) { self._onMouseDown(e); };
+        this._onMouseUpBound     = function (e) { self._onMouseUp(e); };
+        this._onTouchStartBound  = function (e) { self._onTouchStart(e); };
+        this._onTouchEndBound    = function (e) { self._onTouchEnd(e); };
 
-        this._canvas.addEventListener("click",     this._onClickBound,     false);
-        this._canvas.addEventListener("mousemove", this._onMoveBound,      false);
-        global.addEventListener("resize",          this._onResizeBound,    false);
+        this._canvas.addEventListener("click",      this._onClickBound,      false);
+        this._canvas.addEventListener("mousemove",  this._onMoveBound,       false);
+        this._canvas.addEventListener("mousedown",  this._onMouseDownBound,  false);
+        this._canvas.addEventListener("touchstart", this._onTouchStartBound, { passive: false });
+        document.addEventListener("mouseup",        this._onMouseUpBound,    false);
+        document.addEventListener("touchend",       this._onTouchEndBound,   false);
+        global.addEventListener("resize",           this._onResizeBound,     false);
         document.addEventListener("visibilitychange", this._onVisibilityBound, false);
     }
 
@@ -316,17 +391,19 @@
     SolarSystem.prototype.destroy = function () {
         this.stop();
 
-        // Clear pending click navigation
-        if (this._clickTimeout) {
-            clearTimeout(this._clickTimeout);
-            this._clickTimeout = null;
-        }
-        this._clickedBody = null;
+        // Clear press and hover animation state
+        this._pressedBody    = null;
+        this._hoverAnimState = null;
+        this._lastHoveredBody = null;
 
         // Remove event listeners
-        this._canvas.removeEventListener("click",     this._onClickBound,     false);
-        this._canvas.removeEventListener("mousemove", this._onMoveBound,      false);
-        global.removeEventListener("resize",          this._onResizeBound,    false);
+        this._canvas.removeEventListener("click",      this._onClickBound,      false);
+        this._canvas.removeEventListener("mousemove",  this._onMoveBound,       false);
+        this._canvas.removeEventListener("mousedown",  this._onMouseDownBound,  false);
+        this._canvas.removeEventListener("touchstart", this._onTouchStartBound, false);
+        document.removeEventListener("mouseup",        this._onMouseUpBound,    false);
+        document.removeEventListener("touchend",       this._onTouchEndBound,   false);
+        global.removeEventListener("resize",           this._onResizeBound,     false);
         document.removeEventListener("visibilitychange", this._onVisibilityBound, false);
 
         // Clear canvas
@@ -413,9 +490,11 @@
      * @param {number} gap   - Gap between body edge and rim
      */
     SolarSystem.prototype._drawRim = function (ctx, cx, cy, r, color, width, gap) {
+        var innerRadius = r + gap;              // Fixed inner edge
+        var rimRadius   = innerRadius + width / 2;  // Center of stroke (grows outward)
         ctx.save();
         ctx.beginPath();
-        ctx.arc(cx, cy, r + gap, 0, TAU);
+        ctx.arc(cx, cy, rimRadius, 0, TAU);
         ctx.strokeStyle = color;
         ctx.lineWidth   = width;
         ctx.stroke();
@@ -496,43 +575,98 @@
 
         // ---- Layer 4: Labels ---- //
         var labelStyle = opts.labelStyle;
-        ctx.font         = labelStyle.font;
+
+        // Parse the numeric font size from the font string (e.g. "32px Jost, ...")
+        // and scale it proportionally to the canvas so labels don't bleed on mobile.
+        var fontMatch    = labelStyle.font.match(/^(\d+(?:\.\d+)?)(px\s+.*)$/);
+        if (fontMatch) {
+            var scaledSize = Math.round(parseFloat(fontMatch[1]) * scale);
+            ctx.font = scaledSize + fontMatch[2];
+        } else {
+            ctx.font = labelStyle.font;
+        }
+
         ctx.fillStyle    = labelStyle.color;
         ctx.textAlign    = "center";
         ctx.textBaseline = "top";
 
+        var scaledOffset = labelStyle.offset * scale;
+
         // Sun label
         if (sun.label) {
-            ctx.fillText(sun.label, sunX, sunY + sunR + labelStyle.offset);
+            ctx.fillText(sun.label, sunX, sunY + sunR + scaledOffset);
         }
 
         // Planet labels
         for (var k = 0; k < bodies.length; k++) {
             if (bodies[k].label) {
                 var pos = positions[k];
-                ctx.fillText(bodies[k].label, pos.x, pos.y + pos.r + labelStyle.offset);
+                ctx.fillText(bodies[k].label, pos.x, pos.y + pos.r + scaledOffset);
             }
         }
 
-        // ---- Layer 5: Hover / Click Rims ---- //
-        var clickStyle = opts.clickStyle;
+        // ---- Layer 5: Hover Rim ---- //
         var hoverStyle = opts.hoverStyle;
 
-        // Determine which rim to draw. Click rim overrides hover rim.
-        if (this._clickedBody) {
-            var elapsed_ms = performance.now() - this._clickedBody.time;
-            if (elapsed_ms < clickStyle.delay) {
-                var cbPos = this._getBodyScreenPosition(this._clickedBody.body);
-                if (cbPos) {
-                    this._drawRim(ctx, cbPos.x, cbPos.y, cbPos.r,
-                                  clickStyle.color, clickStyle.width, clickStyle.gap);
-                }
+        if (hoverStyle.enabled) {
+            // Determine which body to draw the rim for:
+            // - During shrink, use the last hovered body (since _hoveredBody is now null)
+            // - Otherwise, use the currently hovered body
+            var rimBody = null;
+            if (this._hoverAnimState === "shrinking") {
+                rimBody = this._lastHoveredBody;
+            } else if (this._hoveredBody) {
+                rimBody = this._hoveredBody;
             }
-        } else if (this._hoveredBody && hoverStyle.enabled) {
-            var hbPos = this._getBodyScreenPosition(this._hoveredBody);
-            if (hbPos) {
-                this._drawRim(ctx, hbPos.x, hbPos.y, hbPos.r,
-                              hoverStyle.color, hoverStyle.width, hoverStyle.gap);
+
+            if (rimBody) {
+                var hbPos = this._getBodyScreenPosition(rimBody);
+                if (hbPos) {
+                    var now      = performance.now();
+                    var rimWidth = 0;
+                    var baseWidth = hoverStyle.width;
+
+                    if (this._hoverAnimState === "growing") {
+                        // Interpolate from base width to max over HOVER_GROW_MS
+                        var gt = Math.min((now - this._hoverAnimStart) / HOVER_GROW_MS, 1.0);
+                        rimWidth = baseWidth + (HOVER_MAX_WIDTH - baseWidth) * gt;
+                        if (gt >= 1.0) {
+                            this._hoverAnimState = null; // Done growing — hold at max
+                        }
+                    } else if (this._hoverAnimState === "shrinking") {
+                        // Interpolate from shrinkFrom to 0 over HOVER_SHRINK_MS
+                        var st = Math.min((now - this._hoverAnimStart) / HOVER_SHRINK_MS, 1.0);
+                        rimWidth = this._hoverShrinkFrom * (1 - st);
+                        if (st >= 1.0) {
+                            this._hoverAnimState  = null;
+                            this._lastHoveredBody = null;
+                            rimWidth = 0;
+                        }
+                    } else if (this._hoveredBody) {
+                        // Fully grown — hold at max width
+                        rimWidth = HOVER_MAX_WIDTH;
+                    }
+
+                    if (rimWidth > 0) {
+                        // Determine rim color:
+                        // - Pressed: white (dark mode) or black (light mode)
+                        // - Hovered: darker shade (light mode) or lighter shade (dark mode)
+                        var rimColor;
+                        if (this._pressedBody && this._pressedBody === rimBody) {
+                            rimColor = document.body.classList.contains("light-mode")
+                                ? "#000000"
+                                : "#FFFFFF";
+                        } else {
+                            var isLight = document.body.classList.contains("light-mode");
+                            rimColor = isLight
+                                ? darkenColor(rimBody.color || "#888888", 0.30)
+                                : lightenColor(rimBody.color || "#888888", 0.35);
+                        }
+
+                        this._drawRim(ctx, hbPos.x, hbPos.y, hbPos.r,
+                                      rimColor, rimWidth, hoverStyle.gap);
+                    }
+                }
             }
         }
     };
@@ -577,6 +711,23 @@
         }
 
         ctx.restore();
+
+        // ---- Icon overlay ---- //
+        // If the body has an icon config, draw the icon character centered
+        // on the sphere using the specified font family and weight.
+        if (bodyConfig.icon) {
+            var icon     = bodyConfig.icon;
+            var fontSize = Math.round(r * 1.1);
+            var iconColor = bodyConfig.iconColor || "#2D2B28";
+
+            ctx.save();
+            ctx.font         = icon.fontWeight + " " + fontSize + "px '" + icon.fontFamily + "'";
+            ctx.textAlign    = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillStyle    = iconColor;
+            ctx.fillText(icon.char, cx, cy);
+            ctx.restore();
+        }
     };
 
     // ================================================================== //
@@ -646,48 +797,152 @@
     };
 
     /**
-     * Canvas click handler. Sets click animation state and navigates
-     * to the clicked body's link URL after the configured delay.
+     * Canvas click handler. Navigates immediately to the clicked body's
+     * link URL with no delay. Acts as a fallback for simple clicks.
      */
     SolarSystem.prototype._onClick = function (e) {
         var coords = this._canvasCoords(e);
         var hit    = this._hitTest(coords.x, coords.y);
 
         if (hit && hit.link) {
-            var self  = this;
-            var delay = this._options.clickStyle.delay;
-
-            // Set click animation state
-            this._clickedBody = { body: hit, time: performance.now() };
-
-            // Clear any previous pending navigation
-            if (this._clickTimeout) {
-                clearTimeout(this._clickTimeout);
-            }
-
-            // Navigate after delay
-            this._clickTimeout = setTimeout(function () {
-                self._clickedBody  = null;
-                self._clickTimeout = null;
-                global.location.href = hit.link;
-            }, delay);
+            global.location.href = hit.link;
         }
     };
 
     /**
-     * Canvas mousemove handler. Updates the cursor to "pointer" when
-     * hovering over a clickable body.
+     * Canvas mousedown handler. Sets press state for rim color change only
+     * (white in dark mode, black in light mode). Does NOT trigger animation.
      */
-    SolarSystem.prototype._onMouseMove = function (e) {
-        var coords = this._canvasCoords(e);
+    SolarSystem.prototype._onMouseDown = function (e) {
+        if (this._hoveredBody && this._hoveredBody.link) {
+            this._pressedBody = this._hoveredBody;
+        }
+    };
+
+    /**
+     * Document mouseup handler. Clears press state (rim reverts to lighter
+     * body color). Navigates to the body's link if still hovering.
+     */
+    SolarSystem.prototype._onMouseUp = function (e) {
+        if (!this._pressedBody || !this._canvas) return;
+
+        var pressedBody   = this._pressedBody;
+        this._pressedBody = null;
+
+        // Navigate if cursor is still over the pressed body
+        if (this._hoveredBody === pressedBody && pressedBody.link) {
+            global.location.href = pressedBody.link;
+        }
+    };
+
+    /**
+     * Canvas touchstart handler. Simulates hover-enter (starts grow animation)
+     * and press (white/black rim color) for touch interactions.
+     */
+    SolarSystem.prototype._onTouchStart = function (e) {
+        if (!e.touches || !e.touches.length) return;
+
+        var touch  = e.touches[0];
+        var coords = this._canvasCoords(touch);
         var hit    = this._hitTest(coords.x, coords.y);
 
         if (hit && hit.link) {
+            e.preventDefault(); // Prevent scroll / long-press menu
+
+            // Simulate hover enter — start grow animation
+            this._hoveredBody     = hit;
+            this._lastHoveredBody = hit;
+            this._hoverAnimState  = "growing";
+            this._hoverAnimStart  = performance.now();
+
+            // Set press state for color change
+            this._pressedBody = hit;
+        }
+    };
+
+    /**
+     * Document touchend handler. Navigates to the body's link if the touch
+     * ends over a linkable body. Otherwise starts the shrink animation.
+     */
+    SolarSystem.prototype._onTouchEnd = function (e) {
+        if (!this._pressedBody || !this._canvas) return;
+
+        var pressedBody   = this._pressedBody;
+        this._pressedBody = null;
+
+        var touch = e.changedTouches && e.changedTouches[0];
+        if (touch) {
+            var coords = this._canvasCoords(touch);
+            var hit    = this._hitTest(coords.x, coords.y);
+
+            if (hit && hit.link) {
+                // Clear hover state and navigate
+                this._hoveredBody    = null;
+                this._hoverAnimState = null;
+                global.location.href = hit.link;
+                return;
+            }
+        }
+
+        // Released outside the body — clear hover and start shrink
+        this._hoveredBody = null;
+        this._startHoverShrink();
+    };
+
+    /**
+     * Transitions the hover animation into the "shrinking" state.
+     * Computes the current interpolated rim width to shrink from.
+     * @private
+     */
+    SolarSystem.prototype._startHoverShrink = function () {
+        var now       = performance.now();
+        var baseWidth = this._options.hoverStyle.width;
+
+        if (this._hoverAnimState === "growing") {
+            // Shrink from current interpolated width (mid-grow)
+            var gt = Math.min((now - this._hoverAnimStart) / HOVER_GROW_MS, 1.0);
+            this._hoverShrinkFrom = baseWidth + (HOVER_MAX_WIDTH - baseWidth) * gt;
+        } else {
+            // Was fully grown or idle — shrink from max
+            this._hoverShrinkFrom = HOVER_MAX_WIDTH;
+        }
+
+        this._hoverAnimState = "shrinking";
+        this._hoverAnimStart = now;
+    };
+
+    /**
+     * Canvas mousemove handler. Updates cursor style and triggers hover
+     * grow/shrink animations when the cursor enters or leaves a body.
+     */
+    SolarSystem.prototype._onMouseMove = function (e) {
+        var coords  = this._canvasCoords(e);
+        var hit     = this._hitTest(coords.x, coords.y);
+        var hitBody = (hit && hit.link) ? hit : null;
+
+        var prevHovered = this._hoveredBody;
+
+        if (hitBody) {
             this._canvas.style.cursor = "pointer";
-            this._hoveredBody = hit;
+            this._hoveredBody = hitBody;
+
+            if (hitBody !== prevHovered) {
+                // Entered a (new) body — start grow animation
+                this._lastHoveredBody = hitBody;
+                this._hoverAnimState  = "growing";
+                this._hoverAnimStart  = performance.now();
+            }
         } else {
             this._canvas.style.cursor = "default";
             this._hoveredBody = null;
+
+            if (prevHovered) {
+                // Left a body — start shrink animation
+                this._startHoverShrink();
+            }
+
+            // Clear press state when cursor leaves all bodies
+            this._pressedBody = null;
         }
     };
 

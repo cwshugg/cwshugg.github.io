@@ -17,3 +17,14 @@
     max-width: 100%;
     cursor: default;
 }
+
+/* ---- Mobile: scale down to ~50 % ---- */
+@media (max-width: 600px) {
+    .solarsystem-wrap {
+        padding: 0.5rem 0 0;
+    }
+
+    #solarsystem-canvas {
+        max-width: 300px;
+    }
+}
