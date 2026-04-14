@@ -912,8 +912,8 @@
             waxing:           true,         // Sun on the right side (fixed)
             shading:          true,         // 3D depth shading
             shadingIntensity: 0.20,         // Subtle — let the Earth texture dominate
-            edgeColor:        "#3A6FA0",    // Atmospheric blue edge glow
-            edgeWidth:        3,            // Visible but not heavy
+            edgeColor:        "#1E4D6E",    // Dark ocean blue edge glow
+            edgeWidth:        4,            // Match moon tool thickness
             background:       null,         // Transparent (composited onto scene)
             shadowOpacity:    0.75,         // Slightly translucent shadow (show terrain)
             tilt:             0,            // Updated dynamically per selected date
