@@ -1,0 +1,213 @@
+/* ==========================================================================
+ * nightsky.css — Night Sky tool styles
+ * ==========================================================================
+ * Tool-specific CSS for the Night Sky page. Leverages base.css box, button,
+ * and layout utilities. Only adds styles specific to this tool's layout.
+ * ======================================================================== */
+
+/* --- Controls layout --- */
+
+.nightsky-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.nightsky-datetime-group,
+.nightsky-location-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.nightsky-time-group {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.nightsky-time-group label {
+    white-space: nowrap;
+}
+
+.nightsky-tz-label {
+    white-space: nowrap;
+    font-weight: 600;
+    min-width: 2.5em;
+}
+
+.nightsky-utc-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    cursor: pointer;
+    white-space: nowrap;
+    font-size: 0.85rem;
+}
+
+.nightsky-utc-toggle input[type="checkbox"] {
+    cursor: pointer;
+    margin: 0;
+}
+
+.nightsky-coord-group {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.nightsky-coord-group label {
+    white-space: nowrap;
+}
+
+.nightsky-coord-group input[type="number"] {
+    width: 6rem;
+}
+
+/* --- Canvas --- */
+
+.nightsky-canvas-wrap {
+    text-align: center;
+    padding: 1rem 0;
+    position: relative; /* For tooltip positioning */
+}
+
+#nightsky-canvas {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    height: auto;
+}
+
+/* --- Tooltip --- */
+
+.nightsky-tooltip {
+    position: absolute;
+    background: var(--color-bg-raised);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    pointer-events: none;
+    z-index: 10;
+    white-space: nowrap;
+}
+
+/* --- Status label --- */
+
+.nightsky-status-label {
+    text-align: center;
+    margin-top: 0.75rem;
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+    font-family: var(--font-body);
+}
+
+/* --- Details panel --- */
+
+.nightsky-moon-info {
+    margin-bottom: 0.75rem;
+}
+
+.nightsky-details-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.nightsky-details-table th,
+.nightsky-details-table td {
+    text-align: left;
+    padding: 0.35rem 0.5rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.nightsky-details-table th {
+    color: var(--color-text-muted);
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.nightsky-details-table tbody tr:hover {
+    background: var(--color-bg-sunken);
+}
+
+/* --- Error / loading states --- */
+
+.nightsky-error {
+    color: var(--color-accent1);
+    text-align: center;
+    padding: 1rem;
+}
+
+.nightsky-loading {
+    text-align: center;
+    color: var(--color-text-muted);
+    font-style: italic;
+    padding: 1rem;
+}
+
+/* --- Focus-visible states for keyboard navigation --- */
+
+#nightsky-date-input:focus-visible,
+#nightsky-time-input:focus-visible,
+#nightsky-lat-input:focus-visible,
+#nightsky-lon-input:focus-visible,
+#nightsky-now-btn:focus-visible,
+#nightsky-locate-btn:focus-visible,
+#nightsky-utc-checkbox:focus-visible {
+    outline: 2px solid var(--color-accent1);
+    outline-offset: 2px;
+}
+
+/* --- Disabled button state (e.g., Locate while detecting) --- */
+
+#nightsky-locate-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* --- Responsive: narrow viewports --- */
+
+@media screen and (max-width: 480px) {
+    .nightsky-datetime-group,
+    .nightsky-location-group {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .nightsky-coord-group input[type="number"],
+    #nightsky-date-input,
+    #nightsky-time-input {
+        width: 100%;
+    }
+
+    .nightsky-coord-group {
+        width: 100%;
+    }
+
+    .nightsky-coord-group input[type="number"] {
+        flex: 1;
+    }
+
+    #nightsky-now-btn,
+    #nightsky-locate-btn {
+        width: 100%;
+    }
+
+    .nightsky-details-table {
+        font-size: 0.8rem;
+    }
+
+    .nightsky-details-table th,
+    .nightsky-details-table td {
+        padding: 0.25rem 0.35rem;
+    }
+}
