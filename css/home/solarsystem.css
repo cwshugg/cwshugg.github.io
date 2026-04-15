@@ -14,7 +14,11 @@
 
 #solarsystem-canvas {
     display: block;
-    max-width: 100%;
+    /* NOTE: Do NOT set max-width or height:auto on the canvas.
+       JS (solarsystem-init.js → computeCanvasSize / resize) explicitly sets
+       both canvas.style.width and canvas.style.height.  A CSS max-width
+       without a matching height constraint squishes the canvas horizontally,
+       distorting circles into vertical ovals on mobile. */
     cursor: default;
 }
 
@@ -25,6 +29,6 @@
     }
 
     #solarsystem-canvas {
-        max-width: 300px;
+        /* Canvas sizing is handled entirely by JS; see note above. */
     }
 }
