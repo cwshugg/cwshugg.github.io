@@ -37,6 +37,29 @@
     var HOVER_GROW_MS    = 150;  // Duration to grow from base to max width (ms)
     var HOVER_SHRINK_MS  = 100;  // Duration to shrink back to 0 (ms)
 
+    /**
+     * Navigates to a URL, respecting modifier keys like a normal hyperlink.
+     *   Ctrl/Cmd+click → new tab
+     *   Shift+click    → new window
+     *   body.external  → new tab (always)
+     *   Normal click   → same tab
+     *
+     * @param {string}     url   - The URL to navigate to
+     * @param {MouseEvent} [event] - The originating mouse/touch event
+     * @param {Object}     [body]  - The body config (checked for .external)
+     */
+    function navigateLink(url, event, body) {
+        if (body && body.external) {
+            global.open(url, "_blank");
+        } else if (event && (event.ctrlKey || event.metaKey)) {
+            global.open(url, "_blank");
+        } else if (event && event.shiftKey) {
+            global.open(url);
+        } else {
+            global.location.href = url;
+        }
+    }
+
     var DEFAULTS = {
         sun: {
             radius:     40,                         // Radius in px (at reference width)
@@ -243,6 +266,7 @@
         var self = this;
 
         this._onClickBound       = function (e) { self._onClick(e); };
+        this._onAuxClickBound    = function (e) { self._onAuxClick(e); };
         this._onMoveBound        = function (e) { self._onMouseMove(e); };
         this._onResizeBound      = function ()  { self._onResize(); };
         this._onVisibilityBound  = function ()  { self._onVisibilityChange(); };
@@ -252,6 +276,7 @@
         this._onTouchEndBound    = function (e) { self._onTouchEnd(e); };
 
         this._canvas.addEventListener("click",      this._onClickBound,      false);
+        this._canvas.addEventListener("auxclick",   this._onAuxClickBound,   false);
         this._canvas.addEventListener("mousemove",  this._onMoveBound,       false);
         this._canvas.addEventListener("mousedown",  this._onMouseDownBound,  false);
         this._canvas.addEventListener("touchstart", this._onTouchStartBound, { passive: false });
@@ -398,6 +423,7 @@
 
         // Remove event listeners
         this._canvas.removeEventListener("click",      this._onClickBound,      false);
+        this._canvas.removeEventListener("auxclick",   this._onAuxClickBound,   false);
         this._canvas.removeEventListener("mousemove",  this._onMoveBound,       false);
         this._canvas.removeEventListener("mousedown",  this._onMouseDownBound,  false);
         this._canvas.removeEventListener("touchstart", this._onTouchStartBound, false);
@@ -805,7 +831,23 @@
         var hit    = this._hitTest(coords.x, coords.y);
 
         if (hit && hit.link) {
-            global.location.href = hit.link;
+            navigateLink(hit.link, e, hit);
+        }
+    };
+
+    /**
+     * Canvas auxclick handler. Opens the link in a new tab on middle-click
+     * (button === 1), matching standard browser behaviour for hyperlinks.
+     */
+    SolarSystem.prototype._onAuxClick = function (e) {
+        if (e.button !== 1) return; // only handle middle-click
+
+        var coords = this._canvasCoords(e);
+        var hit    = this._hitTest(coords.x, coords.y);
+
+        if (hit && hit.link) {
+            e.preventDefault();
+            global.open(hit.link, "_blank");
         }
     };
 
@@ -821,18 +863,13 @@
 
     /**
      * Document mouseup handler. Clears press state (rim reverts to lighter
-     * body color). Navigates to the body's link if still hovering.
+     * body color). Does NOT navigate — navigation is handled by _onClick
+     * (left-click) and _onAuxClick (middle-click) which fire after mouseup.
      */
     SolarSystem.prototype._onMouseUp = function (e) {
         if (!this._pressedBody || !this._canvas) return;
 
-        var pressedBody   = this._pressedBody;
         this._pressedBody = null;
-
-        // Navigate if cursor is still over the pressed body
-        if (this._hoveredBody === pressedBody && pressedBody.link) {
-            global.location.href = pressedBody.link;
-        }
     };
 
     /**
@@ -879,7 +916,7 @@
                 // Clear hover state and navigate
                 this._hoveredBody    = null;
                 this._hoverAnimState = null;
-                global.location.href = hit.link;
+                navigateLink(hit.link, e, hit);
                 return;
             }
         }
