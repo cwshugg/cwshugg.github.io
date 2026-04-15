@@ -256,6 +256,20 @@
         this._hoverShrinkFrom  = 0;      // Rim width at the moment shrink animation began
         this._lastHoveredBody  = null;   // Last hovered body (used during shrink after cursor leaves)
 
+        // HiDPI / Retina support — scale the backing store by devicePixelRatio
+        // so that drawing is crisp on high-DPI screens. All layout and drawing
+        // coordinates remain in CSS-pixel space thanks to ctx.scale(dpr, dpr).
+        var dpr = global.devicePixelRatio || 1;
+        this._dpr       = dpr;
+        this._cssWidth  = canvas.width;
+        this._cssHeight = canvas.height;
+
+        canvas.width  = this._cssWidth  * dpr;
+        canvas.height = this._cssHeight * dpr;
+        canvas.style.width  = this._cssWidth  + "px";
+        canvas.style.height = this._cssHeight + "px";
+        this._ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
         // Compute layout values
         this._recomputeLayout();
 
@@ -291,12 +305,14 @@
     // ================================================================== //
 
     /**
-     * Recomputes scale factor and sun center from current canvas dimensions.
+     * Recomputes scale factor and sun center from current CSS dimensions.
+     * Uses _cssWidth / _cssHeight (CSS pixels) so that layout stays in
+     * CSS-pixel space regardless of the backing store's DPR multiplier.
      */
     SolarSystem.prototype._recomputeLayout = function () {
-        this._scale = this._canvas.width / this._options.referenceWidth;
-        this._sunX  = this._canvas.width  / 2;
-        this._sunY  = this._canvas.height / 2;
+        this._scale = this._cssWidth / this._options.referenceWidth;
+        this._sunX  = this._cssWidth  / 2;
+        this._sunY  = this._cssHeight / 2;
     };
 
     // ================================================================== //
@@ -432,8 +448,8 @@
         global.removeEventListener("resize",           this._onResizeBound,     false);
         document.removeEventListener("visibilitychange", this._onVisibilityBound, false);
 
-        // Clear canvas
-        this._ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
+        // Clear canvas (use CSS dimensions since ctx transform is active)
+        this._ctx.clearRect(0, 0, this._cssWidth, this._cssHeight);
 
         // Null references
         this._canvas  = null;
@@ -453,14 +469,28 @@
     /**
      * Updates canvas dimensions and recomputes scale factor. Called
      * internally on window resize, but can also be called externally.
+     * Applies devicePixelRatio scaling to the backing store while keeping
+     * the CSS layout size and all drawing coordinates in CSS-pixel space.
      *
-     * @param {number} w - New canvas width in pixels.
-     * @param {number} h - New canvas height in pixels.
+     * @param {number} w - New canvas width in CSS pixels.
+     * @param {number} h - New canvas height in CSS pixels.
      * @returns {SolarSystem} this (for chaining)
      */
     SolarSystem.prototype.resize = function (w, h) {
-        this._canvas.width  = w;
-        this._canvas.height = h;
+        var dpr = this._dpr;
+
+        this._cssWidth  = w;
+        this._cssHeight = h;
+
+        this._canvas.width  = w * dpr;
+        this._canvas.height = h * dpr;
+        this._canvas.style.width  = w + "px";
+        this._canvas.style.height = h + "px";
+
+        // Re-apply the DPR transform so all subsequent draw calls remain in
+        // CSS-pixel coordinates.
+        this._ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
         this._recomputeLayout();
 
         // If not animating, re-render so the canvas doesn't go blank
@@ -543,8 +573,8 @@
         var scale = this._scale;
         var sunX  = this._sunX;
         var sunY  = this._sunY;
-        var w     = this._canvas.width;
-        var h     = this._canvas.height;
+        var w     = this._cssWidth;
+        var h     = this._cssHeight;
 
         // ---- Layer 0: Clear / Background ---- //
         ctx.clearRect(0, 0, w, h);
@@ -806,19 +836,18 @@
     };
 
     /**
-     * Translates a mouse/touch event to canvas-space coordinates, accounting
-     * for CSS scaling (canvas element vs. canvas buffer dimensions).
+     * Translates a mouse/touch event to canvas-space coordinates in CSS
+     * pixels. Because all drawing uses CSS-pixel coordinates (the DPR
+     * transform is handled by ctx.scale), no additional scaling is needed.
      *
      * @param {MouseEvent} e
      * @returns {{ x: number, y: number }}
      */
     SolarSystem.prototype._canvasCoords = function (e) {
         var rect = this._canvas.getBoundingClientRect();
-        var scaleX = this._canvas.width  / rect.width;
-        var scaleY = this._canvas.height / rect.height;
         return {
-            x: (e.clientX - rect.left) * scaleX,
-            y: (e.clientY - rect.top)  * scaleY
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top
         };
     };
 

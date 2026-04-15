@@ -36,9 +36,9 @@
     // 300 px, so there is a ~24 px buffer plus the additive H_PADDING.
 
     function computeCanvasSize(containerWidth) {
-        // On mobile viewports (≤ 600 px) render at ~50 % size.
+        // On mobile viewports (≤ 600 px) render at ~65 % size (was 50 %).
         var isMobile    = window.innerWidth <= 600;
-        var maxWidth    = isMobile ? 300 : 600;
+        var maxWidth    = isMobile ? 400 : 600;
         var targetWidth = Math.min(containerWidth, maxWidth);
 
         // Scale factor the library will use for this canvas width
