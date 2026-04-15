@@ -15,7 +15,7 @@ extra_js:
 Earth has a single natural satellite; we call it the Moon.
 Use this to explore moon phases for any date.
 
-This tool uses the [US Navy's Astronomical Applications API](https://aa.usno.navy.mil/data/api).
+This tool uses the [US Naval Observatory's Astronomical Applications API](https://aa.usno.navy.mil/data/api).
 
 <hr class="divider">
 

@@ -17,7 +17,7 @@ Summer occurs when one hemisphere is leaning closer to the sun.
 Winter occurs when one hemisphere is leaning farther away from the sun.
 Use this tool to explore the seasons for any date.
 
-This tool uses the [US Navy's Astronomical Applications API](https://aa.usno.navy.mil/data/api).
+This tool uses the [US Naval Observatory's Astronomical Applications API](https://aa.usno.navy.mil/data/api).
 
 <hr class="divider">
 

@@ -15,7 +15,7 @@ A celestial navigation visualization of the night sky.
 Use this tool to explore the positions of navigational stars, planets, the Sun, and the Moon
 from any location on Earth at any date and time.
 
-This tool uses the [US Navy's Astronomical Applications API](https://aa.usno.navy.mil/data/api).
+This tool uses the [US Naval Observatory's Astronomical Applications API](https://aa.usno.navy.mil/data/api).
 
 <hr class="divider">
 
