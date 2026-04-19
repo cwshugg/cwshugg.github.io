@@ -25,12 +25,6 @@ A collection of small tools.
         <a href="/tools/ascii" class="button-nav" style="width: auto; margin: 0;">Open →</a>
     </div>
 </div>
-<div class="box">
-    <div class="tool-card">
-        <h3 style="margin: 0;"><i class="fas fa-microchip" style="color: var(--color-accent3);"></i> <a href="/tools/bitwise" style="color: var(--color-accent2); text-decoration: none;">Bitwise Calculator</a></h3>
-        <a href="/tools/bitwise" class="button-nav" style="width: auto; margin: 0;">Open →</a>
-    </div>
-</div>
 </div>
 
 ## Astronomy
