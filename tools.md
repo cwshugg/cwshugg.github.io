@@ -65,5 +65,11 @@ A collection of small tools.
         <a href="/tools/wordcount" class="button-nav" style="width: auto; margin: 0;">Open →</a>
     </div>
 </div>
+<div class="box">
+    <div class="tool-card">
+        <h3 style="margin: 0;"><i class="fas fa-book" style="color: var(--color-accent3);"></i> <a href="/tools/words" style="color: var(--color-accent2); text-decoration: none;">Word Lookup</a></h3>
+        <a href="/tools/words" class="button-nav" style="width: auto; margin: 0;">Open →</a>
+    </div>
+</div>
 </div>
 

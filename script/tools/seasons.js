@@ -284,25 +284,28 @@
      * @param {number} targetTimestamp - Noon UTC for the selected date
      * @param {number} startTimestamp - Start of current season
      * @param {number} endTimestamp - Start of next season
-     * @returns {Object} { elapsedDays, totalDays, percentage }
+     * @returns {Object} { elapsedDays, totalDays, remainingDays, percentage }
      */
     function computeProgress(targetTimestamp, startTimestamp, endTimestamp) {
         var msPerDay = 24 * 60 * 60 * 1000;
         var totalMs   = endTimestamp - startTimestamp;
         var elapsedMs = targetTimestamp - startTimestamp;
 
-        var totalDays   = Math.round(totalMs / msPerDay);
-        var elapsedDays = Math.floor(elapsedMs / msPerDay);
-        var percentage  = Math.round((elapsedMs / totalMs) * 100);
+        var totalDays     = Math.floor(totalMs / msPerDay);
+        var elapsedDays   = Math.floor(elapsedMs / msPerDay);
+        var remainingDays = Math.ceil((endTimestamp - targetTimestamp) / msPerDay);
+        var percentage    = Math.round((elapsedMs / totalMs) * 100);
 
         // Clamp to valid range
-        elapsedDays = Math.max(0, Math.min(elapsedDays, totalDays));
-        percentage  = Math.max(0, Math.min(percentage, 100));
+        elapsedDays   = Math.max(0, Math.min(elapsedDays, totalDays));
+        remainingDays = Math.max(0, remainingDays);
+        percentage    = Math.max(0, Math.min(percentage, 100));
 
         return {
-            elapsedDays: elapsedDays,
-            totalDays:   totalDays,
-            percentage:  percentage
+            elapsedDays:   elapsedDays,
+            totalDays:     totalDays,
+            remainingDays: remainingDays,
+            percentage:    percentage
         };
     }
 
@@ -615,7 +618,7 @@
                 var nextSeasonName = bracket.next.season;
                 var southSeason = OPPOSITE_SEASON[seasonName];
                 var southNextSeason = OPPOSITE_SEASON[nextSeasonName];
-                var daysUntilNext = progress.totalDays - progress.elapsedDays;
+                var daysUntilNext = progress.remainingDays;
                 var daysStr = daysUntilNext === 1 ? "1 day" : daysUntilNext + " days";
 
                 // Update season label below the globe (dual hemisphere)
@@ -755,7 +758,7 @@
      * @param {string} southSeason - Southern hemisphere season name
      * @param {string} northNext - Northern hemisphere next season name
      * @param {string} southNext - Southern hemisphere next season name
-     * @param {Object} progress - { elapsedDays, totalDays, percentage }
+     * @param {Object} progress - { elapsedDays, totalDays, remainingDays, percentage }
      * @param {Object} currentEvent - Start event for current season
      * @param {Object} nextEvent - Start event for next season
      */

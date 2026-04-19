@@ -118,7 +118,7 @@ ok "Ruby found: ${RUBY_VERSION}"
 # ---------------------------------------------------------------------------
 if ! command -v bundle &>/dev/null; then
     warn "Bundler not found — installing..."
-    gem install bundler
+    gem install bundler --user-install
     ok "Bundler installed."
 else
     ok "Bundler found: $(bundle --version)"
