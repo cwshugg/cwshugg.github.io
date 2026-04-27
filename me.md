@@ -146,6 +146,7 @@ I've also dabbled with Vim plugins. Here are a few plugins I've written:
 
 * [argonaut.vim](https://github.com/cwshugg/argonaut.vim), a plugin that provides command-line argument parsing and rich tab completion for Vim commands.
 * [fops.vim](https://github.com/cwshugg/fops.vim), a plugin that provides several Vim commands for interacting with files.
+* [lexicon.vim](https://github.com/cwshugg/lexicon.vim), a plugin that uses the [Datamuse API](https://www.datamuse.com/api/) to perform dictionary and thesaurus lookups in-editor.
 * [dwarrowdelf](https://github.com/cwshugg/dwarrowdelf), my custom Vim theme.
 
 I also worked on some pretty neat projects in school. Here are some of my favorites:
