@@ -2,6 +2,8 @@
 layout: default
 title: "About Me"
 permalink: /me
+extra_css:
+  - /css/me.css
 ---
 
 <div style="text-align: center;">
@@ -22,35 +24,56 @@ I enjoy software development, exploring software security, writing, and generall
 
 ### Career
 
-##### Microsoft — Software Engineer
-
-I'm an engineer at Microsoft. I currently work on the [Azure Confidential Compute](https://azure.microsoft.com/en-us/solutions/confidential-compute/) platform, which aims to keep sensitive data secure mid-execution using hardware-based Trusted Execution Environments.
-(If you'd like to learn more about the field, take a look at the [Confidential Computing Consortium](https://confidentialcomputing.io/).)
-
-Specifically, I've been heavily contributing to Microsoft's [Azure Integrated HSM](https://techcommunity.microsoft.com/blog/AzureInfrastructureBlog/securing-azure-infrastructure-with-silicon-innovation/4293834) (**HSM** meaning **Hardware Security Module**).
-This is a small hardware device that offloads crypto operations and allows keys to be stored and used in a hardware isolated TEE (Trusted Execution Environment).
-Check out the [AziHSM GitHub repo](https://github.com/microsoft/AziHSM-Guest) for a little more information.
-
-##### Microsoft — Security Verification Engineer
-
-In my previous role at Microsoft, I contributed to some exciting security work involving speculative-execution side-channel attacks (remember [Spectre and Meltdown](https://spectreattack.com)?) and other architectural attacks.
-I worked on the Microsoft Pluton Security processor and the [Microsoft Cobalt processor](https://azure.microsoft.com/en-us/blog/azure-cobalt-100-based-virtual-machines-are-now-generally-available/).
-Through my contributions and utilization of [Revizor](https://www.microsoft.com/en-us/research/publication/revizor-testing-black-box-cpus-against-speculation-contracts/), Microsoft's side-channel vulnerability fuzzer, I co-authored a patent and submitted it to the US Patent Office.
-Additionally, given Microsoft's position in the AI frenzy, I developed new AI-based tools and helped lead the usage of LLMs in my organization's day-to-day engineering workflows.
-
-##### Virginia Tech Computer Science — Teaching Assistant
-
-I also worked as a Teaching Assistant with the Virginia Tech Computer Science department for five semesters. I spent four of those five semesters working on CS 3214 - Computer Systems, both as an undergraduate and graduate TA.
-This class is notorious for its challenging assignments and comprehensive C-based software engineering projects.
-I absolutely loved it; it sparked my passion for lower-level OS/systems-level software.
-
-I had the opportunity to assist hundreds of students with complex systems programming projects involving Linux processes, multithreading, memory management, virtualization, security, and networking, all with a heavy emphasis on writing robust and high-performing code.
-
-### Research
-
-During my M.S. degree at Virginia Tech (2020–2022), I created Gurthang, a fuzzing framework designed specifically for fuzz-testing web servers.
-I created a novel fuzzing harness for AFL++ capable of sending multiple payloads to a web server simultaneously, allowing for effective testing for concurrency-related bugs induced when servers handle multiple requests at once.
-[Read more about it here!](/gurthang)
+<div class="career-timeline">
+    <div class="career-entry">
+        <span class="career-date">Aug 2024 – Present</span>
+        <h5 class="career-title">Microsoft — Software Engineer</h5>
+        <p>
+            I'm an engineer at Microsoft. I currently work on the <a href="https://azure.microsoft.com/en-us/solutions/confidential-compute/">Azure Confidential Compute</a> platform, which aims to keep sensitive data secure mid-execution using hardware-based Trusted Execution Environments.
+            (If you'd like to learn more about the field, take a look at the <a href="https://confidentialcomputing.io/">Confidential Computing Consortium</a>.)
+        </p>
+        <p>
+            Specifically, I've been heavily contributing to Microsoft's <a href="https://techcommunity.microsoft.com/blog/AzureInfrastructureBlog/securing-azure-infrastructure-with-silicon-innovation/4293834">Azure Integrated HSM</a> (<strong>HSM</strong> meaning <strong>Hardware Security Module</strong>).
+            This is a small hardware device that offloads crypto operations and allows keys to be stored and used in a hardware isolated TEE (Trusted Execution Environment).
+            Check out the <a href="https://github.com/microsoft/AziHSM-Guest">AziHSM GitHub repo</a> for a little more information.
+        </p>
+    </div>
+    <div class="career-entry">
+        <span class="career-date">Aug 2022 – Aug 2024</span>
+        <h5 class="career-title">Microsoft — Security Verification Engineer</h5>
+        <p>
+            In my previous role at Microsoft, I contributed to some exciting security work involving speculative-execution side-channel attacks (remember <a href="https://spectreattack.com">Spectre and Meltdown</a>?) and other architectural attacks.
+            I worked on the Microsoft Pluton Security processor and the <a href="https://azure.microsoft.com/en-us/blog/azure-cobalt-100-based-virtual-machines-are-now-generally-available/">Microsoft Cobalt processor</a>.
+            Through my contributions and utilization of <a href="https://www.microsoft.com/en-us/research/publication/revizor-testing-black-box-cpus-against-speculation-contracts/">Revizor</a>, Microsoft's side-channel vulnerability fuzzer, I co-authored a patent and submitted it to the US Patent Office (<code>US-20250005164-A1</code>).
+        </p>
+        <p>
+            Additionally, I developed new AI-based tools and helped lead the usage of LLMs in my organization's day-to-day engineering workflows.
+            Chief among these was an image processing system that converted diagrams into executable Python code.
+        </p>
+    </div>
+    <div class="career-entry">
+        <span class="career-date">Aug 2020 – May 2022</span>
+        <h5 class="career-title">Virginia Tech — Master's Degree</h5>
+        <p>
+            I completed my Master's Degree in Computer Science at Virginia Tech, where I learned the ins and outs of software fuzzing.
+            I created <i>Gurthang</i>, a fuzzing framework designed specifically for fuzz-testing web servers.
+            It's a fuzzing harness for AFL++ capable of sending multiple payloads to a web server simultaneously, allowing for effective testing for concurrency-related bugs induced when servers handle multiple requests at once.
+            <a href="/gurthang">Read more about it here!</a>
+        </p>
+    </div>
+    <div class="career-entry">
+        <span class="career-date">Aug 2019 – May 2022</span>
+        <h5 class="career-title">Virginia Tech Computer Science — Teaching Assistant</h5>
+        <p>
+            I also worked as a Teaching Assistant with the Virginia Tech Computer Science department for five semesters. I spent four of those five semesters working on CS 3214 - Computer Systems, both as an undergraduate and graduate TA.
+            This class is notorious for its challenging assignments and comprehensive C-based software engineering projects.
+            I absolutely loved it; it sparked my passion for lower-level OS/systems-level software.
+        </p>
+        <p>
+            I had the opportunity to assist hundreds of students with complex systems programming projects involving Linux processes, multithreading, memory management, virtualization, security, and networking, all with a heavy emphasis on writing robust and high-performing code.
+        </p>
+    </div>
+</div>
 
 ### Skills
 

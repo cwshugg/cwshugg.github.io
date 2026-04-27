@@ -1,0 +1,75 @@
+/* ==========================================================================
+ * me.css — About Me page styles
+ * ==========================================================================
+ * Styles for the career timeline on the About Me page.
+ * ======================================================================== */
+
+/* Timeline container — vertical line via left border */
+.career-timeline {
+    position: relative;
+    margin-left: 1rem;
+    padding-left: 2rem;
+    border-left: 3px solid var(--color-text-muted);
+}
+
+/* Individual career entry */
+.career-entry {
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+.career-entry:last-child {
+    margin-bottom: 0;
+}
+
+
+/* Date label */
+.career-date {
+    display: block;
+    font-family: var(--font-code);
+    font-size: 0.8rem;
+    color: var(--color-accent3);
+    margin-bottom: 0.2rem;
+}
+
+/* Entry title — anchor for the dot */
+.career-title {
+    position: relative;
+    margin: 0.25rem 0 0.5rem 0;
+    color: var(--color-accent2);
+}
+
+/* Dot marker on the timeline line, aligned to the title */
+.career-title::before {
+    content: "";
+    position: absolute;
+    left: -2rem;
+    top: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--color-accent2);
+    border: 2px solid var(--color-bg);
+    margin-left: -1.5px;
+}
+
+/* Entry description */
+.career-entry p {
+    margin: 0 0 0.5rem 0;
+    line-height: 1.6;
+}
+
+/* Responsive: narrow viewports */
+@media screen and (max-width: 480px) {
+    .career-timeline {
+        margin-left: 0.5rem;
+        padding-left: 1.5rem;
+    }
+
+    .career-title::before {
+        left: -1.5rem;
+        width: 18px;
+        height: 18px;
+    }
+}
