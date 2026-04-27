@@ -1,28 +1,28 @@
 /* ==========================================================================
- * thesaurus.css — Thesaurus & Dictionary tool styles
+ * words.css — Word Lookup tool styles
  * ==========================================================================
- * Tool-specific CSS for the Thesaurus & Dictionary page. Leverages base.css
+ * Tool-specific CSS for the Word Lookup page. Leverages base.css
  * box, button, and layout utilities. Only adds styles specific to this tool's
  * layout.
  * ======================================================================== */
 
 /* Search row — input + button side by side */
-.thesaurus-search {
+.words-search {
     position: relative; /* anchor for dropdown */
 }
 
-.thesaurus-search-row {
+.words-search-row {
     display: flex;
     gap: 0.5rem;
 }
 
-.thesaurus-search-row input[type="text"] {
+.words-search-row input[type="text"] {
     flex: 1;
     font-family: var(--font-body);
 }
 
 /* Autocomplete dropdown */
-.thesaurus-suggestions {
+.words-suggestions {
     position: absolute;
     top: 100%;
     left: 0;
@@ -36,30 +36,30 @@
     display: none; /* shown via JS */
 }
 
-.thesaurus-suggestions.visible {
+.words-suggestions.visible {
     display: block;
 }
 
-.thesaurus-suggestion {
+.words-suggestion {
     padding: 0.5rem 0.75rem;
     cursor: pointer;
     font-family: var(--font-body);
 }
 
-.thesaurus-suggestion:hover,
-.thesaurus-suggestion.active {
+.words-suggestion:hover,
+.words-suggestion.active {
     background: var(--color-bg-sunken);
     color: var(--color-accent2);
 }
 
 /* Word chips — inline clickable tags */
-.thesaurus-chips {
+.words-chips {
     display: flex;
     flex-wrap: wrap;
     gap: 0.4rem;
 }
 
-.thesaurus-chip {
+.words-chip {
     display: inline-block;
     padding: 0.25rem 0.6rem;
     border: 2px solid var(--color-accent1);
@@ -71,47 +71,47 @@
     transition: background 0.15s, color 0.15s;
 }
 
-.thesaurus-chip:hover,
-.thesaurus-chip:focus-visible {
+.words-chip:hover,
+.words-chip:focus-visible {
     background: var(--color-accent1);
     color: var(--color-bg);
 }
 
 /* Color variants for different chip types */
-.thesaurus-chip-ant {
+.words-chip-ant {
     border-color: var(--color-accent2);
 }
-.thesaurus-chip-ant:hover,
-.thesaurus-chip-ant:focus-visible {
+.words-chip-ant:hover,
+.words-chip-ant:focus-visible {
     background: var(--color-accent2);
 }
 
-.thesaurus-chip-rel {
+.words-chip-rel {
     border-color: var(--color-accent3);
 }
-.thesaurus-chip-rel:hover,
-.thesaurus-chip-rel:focus-visible {
+.words-chip-rel:hover,
+.words-chip-rel:focus-visible {
     background: var(--color-accent3);
 }
 
 /* Word header */
-.thesaurus-word-header {
+.words-word-header {
     margin-bottom: 1rem;
 }
 
-.thesaurus-word-name {
+.words-word-name {
     font-family: var(--font-heading);
     font-size: 1.5rem;
     color: var(--color-accent2);
 }
 
-.thesaurus-word-meta {
+.words-word-meta {
     color: var(--color-text-muted);
     font-size: 0.9rem;
     margin-left: 0.5rem;
 }
 
-.thesaurus-pos-badge {
+.words-pos-badge {
     display: inline-block;
     padding: 0.1rem 0.4rem;
     font-size: 0.75rem;
@@ -123,26 +123,26 @@
 }
 
 /* Definitions */
-.thesaurus-defs-group h5 {
+.words-defs-group h5 {
     color: var(--color-accent3);
     margin: 0.75rem 0 0.25rem;
     font-family: var(--font-heading);
 }
 
-.thesaurus-defs-group ol {
+.words-defs-group ol {
     margin: 0 0 0.5rem 1.5rem;
     padding: 0;
 }
 
-.thesaurus-defs-group li {
+.words-defs-group li {
     margin-bottom: 0.3rem;
     line-height: 1.5;
 }
 
 /* Loading, error, empty states */
-.thesaurus-loading,
-.thesaurus-error,
-.thesaurus-empty {
+.words-loading,
+.words-error,
+.words-empty {
     text-align: center;
     color: var(--color-text-muted);
     font-style: italic;
@@ -150,23 +150,23 @@
 }
 
 /* Focus-visible for accessibility */
-#thesaurus-input:focus-visible,
-#thesaurus-search-btn:focus-visible {
+#words-input:focus-visible,
+#words-search-btn:focus-visible {
     outline: 2px solid var(--color-accent1);
     outline-offset: 2px;
 }
 
 /* Responsive: narrow viewports */
 @media screen and (max-width: 480px) {
-    .thesaurus-search-row {
+    .words-search-row {
         flex-direction: column;
     }
 
-    .thesaurus-word-name {
+    .words-word-name {
         font-size: 1.25rem;
     }
 
-    .thesaurus-chip {
+    .words-chip {
         font-size: 0.8rem;
         padding: 0.2rem 0.5rem;
     }

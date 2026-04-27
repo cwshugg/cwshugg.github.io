@@ -11,6 +11,8 @@ extra_js:
 
 Paste or type text below to count the number of words, characters, sentences, etc., it contains.
 
+Tokens made up entirely of special characters (e.g. `###`, `---`, `***`) are not counted as words.
+
 <hr class="divider">
 
 ### Input

@@ -1,4 +1,4 @@
-// Thesaurus & Dictionary — script/tools/thesaurus.js
+// Word Lookup — script/tools/words.js
 // Looks up word definitions, synonyms, antonyms, and related words using
 // the Datamuse API. Provides autocomplete suggestions as the user types.
 //
@@ -19,7 +19,7 @@
     var API_BASE       = "https://api.datamuse.com";
     var WORDS_URL      = API_BASE + "/words";
     var SUG_URL        = API_BASE + "/sug";
-    var CACHE_PREFIX   = "thesaurus-";
+    var CACHE_PREFIX   = "words-";
     var CACHE_TTL      = 7 * 24 * 60 * 60 * 1000;  // 7 days in milliseconds
     var DEBOUNCE_MS    = 300;                        // Autocomplete debounce delay
     var MAX_SYNONYMS   = 30;
@@ -54,6 +54,7 @@
     var activeWord     = "";     // Currently displayed word (race condition guard)
     var suggestIndex   = -1;    // Keyboard-navigation index in suggestions list
     var suggestItems   = [];    // Current suggestion DOM elements (for keyboard nav)
+    var blurHideTimer  = null;   // setTimeout ID for blur-triggered suggestion hide
 
     // ================================================================== //
     //  Helpers                                                            //
@@ -225,7 +226,7 @@
 
     /**
      * Stores data for a word in localStorage with a timestamp.
-     * On QuotaExceededError, clears all thesaurus cache entries and retries once.
+     * On QuotaExceededError, clears all words cache entries and retries once.
      * @param {string} word - The word key.
      * @param {Object} data - The data to cache.
      */
@@ -239,7 +240,7 @@
             localStorage.setItem(CACHE_PREFIX + word, entry);
         } catch (e) {
             if (e.name === "QuotaExceededError") {
-                clearThesaurusCache();
+                clearWordsCache();
                 try {
                     localStorage.setItem(CACHE_PREFIX + word, entry);
                 } catch (e2) {
@@ -250,9 +251,9 @@
     }
 
     /**
-     * Removes all localStorage keys starting with the thesaurus cache prefix.
+     * Removes all localStorage keys starting with the words cache prefix.
      */
-    function clearThesaurusCache() {
+    function clearWordsCache() {
         var keysToRemove = [];
         for (var i = 0; i < localStorage.length; i++) {
             var key = localStorage.key(i);
@@ -345,8 +346,8 @@
      * @returns {string} HTML string.
      */
     function renderWordHeader(wordData, word) {
-        var html = '<div class="thesaurus-word-header">';
-        html += '<span class="thesaurus-word-name">' + escapeHtml(word) + "</span>";
+        var html = '<div class="words-word-header">';
+        html += '<span class="words-word-name">' + escapeHtml(word) + "</span>";
 
         if (wordData) {
             var tagData = parseTags(wordData.tags);
@@ -364,13 +365,13 @@
             }
 
             if (metaParts.length > 0) {
-                html += '<span class="thesaurus-word-meta">'
+                html += '<span class="words-word-meta">'
                     + metaParts.join(" &bull; ") + "</span>";
             }
 
             // POS badges
             for (var i = 0; i < tagData.pos.length; i++) {
-                html += '<span class="thesaurus-pos-badge">'
+                html += '<span class="words-pos-badge">'
                     + escapeHtml(expandPos(tagData.pos[i])) + "</span>";
             }
         }
@@ -385,7 +386,7 @@
      * @returns {string} HTML string.
      */
     function renderDefinitions(groupedDefs) {
-        var html = '<div class="thesaurus-defs">';
+        var html = '<div class="words-defs">';
         var posKeys = Object.keys(groupedDefs);
 
         if (posKeys.length === 0) {
@@ -397,7 +398,7 @@
         for (var i = 0; i < posKeys.length; i++) {
             var pos = posKeys[i];
             var defs = groupedDefs[pos];
-            html += '<div class="thesaurus-defs-group">';
+            html += '<div class="words-defs-group">';
             html += "<h5>" + escapeHtml(pos) + "</h5>";
             html += "<ol>";
             for (var j = 0; j < defs.length; j++) {
@@ -418,9 +419,9 @@
      * @returns {string} HTML string.
      */
     function renderWordChips(words, cssClass) {
-        var html = '<div class="thesaurus-chips">';
+        var html = '<div class="words-chips">';
         for (var i = 0; i < words.length; i++) {
-            html += '<button class="thesaurus-chip ' + cssClass + '" '
+            html += '<button class="words-chip ' + cssClass + '" '
                 + 'data-word="' + escapeAttr(words[i].word) + '">'
                 + escapeHtml(words[i].word)
                 + "</button>";
@@ -457,7 +458,7 @@
         if (data.synonyms.length > 0) {
             html += '<div class="box box-2">';
             html += "<h4>Synonyms</h4>";
-            html += renderWordChips(data.synonyms, "thesaurus-chip-syn");
+            html += renderWordChips(data.synonyms, "words-chip-syn");
             html += "</div>";
         }
 
@@ -465,7 +466,7 @@
         if (data.antonyms.length > 0) {
             html += '<div class="box box-3">';
             html += "<h4>Antonyms</h4>";
-            html += renderWordChips(data.antonyms, "thesaurus-chip-ant");
+            html += renderWordChips(data.antonyms, "words-chip-ant");
             html += "</div>";
         }
 
@@ -474,7 +475,7 @@
         if (related.length > 0) {
             html += '<div class="box box-1">';
             html += "<h4>Related Words</h4>";
-            html += renderWordChips(related, "thesaurus-chip-rel");
+            html += renderWordChips(related, "words-chip-rel");
             html += "</div>";
         }
 
@@ -487,7 +488,7 @@
      */
     function renderLoading(word) {
         resultsEl.innerHTML = '<div class="box box-1">'
-            + '<div class="thesaurus-loading">Looking up '
+            + '<div class="words-loading">Looking up '
             + escapeHtml(word) + '...</div></div>';
     }
 
@@ -498,7 +499,7 @@
      */
     function renderError(word, message) {
         resultsEl.innerHTML = '<div class="box box-1">'
-            + '<div class="thesaurus-error">Could not look up &ldquo;'
+            + '<div class="words-error">Could not look up &ldquo;'
             + escapeHtml(word)
             + '&rdquo;. Please check your connection and try again.</div></div>';
     }
@@ -509,7 +510,7 @@
      */
     function renderNoResults(word) {
         resultsEl.innerHTML = '<div class="box box-1">'
-            + '<div class="thesaurus-empty">No results found for &ldquo;'
+            + '<div class="words-empty">No results found for &ldquo;'
             + escapeHtml(word)
             + '&rdquo;. Try a different spelling.</div></div>';
     }
@@ -563,7 +564,7 @@
 
         var html = "";
         for (var i = 0; i < suggestions.length; i++) {
-            html += '<div class="thesaurus-suggestion" role="option" '
+            html += '<div class="words-suggestion" role="option" '
                 + 'data-word="' + escapeAttr(suggestions[i].word) + '">'
                 + escapeHtml(suggestions[i].word)
                 + "</div>";
@@ -572,7 +573,7 @@
         suggestionsEl.innerHTML = html;
         suggestionsEl.classList.add("visible");
         suggestIndex = -1;
-        suggestItems = suggestionsEl.querySelectorAll(".thesaurus-suggestion");
+        suggestItems = suggestionsEl.querySelectorAll(".words-suggestion");
 
         // Click handler for suggestions
         for (var j = 0; j < suggestItems.length; j++) {
@@ -693,10 +694,10 @@
      * and checks the URL hash for a pre-loaded word.
      */
     function init() {
-        inputEl       = document.getElementById("thesaurus-input");
-        searchBtnEl   = document.getElementById("thesaurus-search-btn");
-        suggestionsEl = document.getElementById("thesaurus-suggestions");
-        resultsEl     = document.getElementById("thesaurus-results");
+        inputEl       = document.getElementById("words-input");
+        searchBtnEl   = document.getElementById("words-search-btn");
+        suggestionsEl = document.getElementById("words-suggestions");
+        resultsEl     = document.getElementById("words-results");
 
         if (!inputEl || !resultsEl) return;
 
@@ -714,15 +715,25 @@
 
         // Event delegation for word chips
         resultsEl.addEventListener("click", function (e) {
-            var chip = e.target.closest(".thesaurus-chip");
+            var chip = e.target.closest(".words-chip");
             if (chip && chip.dataset.word) {
                 lookupWord(chip.dataset.word);
             }
         });
 
+        // Hide suggestions on blur with a small delay to allow suggestion clicks
+        inputEl.addEventListener("blur", function () {
+            blurHideTimer = setTimeout(function () {
+                hideSuggestions();
+            }, 150);
+        });
+        inputEl.addEventListener("focus", function () {
+            clearTimeout(blurHideTimer);
+        });
+
         // Dismiss suggestions on outside click
         document.addEventListener("click", function (e) {
-            if (!e.target.closest(".thesaurus-search")) {
+            if (!e.target.closest(".words-search")) {
                 hideSuggestions();
             }
         });

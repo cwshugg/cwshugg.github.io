@@ -11,14 +11,23 @@
 
     /**
      * Counts words by splitting on whitespace and filtering out empty strings.
+     * Only tokens containing at least one alphanumeric character (a-z, A-Z, 0-9)
+     * are counted. Tokens composed entirely of special characters (e.g. ###, ---)
+     * are excluded.
      * Returns 0 for empty or whitespace-only input.
      */
     function countWords(text) {
-        var words = text.trim().split(/\s+/);
-        if (words.length === 1 && words[0] === "") {
+        var tokens = text.trim().split(/\s+/);
+        if (tokens.length === 1 && tokens[0] === "") {
             return 0;
         }
-        return words.length;
+        var count = 0;
+        for (var i = 0; i < tokens.length; i++) {
+            if (/[a-zA-Z0-9]/.test(tokens[i])) {
+                count++;
+            }
+        }
+        return count;
     }
 
     /**
