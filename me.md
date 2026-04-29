@@ -22,7 +22,7 @@ A year later, I graduated with a M.S. (also in computer science), focusing on co
 
 I enjoy software development, exploring software security, writing, and generally creating things in my free time.
 
-### Career
+### Timeline
 
 <div class="career-timeline">
     <div class="career-entry">
@@ -65,7 +65,7 @@ I enjoy software development, exploring software security, writing, and generall
         <span class="career-date">Aug 2019 – May 2022</span>
         <h5 class="career-title">Virginia Tech Computer Science — Teaching Assistant</h5>
         <p>
-            I also worked as a Teaching Assistant with the Virginia Tech Computer Science department for five semesters. I spent four of those five semesters working on CS 3214 - Computer Systems, both as an undergraduate and graduate TA.
+            I worked as a Teaching Assistant with the Virginia Tech Computer Science department for five semesters. I spent four of those five semesters working on CS 3214 - Computer Systems, both as an undergraduate and graduate TA.
             This class is notorious for its challenging assignments and comprehensive C-based software engineering projects.
             I absolutely loved it; it sparked my passion for lower-level OS/systems-level software.
         </p>
