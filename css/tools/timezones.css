@@ -19,11 +19,11 @@
 }
 
 .tz-fmt-btn.active {
-    background-color: var(--color-bg);
-    color: var(--color-accent1);
+    background-color: var(--color-text);
+    color: var(--color-bg);
     border-color: var(--color-accent1);
-    box-shadow: inset 0 0 0 2px var(--color-accent1);
     transform: translate(4px, 4px);
+    box-shadow: 0 0 0 var(--color-accent1);
 }
 
 /* Time input row: label, time, date, Now button */

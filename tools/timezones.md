@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Time Zone Comparison"
+title: "Time Zones"
 permalink: /tools/timezones
 extra_css:
   - /css/tools/timezones.css
@@ -8,10 +8,15 @@ extra_js:
   - /script/tools/timezones.js
 ---
 
-## Time Zone Comparison
+## Time Zones
 
-Compare times across multiple time zones. Your local time zone is
-added automatically.
+Use this to compare times across multiple time zones.
+
+* Add time zones to the display below.
+    * Your local time zone is added automatically.
+    * (Your selections will be retained upon refreshing)
+* Click on each time zone's name to give it a nickname.
+* Click and drag each box to reorder.
 
 <hr class="divider">
 
@@ -25,7 +30,7 @@ added automatically.
 
 ### Settings
 
-<div class="box box-1">
+<div class="box box-3">
     <div class="tz-settings">
         <!-- Format toggle -->
         <div class="tz-format-toggle">
@@ -50,7 +55,7 @@ added automatically.
 
 ### Add Time Zone
 
-<div class="box box-2">
+<div class="box box-3">
     <div class="tz-add-zone">
         <input type="text" id="tz-search" placeholder="Search time zones..."
                autocomplete="off" role="combobox"
