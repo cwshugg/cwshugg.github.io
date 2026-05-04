@@ -50,6 +50,17 @@ A collection of small tools.
 </div>
 </div>
 
+## Travel
+
+<div class="tools-grid">
+<div class="box">
+    <div class="tool-card">
+        <h3 style="margin: 0;"><i class="fas fa-clock" style="color: var(--color-accent3);"></i> <a href="/tools/timezones" style="color: var(--color-accent2); text-decoration: none;">Time Zone Comparison</a></h3>
+        <a href="/tools/timezones" class="button-nav" style="width: auto; margin: 0;">Open →</a>
+    </div>
+</div>
+</div>
+
 ## Writing
 
 <div class="tools-grid">
