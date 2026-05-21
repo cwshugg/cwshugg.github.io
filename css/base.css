@@ -62,6 +62,7 @@
     --color-acc3:  var(--color-accent2);
     --color-acc4:  #5abcd8;  /* Lighter cerulean for variety */
     --color-acc5:  #c89bfa;  /* Soft lavender for variety    */
+    --color-acc6:  #9cf7bf;  /* Light mint green  */
 
     /* ---- Font stacks -------------------------------------------------- */
     --font-heading:    "Aldrich", "Helvetica Neue", Arial, sans-serif;
@@ -933,6 +934,7 @@ hr.divider::after {
 .color-acc3   { color: var(--color-accent2) !important; }
 .color-acc4   { color: var(--color-acc4)    !important; }
 .color-acc5   { color: var(--color-acc5)    !important; }
+.color-acc6   { color: var(--color-acc6)    !important; }
 
 /* ---- Border utilities ------------------------------------------------- */
 .border-acc1 { border: 1px solid var(--color-accent1) !important; }

@@ -84,6 +84,8 @@ I enjoy software development, exploring software security, writing, and generall
 <code>Software Engineering</code>
 <code>Object-Oriented Programming</code>
 <code>Algorithms &amp; Data Structures</code><br>
+<code class="color-acc6">Model Context Protocol (MCP)</code><br>
+<code class="color-acc6">Agentic Development</code><br>
 <code class="color-acc3">Cryptography</code>
 <code class="color-acc3">Operating Systems</code>
 <code class="color-acc3">Processes</code>
@@ -95,7 +97,6 @@ I enjoy software development, exploring software security, writing, and generall
 <code class="color-acc5">Fuzzing</code><br>
 <code class="color-acc2">Software Security</code>
 <code class="color-acc2">Network Security</code>
-<code class="color-acc2">Cryptography</code>
 <code class="color-acc2">Cache Timing Attacks</code>
 <code class="color-acc2">Speculative Execution Attacks</code>
 </p>
@@ -128,6 +129,8 @@ I enjoy software development, exploring software security, writing, and generall
 <code>WSL</code>
 <code>Git</code>
 <code>Vim</code><br>
+<code class="color-acc6">Copilot</code>
+<code class="color-acc6">AI Skills, Agents</code>
 <code class="color-acc3">GDB</code>
 <code class="color-acc3">WinDBG</code>
 <code class="color-acc3">Valgrind</code>
