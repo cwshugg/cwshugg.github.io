@@ -936,6 +936,8 @@ hr.divider::after {
 .color-acc5   { color: var(--color-acc5)    !important; }
 .color-acc6   { color: var(--color-acc6)    !important; }
 
+body.light-mode .color-acc6 { color: #1a7a42 !important; } /* Darker mint for light backgrounds */
+
 /* ---- Border utilities ------------------------------------------------- */
 .border-acc1 { border: 1px solid var(--color-accent1) !important; }
 .border-acc2 { border: 1px solid var(--color-accent3) !important; }
