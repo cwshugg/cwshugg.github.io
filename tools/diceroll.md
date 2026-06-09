@@ -72,24 +72,23 @@ Build a pool of dice and roll them all at once.
             <button class="dr-pool-btn dr-pool-plus" aria-label="Add a d20">+</button>
         </div>
     </div>
+    <div class="dr-custom-add">
+        <label for="dr-custom-input" class="dr-pool-label">Custom</label>
+        <span class="dr-custom-prefix">d</span>
+        <input type="number" id="dr-custom-input" class="dr-custom-sides" min="2" max="999" placeholder="N" aria-label="Number of sides for custom die">
+        <button id="dr-custom-add-btn" class="dr-pool-btn" aria-label="Add custom die type">+</button>
+    </div>
     <div class="dr-actions">
         <button id="dr-clear-btn" class="button-nav" aria-label="Clear all dice from the pool">Clear All</button>
     </div>
 </div>
 
-### Roll
+### Results
 
 <div class="box box-2">
     <div class="dr-actions">
         <button id="dr-roll-btn" class="button-nav" aria-label="Roll the dice">Roll</button>
     </div>
-</div>
-
-<hr class="divider">
-
-### Results
-
-<div class="box box-3">
     <div id="dr-results" class="dr-results-grid" aria-live="polite"></div>
     <p id="dr-total" class="dr-total" aria-live="polite"></p>
 </div>

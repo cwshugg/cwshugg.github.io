@@ -19,6 +19,7 @@
     // ================================================================== //
 
     var pool = { 4: 0, 6: 1, 8: 0, 10: 0, 12: 0, 20: 0 };
+    var customTypes = [];  // list of custom side counts added by the user
     var animationEnabled = true;
     var rolling = false;
 
@@ -66,6 +67,67 @@
         if (clearBtn) { clearBtn.disabled = disabled; }
     }
 
+    /** Generate a deterministic HSL color from a die side count. */
+    function dieColor(sides) {
+        // Simple hash: multiply by a large prime, mod 360 for hue
+        var hash = ((sides * 2654435761) >>> 0) % 360;
+        return "hsl(" + hash + ", 60%, 55%)";
+    }
+
+    /** Build a custom die pool row and insert it into the DOM. */
+    function addCustomDieRow(sides) {
+        var poolEl = document.querySelector(".dr-pool");
+        var row = document.createElement("div");
+        row.className = "dr-pool-row";
+        row.setAttribute("data-die", String(sides));
+
+        var label = document.createElement("span");
+        label.className = "dr-pool-label";
+        label.textContent = "d" + sides;
+        label.style.color = dieColor(sides);
+
+        var minusBtn = document.createElement("button");
+        minusBtn.className = "dr-pool-btn dr-pool-minus";
+        minusBtn.setAttribute("aria-label", "Remove a d" + sides);
+        minusBtn.textContent = "\u2212";  // minus sign
+
+        var countSpan = document.createElement("span");
+        countSpan.className = "dr-pool-count";
+        countSpan.id = "dr-count-" + sides;
+        countSpan.textContent = "1";
+
+        var plusBtn = document.createElement("button");
+        plusBtn.className = "dr-pool-btn dr-pool-plus";
+        plusBtn.setAttribute("aria-label", "Add a d" + sides);
+        plusBtn.textContent = "+";
+
+        var removeBtn = document.createElement("button");
+        removeBtn.className = "dr-pool-btn dr-pool-remove";
+        removeBtn.setAttribute("aria-label", "Remove d" + sides + " from pool");
+        removeBtn.textContent = "\u2715";  // ✕
+
+        row.appendChild(label);
+        row.appendChild(minusBtn);
+        row.appendChild(countSpan);
+        row.appendChild(plusBtn);
+        row.appendChild(removeBtn);
+        poolEl.appendChild(row);
+
+        // Bind +/- buttons
+        minusBtn.addEventListener("click", function () { decrementDie(sides); });
+        plusBtn.addEventListener("click", function () { incrementDie(sides); });
+        removeBtn.addEventListener("click", function () { removeCustomDie(sides, row); });
+    }
+
+    /** Remove a custom die type entirely from the pool. */
+    function removeCustomDie(sides, rowEl) {
+        if (rolling) return;
+        var idx = customTypes.indexOf(sides);
+        if (idx !== -1) { customTypes.splice(idx, 1); }
+        delete pool[sides];
+        rowEl.parentNode.removeChild(rowEl);
+    }
+
     // ================================================================== //
     //  Pool management                                                    //
     // ================================================================== //
@@ -94,12 +156,16 @@
         }
     }
 
-    /** Clear all dice from the pool. */
+    /** Clear all dice from the pool (including custom types). */
     function clearPool() {
         var i;
         for (i = 0; i < DIE_TYPES.length; i++) {
             pool[DIE_TYPES[i]] = 0;
             updateCountDisplay(DIE_TYPES[i]);
+        }
+        for (i = 0; i < customTypes.length; i++) {
+            pool[customTypes[i]] = 0;
+            updateCountDisplay(customTypes[i]);
         }
     }
 
@@ -110,13 +176,20 @@
     /** Build a single die result element with the shape wrapper.
      *  Returns { wrapper, valueEl, die, finalValue } for animation use. */
     function buildDieElement(die, value) {
+        var isCustom = DIE_TYPES.indexOf(die) === -1;
+
         // Outer wrapper carries the die-type class
         var wrapper = document.createElement("div");
-        wrapper.className = "dr-die-d" + die;
+        wrapper.className = isCustom ? "dr-die-custom" : ("dr-die-d" + die);
 
         // Shape layer (provides the colored clip-path border)
         var shape = document.createElement("div");
         shape.className = "dr-die-shape";
+
+        // For custom dice, set the background color from hash
+        if (isCustom) {
+            shape.style.background = dieColor(die);
+        }
 
         // Inner card (content, inset clip-path)
         var card = document.createElement("div");
@@ -129,6 +202,11 @@
         var num = document.createElement("span");
         num.className = "dr-die-value";
         num.textContent = value;
+
+        // For custom dice, set the value text color from hash
+        if (isCustom) {
+            num.style.color = dieColor(die);
+        }
 
         card.appendChild(label);
         card.appendChild(num);
@@ -152,8 +230,9 @@
         // Check that pool has at least one die
         var hasDice = false;
         var i, j, die;
-        for (i = 0; i < DIE_TYPES.length; i++) {
-            if (pool[DIE_TYPES[i]] > 0) { hasDice = true; break; }
+        var allTypes = DIE_TYPES.concat(customTypes);
+        for (i = 0; i < allTypes.length; i++) {
+            if (pool[allTypes[i]] > 0) { hasDice = true; break; }
         }
         if (!hasDice) {
             totalEl.innerHTML = '<span class="dr-total-label">Add dice to the pool first.</span>';
@@ -172,8 +251,8 @@
         var total = 0;
         var allWrappers = [];  // flat list of all wrapper elements (for animation)
 
-        for (i = 0; i < DIE_TYPES.length; i++) {
-            die = DIE_TYPES[i];
+        for (i = 0; i < allTypes.length; i++) {
+            die = allTypes[i];
             if (pool[die] === 0) continue;
 
             // Create a type-row container
@@ -327,6 +406,39 @@
         rollBtn.addEventListener("click", doRoll);
         clearBtn.addEventListener("click", clearPool);
         animToggle.addEventListener("change", onAnimToggle);
+
+        // Bind custom dice add button
+        var customInput = document.getElementById("dr-custom-input");
+        var customAddBtn = document.getElementById("dr-custom-add-btn");
+
+        /** Add a custom die type from the input field. */
+        function addCustomDie() {
+            var sides = parseInt(customInput.value, 10);
+            if (isNaN(sides) || sides < 2) return;
+
+            // Skip if it's a built-in type or already added
+            if (DIE_TYPES.indexOf(sides) !== -1) return;
+            if (customTypes.indexOf(sides) !== -1) {
+                // Already exists — just increment
+                incrementDie(sides);
+                customInput.value = "";
+                return;
+            }
+
+            // Register the new custom type
+            customTypes.push(sides);
+            pool[sides] = 1;
+            addCustomDieRow(sides);
+            customInput.value = "";
+        }
+
+        customAddBtn.addEventListener("click", addCustomDie);
+        customInput.addEventListener("keydown", function (e) {
+            if (e.key === "Enter" || e.keyCode === 13) {
+                e.preventDefault();
+                addCustomDie();
+            }
+        });
     }
 
     // Kick off on DOM ready

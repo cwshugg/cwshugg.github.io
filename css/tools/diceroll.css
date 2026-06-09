@@ -31,6 +31,14 @@
     color: var(--color-accent2);
 }
 
+/* Color each standard die label to match its die shape */
+.dr-pool-row[data-die="4"]  .dr-pool-label { color: #e76f51; }
+.dr-pool-row[data-die="6"]  .dr-pool-label { color: #f4a261; }
+.dr-pool-row[data-die="8"]  .dr-pool-label { color: #e9c46a; }
+.dr-pool-row[data-die="10"] .dr-pool-label { color: #2a9d8f; }
+.dr-pool-row[data-die="12"] .dr-pool-label { color: #609daf; }
+.dr-pool-row[data-die="20"] .dr-pool-label { color: #8b5cf6; }
+
 .dr-pool-count {
     display: inline-block;
     min-width: 2rem;
@@ -81,6 +89,71 @@
 .dr-pool-btn:focus-visible {
     outline: 2px solid var(--color-accent1);
     outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+ * Custom dice input row
+ * ---------------------------------------------------------------------- */
+
+.dr-custom-add {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0;
+    border-top: 1px solid var(--color-border);
+    margin-top: 0.4rem;
+}
+
+.dr-pool-btn.dr-pool-remove {
+    color: #c0392b;
+    font-size: 0.85rem;
+    margin-left: 0.3rem;
+    opacity: 0.7;
+}
+.dr-pool-btn.dr-pool-remove:hover {
+    opacity: 1;
+}
+
+.dr-custom-add > .dr-pool-label {
+    width: 100%;
+    text-align: center;
+}
+
+.dr-custom-prefix {
+    font-family: var(--font-heading, inherit);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-accent2);
+}
+
+.dr-custom-sides {
+    width: 4rem;
+    text-align: center;
+    font-family: var(--font-heading, inherit);
+    font-size: 1rem;
+    font-weight: 700;
+    background: var(--color-bg-sunken);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    padding: 0.25rem 0.3rem;
+}
+
+.dr-custom-sides:focus {
+    border-color: var(--color-accent3);
+    outline: none;
+}
+
+/* Hide number input spinners */
+.dr-custom-sides::-webkit-outer-spin-button,
+.dr-custom-sides::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.dr-custom-sides {
+    -moz-appearance: textfield;
 }
 
 /* --------------------------------------------------------------------------
@@ -198,18 +271,18 @@
     background: #e76f51;
 }
 .dr-die-d4 .dr-die-result {
-    clip-path: polygon(50% 10%, 8% 96%, 92% 96%);
+    clip-path: polygon(50% 13%, 10% 95%, 90% 95%);
     padding-top: 1.2rem;
 }
 .dr-die-d4 .dr-die-value { color: #e76f51; }
 
 /* ---- d6: square (cube) ------------------------------------------------ */
 .dr-die-d6 .dr-die-shape {
-    clip-path: inset(4% round 8px);
+    clip-path: inset(4%);
     background: #f4a261;
 }
 .dr-die-d6 .dr-die-result {
-    clip-path: inset(10% round 5px);
+    clip-path: inset(10%);
 }
 .dr-die-d6 .dr-die-value { color: #f4a261; }
 
@@ -233,25 +306,34 @@
 }
 .dr-die-d10 .dr-die-value { color: #2a9d8f; }
 
-/* ---- d12: decagon (dodecahedron) -------------------------------------- */
+/* ---- d12: hexagon (dodecahedron) --------------------------------------- */
 .dr-die-d12 .dr-die-shape {
-    clip-path: polygon(50% 0%, 79% 10%, 98% 35%, 98% 65%, 79% 90%, 50% 100%, 21% 90%, 2% 65%, 2% 35%, 21% 10%);
+    clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
     background: #609daf;
 }
 .dr-die-d12 .dr-die-result {
-    clip-path: polygon(50% 7%, 75% 15%, 91% 37%, 91% 63%, 75% 85%, 50% 93%, 25% 85%, 9% 63%, 9% 37%, 25% 15%);
+    clip-path: polygon(50% 7%, 87% 28%, 87% 72%, 50% 93%, 13% 72%, 13% 28%);
 }
 .dr-die-d12 .dr-die-value { color: #609daf; }
 
-/* ---- d20: hexagon (icosahedron) --------------------------------------- */
+/* ---- d20: octagon ---------------------------------------------------- */
 .dr-die-d20 .dr-die-shape {
-    clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+    clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
     background: #8b5cf6;
 }
 .dr-die-d20 .dr-die-result {
-    clip-path: polygon(50% 7%, 87% 28%, 87% 72%, 50% 93%, 13% 72%, 13% 28%);
+    clip-path: polygon(34% 6%, 66% 6%, 94% 34%, 94% 66%, 66% 94%, 34% 94%, 6% 66%, 6% 34%);
 }
 .dr-die-d20 .dr-die-value { color: #8b5cf6; }
+
+/* ---- Custom dice: decagon -------------------------------------------- */
+/* Color is set dynamically via inline style from JS (hashed from side count) */
+.dr-die-custom .dr-die-shape {
+    clip-path: polygon(50% 0%, 79% 10%, 98% 35%, 98% 65%, 79% 90%, 50% 100%, 21% 90%, 2% 65%, 2% 35%, 21% 10%);
+}
+.dr-die-custom .dr-die-result {
+    clip-path: polygon(50% 7%, 75% 15%, 91% 37%, 91% 63%, 75% 85%, 50% 93%, 25% 85%, 9% 63%, 9% 37%, 25% 15%);
+}
 
 /* --------------------------------------------------------------------------
  * Roll animation — tumble keyframes
@@ -307,8 +389,8 @@
 
 .dr-total-label {
     font-family: var(--font-heading, inherit);
-    font-size: 0.9rem;
-    font-weight: 400;
+    font-size: inherit;
+    font-weight: inherit;
     color: var(--color-text-muted);
 }
 
