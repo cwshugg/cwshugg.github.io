@@ -32,7 +32,7 @@ Flip a virtual coin. Customize the side names and toggle the animation.
 ### Result
 
 <div class="box box-2">
-    <p id="cf-result" class="cf-result">Press <strong>Flip</strong> to start.</p>
+    <p id="cf-result" class="cf-result" aria-live="polite">Press <strong>Flip</strong> to start.</p>
 </div>
 
 <hr class="divider">

@@ -65,6 +65,19 @@
     border-color: var(--color-accent2);
 }
 
+/* Cancel tabletop-theme button overrides on pool buttons */
+.dr-pool-btn {
+    box-shadow: none;
+}
+.dr-pool-btn:hover {
+    transform: none;
+    box-shadow: none;
+}
+.dr-pool-btn:active {
+    transform: none;
+    box-shadow: none;
+}
+
 .dr-pool-btn:focus-visible {
     outline: 2px solid var(--color-accent1);
     outline-offset: 2px;
@@ -147,6 +160,9 @@
     align-items: center;
     justify-content: center;
     filter: url(#dr-round);
+    /* Fallback for browsers that don't support the SVG filter */
+    border-radius: 6px;
+    overflow: hidden;
 }
 
 .dr-die-result {
@@ -178,18 +194,18 @@
 
 /* ---- d4: triangle (tetrahedron) --------------------------------------- */
 .dr-die-d4 .dr-die-shape {
-    clip-path: polygon(50% 2%, 2% 98%, 98% 98%);
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
     background: #e76f51;
 }
 .dr-die-d4 .dr-die-result {
-    clip-path: polygon(50% 12%, 10% 95%, 90% 95%);
+    clip-path: polygon(50% 10%, 8% 96%, 92% 96%);
     padding-top: 1.2rem;
 }
 .dr-die-d4 .dr-die-value { color: #e76f51; }
 
 /* ---- d6: square (cube) ------------------------------------------------ */
 .dr-die-d6 .dr-die-shape {
-    clip-path: inset(6% round 8px);
+    clip-path: inset(4% round 8px);
     background: #f4a261;
 }
 .dr-die-d6 .dr-die-result {
@@ -371,5 +387,82 @@
     .dr-settings {
         flex-direction: column;
         align-items: stretch;
+    }
+
+    .dr-pool-btn {
+        min-width: 44px;
+        min-height: 44px;
+        width: 44px;
+        height: 44px;
+    }
+
+    #dr-roll-btn,
+    #dr-clear-btn {
+        min-height: 44px;
+        min-width: 44px;
+    }
+}
+
+@media screen and (max-width: 360px) {
+    .dr-die-shape {
+        width: 52px;
+        height: 52px;
+    }
+
+    .dr-die-value {
+        font-size: 0.95rem;
+    }
+
+    .dr-die-label {
+        font-size: 0.5rem;
+    }
+
+    .dr-total {
+        font-size: 1.1rem;
+    }
+
+    .dr-pool-row {
+        gap: 0.5rem;
+    }
+
+    .dr-pool-label {
+        font-size: 0.85rem;
+        width: 2rem;
+    }
+
+    .dr-type-row-dice {
+        gap: 0.4rem;
+    }
+}
+
+/* --------------------------------------------------------------------------
+ * Light-mode die color contrast — darkened for readability
+ * ---------------------------------------------------------------------- */
+
+.light-mode .dr-die-d4 .dr-die-value  { color: #c4533a; }
+.light-mode .dr-die-d6 .dr-die-value  { color: #c47d3a; }
+.light-mode .dr-die-d8 .dr-die-value  { color: #b89a3a; }
+.light-mode .dr-die-d10 .dr-die-value { color: #1f7a6e; }
+.light-mode .dr-die-d12 .dr-die-value { color: #3d7a8c; }
+.light-mode .dr-die-d20 .dr-die-value { color: #6b3fcc; }
+
+.light-mode .dr-die-d4 .dr-die-shape  { background: #c4533a; }
+.light-mode .dr-die-d6 .dr-die-shape  { background: #c47d3a; }
+.light-mode .dr-die-d8 .dr-die-shape  { background: #b89a3a; }
+.light-mode .dr-die-d10 .dr-die-shape { background: #1f7a6e; }
+.light-mode .dr-die-d12 .dr-die-shape { background: #3d7a8c; }
+.light-mode .dr-die-d20 .dr-die-shape { background: #6b3fcc; }
+
+/* --------------------------------------------------------------------------
+ * Reduced motion preference
+ * ---------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+    .dr-rolling {
+        animation: none;
+    }
+
+    .dr-die-value.dr-settled {
+        animation: none;
     }
 }

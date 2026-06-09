@@ -32,7 +32,10 @@
 
 .cf-coin-face {
     position: absolute;
-    inset: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -66,21 +69,8 @@
  * Flip animations — keyframes for heads & tails outcomes
  * ---------------------------------------------------------------------- */
 
-/* Land on heads (front face up): 3.5 full rotations = 1260° */
-@keyframes cf-flip-to-heads {
-    0%   { transform: rotateY(0deg); }
-    100% { transform: rotateY(1260deg); }
-}
-
-/* Land on tails (back face up): 3 full rotations + 180° = 1260° total but
-   we need an odd-half so the back face shows: 1260 + 180 = 1440° would
-   repeat. Use 1080 + 180 = 1260° — that's 3.5 turns ending back-face-up.
-   Actually: 3 full turns + half = 1080+180 = 1260° shows back.
-   But heads also uses 1260°. To differentiate, tails uses 1440° (4 turns)
-   which ends front-up — wrong. Let's be precise:
-     Even half-turns (0°, 360°, 720°, 1080°, 1440°) → front face
-     Odd half-turns (180°, 540°, 900°, 1260°, 1620°) → back face
-   So: heads = 1440° (even), tails = 1260° (odd). */
+/* Land on tails (back face up): odd half-turn count (1260°) → back face.
+   Heads uses cf-flip-to-heads-corrected (1440°, even) → front face. */
 @keyframes cf-flip-to-heads-corrected {
     0%   { transform: rotateY(0deg); }
     100% { transform: rotateY(1440deg); }
@@ -237,5 +227,46 @@
 
     .cf-setting-group input[type="text"] {
         width: 100%;
+    }
+
+    #cf-flip-btn,
+    #cf-reset-names-btn {
+        min-height: 44px;
+        min-width: 44px;
+    }
+}
+
+@media screen and (max-width: 360px) {
+    .cf-coin {
+        width: 110px;
+        height: 110px;
+    }
+
+    .cf-coin-face {
+        font-size: 0.95rem;
+        padding: 0.3rem;
+    }
+
+    .cf-result {
+        font-size: 1.1rem;
+    }
+
+    .cf-coin-stage {
+        padding: 1.5rem 0 1rem;
+    }
+}
+
+/* --------------------------------------------------------------------------
+ * Reduced motion preference
+ * ---------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+    .cf-coin.cf-anim-heads,
+    .cf-coin.cf-anim-tails {
+        animation: none;
+    }
+
+    .cf-coin {
+        transition: none;
     }
 }

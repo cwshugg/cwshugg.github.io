@@ -92,13 +92,21 @@
             coin.classList.add(isHeads ? "cf-anim-heads" : "cf-anim-tails");
 
             // Wait for the animation to finish
+            var animDone = false;
             var onEnd = function () {
+                if (animDone) return;
+                animDone = true;
                 coin.removeEventListener("animationend", onEnd);
                 flipping = false;
                 flipBtn.disabled = false;
                 showResult(winner);
             };
             coin.addEventListener("animationend", onEnd);
+
+            // Safety timeout: force cleanup if animationend never fires
+            setTimeout(function () {
+                if (!animDone) { onEnd(); }
+            }, 1200);
 
             // Show result text partway through (slight delay for drama)
             resultEl.innerHTML = "Flipping&hellip;";
@@ -118,9 +126,9 @@
 
     /** Basic HTML escaping for user-provided text. */
     function escapeHtml(str) {
-        var div = document.createElement("div");
-        div.appendChild(document.createTextNode(str));
-        return div.innerHTML;
+        var el = document.createElement("span");
+        el.textContent = str;
+        return el.innerHTML;
     }
 
     // ================================================================== //
@@ -180,6 +188,12 @@
         if (savedAnim !== null) {
             animationEnabled = savedAnim === "1";
             animToggle.checked = animationEnabled;
+        }
+
+        // Respect prefers-reduced-motion
+        if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            animationEnabled = false;
+            animToggle.checked = false;
         }
 
         updateFaceLabels();

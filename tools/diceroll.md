@@ -90,13 +90,13 @@ Build a pool of dice and roll them all at once.
 ### Results
 
 <div class="box box-3">
-    <div id="dr-results" class="dr-results-grid"></div>
-    <p id="dr-total" class="dr-total"></p>
+    <div id="dr-results" class="dr-results-grid" aria-live="polite"></div>
+    <p id="dr-total" class="dr-total" aria-live="polite"></p>
 </div>
 
 ### Settings
 
-<div class="box">
+<div class="box box-1">
     <div class="dr-settings">
         <div class="dr-setting-group dr-toggle-group">
             <label for="dr-anim-toggle">Animation</label>

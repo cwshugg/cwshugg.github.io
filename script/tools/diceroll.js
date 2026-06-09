@@ -11,6 +11,7 @@
     // ================================================================== //
 
     var DIE_TYPES = [4, 6, 8, 10, 12, 20];
+    var MAX_PER_TYPE = 20;
     var LS_ANIMATION = "diceroll-animation";
 
     // ================================================================== //
@@ -55,6 +56,16 @@
         return Math.floor(Math.random() * max) + 1;
     }
 
+    /** Disable or enable all pool control buttons. */
+    function setPoolButtonsDisabled(disabled) {
+        var btns = document.querySelectorAll(".dr-pool-btn");
+        var i;
+        for (i = 0; i < btns.length; i++) {
+            btns[i].disabled = disabled;
+        }
+        if (clearBtn) { clearBtn.disabled = disabled; }
+    }
+
     // ================================================================== //
     //  Pool management                                                    //
     // ================================================================== //
@@ -67,10 +78,12 @@
         }
     }
 
-    /** Increment the pool count for a die type. */
+    /** Increment the pool count for a die type (max MAX_PER_TYPE). */
     function incrementDie(die) {
-        pool[die] = pool[die] + 1;
-        updateCountDisplay(die);
+        if (pool[die] < MAX_PER_TYPE) {
+            pool[die] = pool[die] + 1;
+            updateCountDisplay(die);
+        }
     }
 
     /** Decrement the pool count for a die type (min 0). */
@@ -129,7 +142,7 @@
     function startNumberCycle(valueEl, die) {
         return setInterval(function () {
             valueEl.textContent = rollDie(die);
-        }, 35);
+        }, 17);
     }
 
     /** Perform a dice roll for all dice in the pool. */
@@ -149,6 +162,7 @@
 
         rolling = true;
         rollBtn.disabled = true;
+        setPoolButtonsDisabled(true);
 
         // Clear previous results
         resultsEl.innerHTML = "";
@@ -219,27 +233,39 @@
             }
 
             // When the last animation finishes, stop all cycling and show final values
+            var animDone = false;
             var onEnd = function () {
+                if (animDone) return;
+                animDone = true;
                 lastEl.removeEventListener("animationend", onEnd);
                 for (var k = 0; k < cycleIntervals.length; k++) {
                     clearInterval(cycleIntervals[k]);
                     allWrappers[k].valueEl.textContent = allWrappers[k].finalValue;
                     allWrappers[k].valueEl.classList.add("dr-settled");
                 }
-                showTotal(total, allWrappers.length);
+                showTotal(total);
                 rolling = false;
                 rollBtn.disabled = false;
+                setPoolButtonsDisabled(false);
             };
             lastEl.addEventListener("animationend", onEnd);
+
+            // Safety timeout: force cleanup if animationend never fires
+            // 0.6s animation + max stagger delay + 300ms buffer
+            var safetyMs = 600 + maxDelay + 300;
+            setTimeout(function () {
+                if (!animDone) { onEnd(); }
+            }, safetyMs);
         } else {
-            showTotal(total, allWrappers.length);
+            showTotal(total);
             rolling = false;
             rollBtn.disabled = false;
+            setPoolButtonsDisabled(false);
         }
     }
 
     /** Display the total sum in the total area. */
-    function showTotal(total, count) {
+    function showTotal(total) {
         totalEl.innerHTML = '<span class="dr-total-label">Total: </span>' +
                             '<span class="dr-total-value">' +
                             escapeHtml(String(total)) + '</span>';
@@ -271,6 +297,12 @@
         if (savedAnim !== null) {
             animationEnabled = savedAnim === "1";
             animToggle.checked = animationEnabled;
+        }
+
+        // Respect prefers-reduced-motion
+        if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            animationEnabled = false;
+            animToggle.checked = false;
         }
 
         // Bind pool buttons
