@@ -1,0 +1,241 @@
+/* ==========================================================================
+ * coinflip.css — Coin Flip tool styles
+ * ==========================================================================
+ * Tool-specific CSS for the Coin Flip page. Leverages base.css box, button,
+ * and layout utilities. Only adds styles specific to this tool's layout.
+ * ======================================================================== */
+
+/* --------------------------------------------------------------------------
+ * Coin stage — perspective container
+ * ---------------------------------------------------------------------- */
+
+.cf-coin-stage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 800px;
+    padding: 2rem 0 1.5rem;
+}
+
+/* --------------------------------------------------------------------------
+ * Coin element — 3D rotating disc
+ * ---------------------------------------------------------------------- */
+
+.cf-coin {
+    position: relative;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    transform-style: preserve-3d;
+    transition: transform 0.1s ease;
+}
+
+.cf-coin-face {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading, inherit);
+    font-size: 1.3rem;
+    font-weight: 700;
+    text-align: center;
+    padding: 0.5rem;
+    word-break: break-word;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border: 4px solid var(--color-accent2);
+    box-shadow: 0 0 18px rgba(0, 0, 0, 0.3), inset 0 0 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Heads — front face */
+.cf-coin-heads {
+    background: linear-gradient(145deg, var(--color-accent2), #e6b85e);
+    color: var(--color-bg);
+}
+
+/* Tails — back face, rotated 180° */
+.cf-coin-tails {
+    background: linear-gradient(145deg, var(--color-accent3), #d45a5f);
+    color: var(--color-bg);
+    transform: rotateY(180deg);
+}
+
+/* --------------------------------------------------------------------------
+ * Flip animations — keyframes for heads & tails outcomes
+ * ---------------------------------------------------------------------- */
+
+/* Land on heads (front face up): 3.5 full rotations = 1260° */
+@keyframes cf-flip-to-heads {
+    0%   { transform: rotateY(0deg); }
+    100% { transform: rotateY(1260deg); }
+}
+
+/* Land on tails (back face up): 3 full rotations + 180° = 1260° total but
+   we need an odd-half so the back face shows: 1260 + 180 = 1440° would
+   repeat. Use 1080 + 180 = 1260° — that's 3.5 turns ending back-face-up.
+   Actually: 3 full turns + half = 1080+180 = 1260° shows back.
+   But heads also uses 1260°. To differentiate, tails uses 1440° (4 turns)
+   which ends front-up — wrong. Let's be precise:
+     Even half-turns (0°, 360°, 720°, 1080°, 1440°) → front face
+     Odd half-turns (180°, 540°, 900°, 1260°, 1620°) → back face
+   So: heads = 1440° (even), tails = 1260° (odd). */
+@keyframes cf-flip-to-heads-corrected {
+    0%   { transform: rotateY(0deg); }
+    100% { transform: rotateY(1440deg); }
+}
+
+@keyframes cf-flip-to-tails {
+    0%   { transform: rotateY(0deg); }
+    100% { transform: rotateY(1260deg); }
+}
+
+.cf-coin.cf-anim-heads {
+    animation: cf-flip-to-heads-corrected 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+
+.cf-coin.cf-anim-tails {
+    animation: cf-flip-to-tails 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+
+/* Static (no animation) positioning */
+.cf-coin.cf-show-heads {
+    transform: rotateY(0deg);
+}
+
+.cf-coin.cf-show-tails {
+    transform: rotateY(180deg);
+}
+
+/* --------------------------------------------------------------------------
+ * Actions row (flip button)
+ * ---------------------------------------------------------------------- */
+
+.cf-actions {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 0.5rem;
+}
+
+#cf-flip-btn {
+    min-width: 7rem;
+    font-size: 1.1rem;
+    text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+ * Result display
+ * ---------------------------------------------------------------------- */
+
+.cf-result {
+    text-align: center;
+    font-size: 1.4rem;
+    font-family: var(--font-heading, inherit);
+    margin: 0;
+    padding: 0.5rem 0;
+    color: var(--color-text);
+    min-height: 2.2rem;
+}
+
+.cf-result-value {
+    color: var(--color-accent2);
+    font-weight: 700;
+}
+
+/* --------------------------------------------------------------------------
+ * Settings panel
+ * ---------------------------------------------------------------------- */
+
+.cf-settings {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: flex-end;
+}
+
+.cf-setting-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.cf-setting-group label {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    font-family: var(--font-heading, inherit);
+}
+
+.cf-setting-group input[type="text"] {
+    width: 9rem;
+    padding: 0.4rem 0.6rem;
+    border-radius: 4px;
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-sunken);
+    color: var(--color-text);
+    font-size: 0.95rem;
+    font-family: inherit;
+}
+
+.cf-setting-group input[type="text"]:focus {
+    outline: 2px solid var(--color-accent1);
+    outline-offset: 1px;
+}
+
+/* Toggle group — horizontal layout */
+.cf-toggle-group {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.cf-toggle-group input[type="checkbox"] {
+    width: 1.1rem;
+    height: 1.1rem;
+    accent-color: var(--color-accent2);
+    cursor: pointer;
+}
+
+#cf-reset-names-btn {
+    width: auto;
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+ * Focus-visible states for keyboard navigation
+ * ---------------------------------------------------------------------- */
+
+#cf-flip-btn:focus-visible,
+#cf-reset-names-btn:focus-visible {
+    outline: 2px solid var(--color-accent1);
+    outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+ * Responsive: narrow viewports
+ * ---------------------------------------------------------------------- */
+
+@media screen and (max-width: 480px) {
+    .cf-coin {
+        width: 130px;
+        height: 130px;
+    }
+
+    .cf-coin-face {
+        font-size: 1.1rem;
+    }
+
+    .cf-result {
+        font-size: 1.2rem;
+    }
+
+    .cf-settings {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .cf-setting-group input[type="text"] {
+        width: 100%;
+    }
+}

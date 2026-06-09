@@ -1,0 +1,375 @@
+/* ==========================================================================
+ * diceroll.css — Dice Roll tool styles
+ * ==========================================================================
+ * Tool-specific CSS for the Dice Roll page.
+ * ======================================================================== */
+
+/* --------------------------------------------------------------------------
+ * Dice pool selector
+ * ---------------------------------------------------------------------- */
+
+.dr-pool {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 1rem 0;
+}
+
+.dr-pool-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.dr-pool-label {
+    font-family: var(--font-heading, inherit);
+    font-size: 1.1rem;
+    font-weight: 700;
+    width: 2.5rem;
+    text-align: right;
+    color: var(--color-accent2);
+}
+
+.dr-pool-count {
+    display: inline-block;
+    min-width: 2rem;
+    text-align: center;
+    font-family: var(--font-heading, inherit);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.dr-pool-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    background: var(--color-bg-sunken);
+    color: var(--color-text);
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+    line-height: 1;
+    padding: 0;
+}
+
+.dr-pool-btn:hover {
+    background: var(--color-accent2);
+    color: var(--color-bg);
+    border-color: var(--color-accent2);
+}
+
+.dr-pool-btn:focus-visible {
+    outline: 2px solid var(--color-accent1);
+    outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+ * Actions row (roll & clear buttons)
+ * ---------------------------------------------------------------------- */
+
+.dr-actions {
+    display: flex;
+    justify-content: center;
+    padding: 0.5rem 0;
+}
+
+#dr-roll-btn {
+    min-width: 7rem;
+    font-size: 1.1rem;
+    text-align: center;
+}
+
+#dr-clear-btn {
+    width: auto;
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+#dr-roll-btn:focus-visible,
+#dr-clear-btn:focus-visible {
+    outline: 2px solid var(--color-accent1);
+    outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+ * Results area — type-grouped rows
+ * ---------------------------------------------------------------------- */
+
+.dr-results-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 0.5rem 0;
+}
+
+/* Each die type gets its own row */
+.dr-type-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.dr-type-row-label {
+    font-family: var(--font-heading, inherit);
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+}
+
+.dr-type-row-dice {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+}
+
+/* --------------------------------------------------------------------------
+ * Individual die result cards — shaped via clip-path
+ *
+ * Each die uses a CSS clip-path polygon matching its real-world shape.
+ * An outer wrapper (.dr-die-shape) provides the colored clipped border,
+ * and the inner card (.dr-die-result) is inset slightly for the content.
+ * ---------------------------------------------------------------------- */
+
+.dr-die-shape {
+    position: relative;
+    width: 78px;
+    height: 78px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: url(#dr-round);
+}
+
+.dr-die-result {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: var(--color-bg-sunken);
+}
+
+.dr-die-label {
+    font-family: var(--font-heading, inherit);
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.7;
+}
+
+.dr-die-value {
+    font-family: var(--font-heading, inherit);
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--color-accent2);
+    line-height: 1.2;
+}
+
+/* ---- d4: triangle (tetrahedron) --------------------------------------- */
+.dr-die-d4 .dr-die-shape {
+    clip-path: polygon(50% 2%, 2% 98%, 98% 98%);
+    background: #e76f51;
+}
+.dr-die-d4 .dr-die-result {
+    clip-path: polygon(50% 12%, 10% 95%, 90% 95%);
+    padding-top: 1.2rem;
+}
+.dr-die-d4 .dr-die-value { color: #e76f51; }
+
+/* ---- d6: square (cube) ------------------------------------------------ */
+.dr-die-d6 .dr-die-shape {
+    clip-path: inset(6% round 8px);
+    background: #f4a261;
+}
+.dr-die-d6 .dr-die-result {
+    clip-path: inset(10% round 5px);
+}
+.dr-die-d6 .dr-die-value { color: #f4a261; }
+
+/* ---- d8: diamond (octahedron) ----------------------------------------- */
+.dr-die-d8 .dr-die-shape {
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    background: #e9c46a;
+}
+.dr-die-d8 .dr-die-result {
+    clip-path: polygon(50% 8%, 92% 50%, 50% 92%, 8% 50%);
+}
+.dr-die-d8 .dr-die-value { color: #e9c46a; }
+
+/* ---- d10: kite / pentagonal cross-section ----------------------------- */
+.dr-die-d10 .dr-die-shape {
+    clip-path: polygon(50% 0%, 97% 35%, 82% 92%, 18% 92%, 3% 35%);
+    background: #2a9d8f;
+}
+.dr-die-d10 .dr-die-result {
+    clip-path: polygon(50% 8%, 90% 38%, 77% 87%, 23% 87%, 10% 38%);
+}
+.dr-die-d10 .dr-die-value { color: #2a9d8f; }
+
+/* ---- d12: decagon (dodecahedron) -------------------------------------- */
+.dr-die-d12 .dr-die-shape {
+    clip-path: polygon(50% 0%, 79% 10%, 98% 35%, 98% 65%, 79% 90%, 50% 100%, 21% 90%, 2% 65%, 2% 35%, 21% 10%);
+    background: #609daf;
+}
+.dr-die-d12 .dr-die-result {
+    clip-path: polygon(50% 7%, 75% 15%, 91% 37%, 91% 63%, 75% 85%, 50% 93%, 25% 85%, 9% 63%, 9% 37%, 25% 15%);
+}
+.dr-die-d12 .dr-die-value { color: #609daf; }
+
+/* ---- d20: hexagon (icosahedron) --------------------------------------- */
+.dr-die-d20 .dr-die-shape {
+    clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+    background: #8b5cf6;
+}
+.dr-die-d20 .dr-die-result {
+    clip-path: polygon(50% 7%, 87% 28%, 87% 72%, 50% 93%, 13% 72%, 13% 28%);
+}
+.dr-die-d20 .dr-die-value { color: #8b5cf6; }
+
+/* --------------------------------------------------------------------------
+ * Roll animation — tumble keyframes
+ * ---------------------------------------------------------------------- */
+
+@keyframes dr-tumble {
+    0%   { transform: scale(0.3) rotate(0deg);   opacity: 0; }
+    30%  { transform: scale(1.1) rotate(180deg);  opacity: 1; }
+    50%  { transform: scale(0.95) rotate(270deg); }
+    70%  { transform: scale(1.05) rotate(340deg); }
+    100% { transform: scale(1) rotate(360deg);    opacity: 1; }
+}
+
+.dr-rolling {
+    animation: dr-tumble 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+/* Highlight flash on final value — briefly goes white then fades back */
+@keyframes dr-flash {
+    0%   { color: #ffffff; text-shadow: 0 0 8px rgba(255, 255, 255, 0.8); }
+    50%  { text-shadow: 0 0 4px rgba(255, 255, 255, 0.4); }
+    100% { text-shadow: 0 0 0 rgba(255, 255, 255, 0); }
+}
+
+@keyframes dr-flash-light {
+    0%   { color: #000000; text-shadow: 0 0 8px rgba(0, 0, 0, 0.5); }
+    50%  { text-shadow: 0 0 4px rgba(0, 0, 0, 0.25); }
+    100% { text-shadow: 0 0 0 rgba(0, 0, 0, 0); }
+}
+
+.dr-die-value.dr-settled {
+    animation: dr-flash 1.6s ease-out forwards;
+}
+
+.light-mode .dr-die-value.dr-settled {
+    animation: dr-flash-light 1.6s ease-out forwards;
+}
+
+/* --------------------------------------------------------------------------
+ * Total display
+ * ---------------------------------------------------------------------- */
+
+.dr-total {
+    text-align: center;
+    font-family: var(--font-heading, inherit);
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0.5rem 0 0;
+    padding: 0.5rem 0;
+    min-height: 2.2rem;
+}
+
+.dr-total-label {
+    font-family: var(--font-heading, inherit);
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: var(--color-text-muted);
+}
+
+.dr-total-value {
+    font-family: var(--font-heading, inherit);
+    color: var(--color-accent2);
+}
+
+/* --------------------------------------------------------------------------
+ * Settings panel
+ * ---------------------------------------------------------------------- */
+
+.dr-settings {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: flex-end;
+}
+
+.dr-setting-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.dr-setting-group label {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    font-family: var(--font-heading, inherit);
+}
+
+/* Toggle group — horizontal layout */
+.dr-toggle-group {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.dr-toggle-group input[type="checkbox"] {
+    width: 1.1rem;
+    height: 1.1rem;
+    accent-color: var(--color-accent2);
+    cursor: pointer;
+}
+
+/* --------------------------------------------------------------------------
+ * Responsive: narrow viewports
+ * ---------------------------------------------------------------------- */
+
+@media screen and (max-width: 480px) {
+    .dr-die-shape {
+        width: 62px;
+        height: 62px;
+    }
+
+    .dr-die-value {
+        font-size: 1.1rem;
+    }
+
+    .dr-die-label {
+        font-size: 0.55rem;
+    }
+
+    .dr-total {
+        font-size: 1.3rem;
+    }
+
+    .dr-pool-label {
+        font-size: 0.95rem;
+    }
+
+    .dr-pool-count {
+        font-size: 0.95rem;
+    }
+
+    .dr-settings {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}

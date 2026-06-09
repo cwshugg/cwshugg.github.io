@@ -1,0 +1,812 @@
+/* ==========================================================================
+ * tabletop.css — Tabletop theme
+ * ==========================================================================
+ *
+ * A warm, board-game-inspired style for pages with `.tabletop-theme` on body.
+ * Layers on top of base.css — overrides variables and adds tabletop-specific
+ * component patterns.
+ *
+ * Color palette:
+ *   Sandy Brown     #FF9B42  — warm orange-brown (borders, accents)
+ *   Coffee Bean    #25090a  — very dark brown (background dark mode)
+ *   Powder Petal    #FFEADF  — warm peach-white (text dark mode / bg light)
+ *   Dusty Olive    #8ea897  — bright muted green (accent, secondary)
+ *   Ocean Deep     #3a7db5  — soft blue (links, interactive)
+ *
+ * Fonts:
+ *   Berenika-Book       — headings (fantasy serif feel)
+ *   Lexend           — body text
+ *
+ * Design rules:
+ *   - Retro flat aesthetic: no gradients, no blur, sharp shadows
+ *   - Warm leather-and-felt boxes that feel like a game table
+ *   - Works in both dark mode (default) and light mode
+ * ======================================================================== */
+
+
+/* ==========================================================================
+ * Font faces
+ * ======================================================================== */
+
+@font-face {
+    font-family: "Berenika-Book";
+    src: url("../../fonts/Berenika-Book.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Lexend";
+    src: url("../../fonts/Lexend-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Lexend";
+    src: url("../../fonts/Lexend-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+/* ==========================================================================
+ * Dark mode variables (default)
+ * ======================================================================== */
+
+.tabletop-theme {
+    /* Core palette */
+    --color-bg:         #25090a;   /* Coffee Bean */
+    --color-text:       #FFEADF;   /* Powder Petal */
+    --color-accent1:    #8ea897;   /* Dusty Olive */
+    --color-accent2:    #FF9B42;   /* Sandy Brown */
+    --color-accent3:    #3a7db5;   /* Ocean Deep */
+
+    /* Derived / surface colors */
+    --color-bg-raised:  #3A1A12;
+    --color-bg-sunken:  #1E0708;
+    --color-bg-code:    #321510;
+    --color-text-muted: #8ea897;   /* Dusty Olive */
+    --color-border:     #FF9B42;   /* Sandy Brown */
+
+    /* Fonts */
+    --font-heading: "Berenika-Book", "Georgia", serif;
+    --font-body:    "Lexend", "Helvetica Neue", Arial, sans-serif;
+
+    /* Divider: tabletop uses Dusty Olive lines */
+    --divider-color1: #8ea897;
+    --divider-color2: #8ea897;
+    --divider-color3: #8ea897;
+}
+
+
+/* ==========================================================================
+ * Light mode variables
+ * ======================================================================== */
+
+.tabletop-theme.light-mode {
+    --color-bg:         #FFEADF;   /* Powder Petal */
+    --color-text:       #25090a;   /* Coffee Bean */
+    --color-accent1:    #D47A2A;   /* Sandy Brown (swapped for light) */
+    --color-accent2:    #D47A2A;   /* Sandy Brown */
+    --color-accent3:    #5E7A66;   /* Dusty Olive */
+
+    /* Derived / surface colors */
+    --color-bg-raised:  #FFF5EF;
+    --color-bg-sunken:  #FFEADF;
+    --color-bg-code:    #FFE0D2;
+    --color-text-muted: #5E7A66;
+    --color-border:     #5E7A66;   /* Olive borders in light mode */
+}
+
+
+/* ==========================================================================
+ * Component overrides — dark mode
+ *
+ * Tabletop-specific visual effects that go beyond CSS variables.
+ * ======================================================================== */
+
+/* ---- Font family overrides -------------------------------------------- */
+
+.tabletop-theme {
+    font-family: "Lexend", "Helvetica Neue", Arial, sans-serif;
+}
+
+.tabletop-theme p,
+.tabletop-theme li,
+.tabletop-theme td,
+.tabletop-theme label,
+.tabletop-theme input,
+.tabletop-theme textarea,
+.tabletop-theme select {
+    font-family: "Lexend", "Helvetica Neue", Arial, sans-serif;
+}
+
+.tabletop-theme h1,
+.tabletop-theme h2,
+.tabletop-theme h3,
+.tabletop-theme h4,
+.tabletop-theme h5,
+.tabletop-theme h6,
+.tabletop-theme th {
+    font-family: "Berenika-Book", "Georgia", serif;
+}
+
+
+/* ---- Heading colors: Sandy Brown / Dusty Olive alternating ------------------ */
+
+.tabletop-theme h1 { color: #FF9B42; }
+.tabletop-theme h2 { color: #8ea897; }
+.tabletop-theme h3 { color: #FF9B42; }
+.tabletop-theme h4 { color: #8ea897; }
+.tabletop-theme h5 { color: #FF9B42; }
+.tabletop-theme h6 { color: #8ea897; }
+
+
+/* ---- Site header / nav ------------------------------------------------ */
+
+.tabletop-theme .site-header {
+    background-color: #25090a;
+    border-bottom-color: #FF9B42;
+}
+
+.tabletop-theme .site-header .site-title {
+    font-family: "Berenika-Book", "Georgia", serif;
+}
+
+.tabletop-theme .site-header .site-title .title-shugg { color: #8ea897; }
+.tabletop-theme .site-header .site-title .title-dot   { color: #FF9B42; }
+.tabletop-theme .site-header .site-title .title-dev   { color: #3a7db5; }
+
+.tabletop-theme .site-header .site-title:hover .title-shugg,
+.tabletop-theme .site-header .site-title:hover .title-dot,
+.tabletop-theme .site-header .site-title:hover .title-dev {
+    color: var(--color-text);
+}
+
+.tabletop-theme .site-header a.button-nav,
+.tabletop-theme .site-header button:not(.sidebar-toggle):not(.sidebar-close) {
+    color: var(--color-text);
+    border-color: #8ea897;
+    box-shadow: 4px 4px 0 #8ea897;
+}
+
+.tabletop-theme .site-header a.button-nav:hover,
+.tabletop-theme .site-header button:not(.sidebar-toggle):not(.sidebar-close):hover {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 #8ea897;
+}
+
+.tabletop-theme .site-header a.button-nav:active,
+.tabletop-theme .site-header button:not(.sidebar-toggle):not(.sidebar-close):active {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    transform: translate(4px, 4px);
+    box-shadow: 0 0 0 #8ea897;
+}
+
+
+/* ---- Footer ----------------------------------------------------------- */
+
+.tabletop-theme .site-footer a {
+    color: #3a7db5;
+}
+
+.tabletop-theme .site-footer a:hover {
+    color: #FF9B42;
+}
+
+
+/* ---- Links ------------------------------------------------------------ */
+
+.tabletop-theme a {
+    color: #3a7db5;
+}
+
+.tabletop-theme a:hover,
+.tabletop-theme a:focus {
+    color: #5a94c4;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.tabletop-theme a:active {
+    color: #FF9B42;
+}
+
+.tabletop-theme .text-link {
+    color: #3a7db5;
+}
+
+.tabletop-theme .text-link:hover,
+.tabletop-theme .text-link:focus {
+    color: #5a94c4;
+}
+
+
+/* ---- Labels / muted text ---------------------------------------------- */
+
+.tabletop-theme label,
+.tabletop-theme .label-main {
+    color: #8ea897;
+}
+
+
+/* ---- Boxes (paper sheets) --------------------------------------------- */
+
+.tabletop-theme .box {
+    background: #3A1A12;
+    border: 3px solid #FF9B42;
+    box-shadow: 5px 5px 0 #FF9B42;
+    border-top: 3px solid #FFB574;
+}
+
+.tabletop-theme .box-1 {
+    border-color: #FF9B42;
+    box-shadow: 5px 5px 0 #FF9B42;
+    border-top-color: #FFB574;
+}
+
+.tabletop-theme .box-2 {
+    border-color: #8ea897;
+    box-shadow: 5px 5px 0 #8ea897;
+    border-top-color: #a6bfb0;
+}
+
+.tabletop-theme .box-3 {
+    border-color: #3a7db5;
+    box-shadow: 5px 5px 0 #3a7db5;
+    border-top-color: #5a94c4;
+}
+
+
+/* ---- Buttons ---------------------------------------------------------- */
+
+.tabletop-theme button,
+.tabletop-theme .button-main,
+.tabletop-theme .button-nav {
+    border-color: #8ea897;
+    box-shadow: 4px 4px 0 #8ea897;
+}
+
+.tabletop-theme button:hover:enabled,
+.tabletop-theme .button-main:hover:enabled,
+.tabletop-theme .button-nav:hover:enabled,
+.tabletop-theme button:hover,
+.tabletop-theme .button-main:hover,
+.tabletop-theme .button-nav:hover {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 #8ea897;
+}
+
+.tabletop-theme button:active:enabled,
+.tabletop-theme .button-main:active:enabled,
+.tabletop-theme .button-nav:active:enabled,
+.tabletop-theme button:active,
+.tabletop-theme .button-main:active,
+.tabletop-theme .button-nav:active {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    transform: translate(4px, 4px);
+    box-shadow: 0 0 0 #8ea897;
+}
+
+.tabletop-theme button:focus-visible,
+.tabletop-theme .button-main:focus-visible,
+.tabletop-theme .button-nav:focus-visible {
+    outline-color: #3a7db5;
+}
+
+
+/* ---- Inputs ----------------------------------------------------------- */
+
+.tabletop-theme input,
+.tabletop-theme .input-main {
+    background-color: #321510;
+    border-bottom-color: #FF9B42;
+}
+
+.tabletop-theme input:focus,
+.tabletop-theme .input-main:focus {
+    border-bottom-color: #3a7db5;
+    box-shadow: 0 1px 0 #3a7db5;
+}
+
+.tabletop-theme input::placeholder {
+    color: #8ea897;
+    opacity: 0.6;
+}
+
+
+/* ---- Textarea --------------------------------------------------------- */
+
+.tabletop-theme textarea {
+    background-color: #321510;
+    border: 1px solid #FF9B42;
+    color: #FFEADF;
+}
+
+.tabletop-theme textarea:focus {
+    border-color: #8ea897;
+}
+
+
+/* ---- Select ----------------------------------------------------------- */
+
+.tabletop-theme select {
+    background-color: #321510;
+    border-color: #FF9B42;
+}
+
+.tabletop-theme select:focus {
+    border-color: #8ea897;
+}
+
+
+/* ---- Tables ----------------------------------------------------------- */
+
+.tabletop-theme table {
+    border-color: #FF9B42;
+    box-shadow: 5px 5px 0 #FF9B42;
+}
+
+.tabletop-theme .box table {
+    border: none;
+    box-shadow: none;
+}
+
+.tabletop-theme thead {
+    border-bottom-color: #FF9B42;
+}
+
+.tabletop-theme th {
+    color: #FF9B42;
+}
+
+.tabletop-theme td {
+    border-bottom-color: #3A1A12;
+}
+
+.tabletop-theme tbody tr:hover {
+    background-color: rgba(105, 73, 55, 0.1);
+}
+
+
+/* ---- Tabletop divider: two thick lines pointing to a center dot ------- */
+/*       ═══════════════ ● ═══════════════                                 */
+
+.tabletop-theme .divider,
+.tabletop-theme hr.divider {
+    position: relative;
+    height: 0;
+    border: none;
+    border-top: 3px solid #8ea897;
+    border-bottom: 3px solid #8ea897;
+    padding: 2px 0;
+    background: none;
+    margin: 2.5rem 0;
+    overflow: visible;
+    border-radius: 0;
+    width: auto;
+}
+
+/* Center dot with gap — uses a bg-colored mask behind the dot */
+.tabletop-theme .divider::before,
+.tabletop-theme hr.divider::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #8ea897;
+    outline: 8px solid var(--color-bg);
+    z-index: 1;
+}
+
+.tabletop-theme .divider::after,
+.tabletop-theme hr.divider::after {
+    content: none;
+    display: none;
+}
+
+
+/* ---- Code blocks ------------------------------------------------------ */
+
+.tabletop-theme pre {
+    border-color: #FF9B42;
+    box-shadow: 5px 5px 0 #FF9B42;
+}
+
+
+/* ---- Images ----------------------------------------------------------- */
+
+.tabletop-theme img {
+    border-color: #FF9B42;
+    box-shadow: 5px 5px 0 #FF9B42;
+}
+
+
+/* ---- Sidebar (dark mode) ---------------------------------------------- */
+
+.tabletop-theme .sidebar {
+    background: #25090a;
+    border-right-color: #FF9B42;
+}
+
+.tabletop-theme .sidebar-header {
+    border-bottom-color: #FF9B42;
+}
+
+.tabletop-theme .sidebar-header .site-title {
+    color: #FF9B42;
+    font-family: "Berenika-Book", "Georgia", serif;
+}
+
+.tabletop-theme .sidebar-header .site-title .title-shugg { color: #8ea897; }
+.tabletop-theme .sidebar-header .site-title .title-dot   { color: #FF9B42; }
+.tabletop-theme .sidebar-header .site-title .title-dev   { color: #3a7db5; }
+
+.tabletop-theme .sidebar-close,
+.tabletop-theme .sidebar-toggle {
+    color: var(--color-text);
+    border: none;
+    box-shadow: none;
+}
+
+.tabletop-theme .sidebar-close:hover,
+.tabletop-theme .sidebar-toggle:hover {
+    color: #FF9B42;
+    background: transparent;
+    transform: none;
+    box-shadow: none;
+}
+
+.tabletop-theme .sidebar-nav .button-nav {
+    border-color: #8ea897;
+    box-shadow: 4px 4px 0 #8ea897;
+    color: var(--color-text);
+}
+
+.tabletop-theme .sidebar-nav .button-nav:hover {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    box-shadow: 2px 2px 0 #8ea897;
+}
+
+.tabletop-theme .sidebar-nav button {
+    border-color: #8ea897;
+    box-shadow: 4px 4px 0 #8ea897;
+    color: var(--color-text);
+}
+
+.tabletop-theme .sidebar-nav button:hover {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    box-shadow: 2px 2px 0 #8ea897;
+}
+
+
+/* ==========================================================================
+ * Light mode overrides
+ * ======================================================================== */
+
+/* ---- Headings: Sandy Brown / Dusty Olive alternating ------------------------ */
+
+.tabletop-theme.light-mode h1 { color: #D47A2A; }
+.tabletop-theme.light-mode h2 { color: #5E7A66; }
+.tabletop-theme.light-mode h3 { color: #D47A2A; }
+.tabletop-theme.light-mode h4 { color: #5E7A66; }
+.tabletop-theme.light-mode h5 { color: #D47A2A; }
+.tabletop-theme.light-mode h6 { color: #5E7A66; }
+
+
+/* ---- Site header / nav (light mode) ----------------------------------- */
+
+.tabletop-theme.light-mode .site-header {
+    background-color: #FFEADF;
+    border-bottom-color: #5E7A66;
+}
+
+.tabletop-theme.light-mode .site-header .site-title .title-shugg { color: #D47A2A; }
+.tabletop-theme.light-mode .site-header .site-title .title-dot   { color: #D47A2A; }
+.tabletop-theme.light-mode .site-header .site-title .title-dev   { color: #5E7A66; }
+
+.tabletop-theme.light-mode .site-header .site-title:hover .title-shugg,
+.tabletop-theme.light-mode .site-header .site-title:hover .title-dot,
+.tabletop-theme.light-mode .site-header .site-title:hover .title-dev {
+    color: var(--color-text);
+}
+
+.tabletop-theme.light-mode .site-header a.button-nav,
+.tabletop-theme.light-mode .site-header button:not(.sidebar-toggle):not(.sidebar-close) {
+    color: var(--color-text);
+    border-color: #D47A2A;
+    box-shadow: 4px 4px 0 #D47A2A;
+}
+
+.tabletop-theme.light-mode .site-header a.button-nav:hover,
+.tabletop-theme.light-mode .site-header button:not(.sidebar-toggle):not(.sidebar-close):hover {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 #D47A2A;
+}
+
+.tabletop-theme.light-mode .site-header a.button-nav:active,
+.tabletop-theme.light-mode .site-header button:not(.sidebar-toggle):not(.sidebar-close):active {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    transform: translate(4px, 4px);
+    box-shadow: 0 0 0 #D47A2A;
+}
+
+
+/* ---- Footer (light mode) ---------------------------------------------- */
+
+.tabletop-theme.light-mode .site-footer a {
+    color: #5E7A66;
+}
+
+.tabletop-theme.light-mode .site-footer a:hover {
+    color: #D47A2A;
+}
+
+
+/* ---- Links (light mode) ----------------------------------------------- */
+
+.tabletop-theme.light-mode a {
+    color: #326a9a;
+}
+
+.tabletop-theme.light-mode a:hover,
+.tabletop-theme.light-mode a:focus {
+    color: #3a7db5;
+}
+
+.tabletop-theme.light-mode a:active {
+    color: #D47A2A;
+}
+
+.tabletop-theme.light-mode .text-link {
+    color: #326a9a;
+}
+
+.tabletop-theme.light-mode .text-link:hover,
+.tabletop-theme.light-mode .text-link:focus {
+    color: #3a7db5;
+}
+
+
+/* ---- Labels / muted text (light mode) --------------------------------- */
+
+.tabletop-theme.light-mode label,
+.tabletop-theme.light-mode .label-main {
+    color: #5E7A66;
+}
+
+
+/* ---- Boxes (cream paper, light mode) ---------------------------------- */
+
+.tabletop-theme.light-mode .box {
+    background: #FFF5EF;
+    border: 3px solid #5E7A66;
+    box-shadow: 5px 5px 0 #5E7A66;
+    border-top: 3px solid #3a7db5;
+}
+
+.tabletop-theme.light-mode .box-1 {
+    border-color: #D47A2A;
+    box-shadow: 5px 5px 0 #D47A2A;
+    border-top-color: #FFB574;
+}
+
+.tabletop-theme.light-mode .box-2 {
+    border-color: #5E7A66;
+    box-shadow: 5px 5px 0 #5E7A66;
+    border-top-color: #3a7db5;
+}
+
+.tabletop-theme.light-mode .box-3 {
+    border-color: #3a7db5;
+    box-shadow: 5px 5px 0 #3a7db5;
+    border-top-color: #5a94c4;
+}
+
+
+/* ---- Buttons (light mode) --------------------------------------------- */
+
+.tabletop-theme.light-mode button,
+.tabletop-theme.light-mode .button-main,
+.tabletop-theme.light-mode .button-nav {
+    border-color: #D47A2A;
+    box-shadow: 4px 4px 0 #D47A2A;
+    color: #25090a;
+}
+
+.tabletop-theme.light-mode button:hover:enabled,
+.tabletop-theme.light-mode .button-main:hover:enabled,
+.tabletop-theme.light-mode .button-nav:hover:enabled,
+.tabletop-theme.light-mode button:hover,
+.tabletop-theme.light-mode .button-main:hover,
+.tabletop-theme.light-mode .button-nav:hover {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 #D47A2A;
+}
+
+.tabletop-theme.light-mode button:active:enabled,
+.tabletop-theme.light-mode .button-main:active:enabled,
+.tabletop-theme.light-mode .button-nav:active:enabled,
+.tabletop-theme.light-mode button:active,
+.tabletop-theme.light-mode .button-main:active,
+.tabletop-theme.light-mode .button-nav:active {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    transform: translate(4px, 4px);
+    box-shadow: 0 0 0 #D47A2A;
+}
+
+.tabletop-theme.light-mode button:focus-visible,
+.tabletop-theme.light-mode .button-main:focus-visible,
+.tabletop-theme.light-mode .button-nav:focus-visible {
+    outline-color: #326a9a;
+}
+
+
+/* ---- Inputs (light mode) ---------------------------------------------- */
+
+.tabletop-theme.light-mode input,
+.tabletop-theme.light-mode .input-main {
+    background-color: #FFF5EF;
+    color: #25090a;
+    border-bottom-color: #5E7A66;
+}
+
+.tabletop-theme.light-mode input:focus,
+.tabletop-theme.light-mode .input-main:focus {
+    border-bottom-color: #326a9a;
+    box-shadow: 0 1px 0 #326a9a;
+}
+
+.tabletop-theme.light-mode input::placeholder {
+    color: #5E7A66;
+    opacity: 0.7;
+}
+
+
+/* ---- Textarea (light mode) -------------------------------------------- */
+
+.tabletop-theme.light-mode textarea {
+    background-color: #FFF5EF;
+    color: #25090a;
+    border-color: #5E7A66;
+}
+
+.tabletop-theme.light-mode textarea:focus {
+    border-color: #D47A2A;
+}
+
+
+/* ---- Select (light mode) ---------------------------------------------- */
+
+.tabletop-theme.light-mode select {
+    background-color: #FFF5EF;
+    color: #25090a;
+    border-color: #5E7A66;
+}
+
+.tabletop-theme.light-mode select:focus {
+    border-color: #D47A2A;
+}
+
+
+/* ---- Tables (light mode) ---------------------------------------------- */
+
+.tabletop-theme.light-mode table {
+    border-color: #5E7A66;
+    box-shadow: 5px 5px 0 #5E7A66;
+}
+
+.tabletop-theme.light-mode .box table {
+    border: none;
+    box-shadow: none;
+}
+
+.tabletop-theme.light-mode thead {
+    border-bottom-color: #5E7A66;
+}
+
+.tabletop-theme.light-mode th {
+    color: #D47A2A;
+}
+
+.tabletop-theme.light-mode td {
+    border-bottom-color: #F0D5C8;
+}
+
+.tabletop-theme.light-mode tbody tr:hover {
+    background-color: rgba(115, 135, 123, 0.08);
+}
+
+
+/* ---- Tabletop divider (light mode) ------------------------------------ */
+
+.tabletop-theme.light-mode .divider,
+.tabletop-theme.light-mode hr.divider {
+    border-top-color: #5E7A66;
+    border-bottom-color: #5E7A66;
+}
+
+.tabletop-theme.light-mode .divider::before,
+.tabletop-theme.light-mode hr.divider::before {
+    background: #5E7A66;
+}
+
+
+/* ---- Code blocks (light mode) ----------------------------------------- */
+
+.tabletop-theme.light-mode pre {
+    border-color: #5E7A66;
+    box-shadow: 5px 5px 0 #5E7A66;
+}
+
+
+/* ---- Images (light mode) ---------------------------------------------- */
+
+.tabletop-theme.light-mode img {
+    border-color: #5E7A66;
+    box-shadow: 5px 5px 0 #5E7A66;
+}
+
+
+/* ---- Sidebar (light mode) --------------------------------------------- */
+
+.tabletop-theme.light-mode .sidebar {
+    background: #FFEADF;
+    border-right-color: #5E7A66;
+}
+
+.tabletop-theme.light-mode .sidebar-header {
+    border-bottom-color: #5E7A66;
+}
+
+.tabletop-theme.light-mode .sidebar-header .site-title {
+    color: #D47A2A;
+}
+
+.tabletop-theme.light-mode .sidebar-header .site-title .title-shugg { color: #D47A2A; }
+.tabletop-theme.light-mode .sidebar-header .site-title .title-dot   { color: #D47A2A; }
+.tabletop-theme.light-mode .sidebar-header .site-title .title-dev   { color: #5E7A66; }
+
+.tabletop-theme.light-mode .sidebar-close:hover,
+.tabletop-theme.light-mode .sidebar-toggle:hover {
+    color: #D47A2A;
+    background: transparent;
+    transform: none;
+    box-shadow: none;
+}
+
+.tabletop-theme.light-mode .sidebar-nav .button-nav,
+.tabletop-theme.light-mode .sidebar-nav button {
+    border-color: #D47A2A;
+    box-shadow: 4px 4px 0 #D47A2A;
+    color: var(--color-text);
+}
+
+.tabletop-theme.light-mode .sidebar-nav .button-nav:hover,
+.tabletop-theme.light-mode .sidebar-nav button:hover {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    box-shadow: 2px 2px 0 #D47A2A;
+}
