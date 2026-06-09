@@ -168,11 +168,13 @@ Here are a few notable mentions of things I've created (or am still creating):
 * [cobots](https://github.com/cwshugg/cobots) - My AI tooling setup: agents, skills, instructions, etc.
 * [Custom QMK firmware](https://github.com/cwshugg/qmk), for a mechanical keyboard I built.
 
-I've also dabbled with Vim plugins. Here are a few plugins I've written:
+I've also dabbled with Vim plugins.
+Here are a few I've written:
 
 * [argonaut.vim](https://github.com/cwshugg/argonaut.vim), a plugin that provides command-line argument parsing and rich tab completion for Vim commands.
 * [fops.vim](https://github.com/cwshugg/fops.vim), a plugin that provides several Vim commands for interacting with files.
 * [lexicon.vim](https://github.com/cwshugg/lexicon.vim), a plugin that uses the [Datamuse API](https://www.datamuse.com/api/) to perform dictionary and thesaurus lookups in-editor.
+* [merg.vim](https://github.com/cwshugg/merg.vim), a plugin that provides a cleaner interface for viewing git diffs and resolving git merge conflicts.
 * [dwarrowdelf](https://github.com/cwshugg/dwarrowdelf), my custom Vim theme.
 
 I also worked on some pretty neat projects in school. Here are some of my favorites:
