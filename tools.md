@@ -89,8 +89,8 @@ A collection of small tools.
 </div>
 <div class="box">
     <div class="tool-card">
-        <h3 style="margin: 0;"><i class="fas fa-dice" style="color: var(--color-accent3);"></i> <a href="/tools/diceroll" style="color: var(--color-accent2); text-decoration: none;">Dice Roll</a></h3>
-        <a href="/tools/diceroll" class="button-nav" style="width: auto; margin: 0;">Open →</a>
+        <h3 style="margin: 0;"><i class="fas fa-dice" style="color: var(--color-accent3);"></i> <a href="/tools/dice" style="color: var(--color-accent2); text-decoration: none;">Dice Roll</a></h3>
+        <a href="/tools/dice" class="button-nav" style="width: auto; margin: 0;">Open →</a>
     </div>
 </div>
 </div>

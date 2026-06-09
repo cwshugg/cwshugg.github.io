@@ -11,8 +11,6 @@ extra_js:
 
 ## Coin Flip
 
-Flip a virtual coin. Customize the side names and toggle the animation.
-
 <hr class="divider">
 
 ### Coin

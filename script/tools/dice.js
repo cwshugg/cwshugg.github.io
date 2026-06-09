@@ -18,7 +18,7 @@
     //  State                                                              //
     // ================================================================== //
 
-    var pool = { 4: 0, 6: 1, 8: 0, 10: 0, 12: 0, 20: 0 };
+    var pool = { 4: 1, 6: 1, 8: 1, 10: 1, 12: 1, 20: 1 };
     var customTypes = [];  // list of custom side counts added by the user
     var animationEnabled = true;
     var rolling = false;

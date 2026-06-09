@@ -1,12 +1,12 @@
 ---
 layout: default
 title: "Dice Roll"
-permalink: /tools/diceroll
+permalink: /tools/dice
 theme: tabletop
 extra_css:
-  - /css/tools/diceroll.css
+  - /css/tools/dice.css
 extra_js:
-  - /script/tools/diceroll.js
+  - /script/tools/dice.js
 ---
 
 <!-- SVG filter for rounding clip-path polygon edges -->
@@ -38,7 +38,7 @@ Build a pool of dice and roll them all at once.
         <div class="dr-pool-row" data-die="4">
             <span class="dr-pool-label">d4</span>
             <button class="dr-pool-btn dr-pool-minus" aria-label="Remove a d4">−</button>
-            <span class="dr-pool-count" id="dr-count-4">0</span>
+            <span class="dr-pool-count" id="dr-count-4">1</span>
             <button class="dr-pool-btn dr-pool-plus" aria-label="Add a d4">+</button>
         </div>
         <div class="dr-pool-row" data-die="6">
@@ -50,25 +50,25 @@ Build a pool of dice and roll them all at once.
         <div class="dr-pool-row" data-die="8">
             <span class="dr-pool-label">d8</span>
             <button class="dr-pool-btn dr-pool-minus" aria-label="Remove a d8">−</button>
-            <span class="dr-pool-count" id="dr-count-8">0</span>
+            <span class="dr-pool-count" id="dr-count-8">1</span>
             <button class="dr-pool-btn dr-pool-plus" aria-label="Add a d8">+</button>
         </div>
         <div class="dr-pool-row" data-die="10">
             <span class="dr-pool-label">d10</span>
             <button class="dr-pool-btn dr-pool-minus" aria-label="Remove a d10">−</button>
-            <span class="dr-pool-count" id="dr-count-10">0</span>
+            <span class="dr-pool-count" id="dr-count-10">1</span>
             <button class="dr-pool-btn dr-pool-plus" aria-label="Add a d10">+</button>
         </div>
         <div class="dr-pool-row" data-die="12">
             <span class="dr-pool-label">d12</span>
             <button class="dr-pool-btn dr-pool-minus" aria-label="Remove a d12">−</button>
-            <span class="dr-pool-count" id="dr-count-12">0</span>
+            <span class="dr-pool-count" id="dr-count-12">1</span>
             <button class="dr-pool-btn dr-pool-plus" aria-label="Add a d12">+</button>
         </div>
         <div class="dr-pool-row" data-die="20">
             <span class="dr-pool-label">d20</span>
             <button class="dr-pool-btn dr-pool-minus" aria-label="Remove a d20">−</button>
-            <span class="dr-pool-count" id="dr-count-20">0</span>
+            <span class="dr-pool-count" id="dr-count-20">1</span>
             <button class="dr-pool-btn dr-pool-plus" aria-label="Add a d20">+</button>
         </div>
     </div>
