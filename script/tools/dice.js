@@ -293,11 +293,14 @@
             var typeRows = resultsEl.querySelectorAll(".dr-type-row-dice");
             var lastEl = null;
             var maxDelay = 0;
+            var REVEAL_STAGGER = 120; // ms between each die's final reveal
 
             for (i = 0; i < allWrappers.length; i++) {
                 cycleIntervals.push(startNumberCycle(allWrappers[i].valueEl, allWrappers[i].die));
             }
 
+            // Assign each die a reveal order index (within its type row)
+            var revealIndex = 0;
             for (i = 0; i < typeRows.length; i++) {
                 var rowChildren = typeRows[i].children;
                 for (j = 0; j < rowChildren.length; j++) {
@@ -308,30 +311,43 @@
                         maxDelay = delay;
                         lastEl = rowChildren[j];
                     }
+                    // Tag each wrapper with its reveal order
+                    allWrappers[revealIndex].revealDelay = revealIndex * REVEAL_STAGGER;
+                    revealIndex++;
                 }
             }
 
-            // When the last animation finishes, stop all cycling and show final values
+            // When the tumble animation finishes, stagger the reveals
             var animDone = false;
             var onEnd = function () {
                 if (animDone) return;
                 animDone = true;
                 lastEl.removeEventListener("animationend", onEnd);
-                for (var k = 0; k < cycleIntervals.length; k++) {
-                    clearInterval(cycleIntervals[k]);
-                    allWrappers[k].valueEl.textContent = allWrappers[k].finalValue;
-                    allWrappers[k].valueEl.classList.add("dr-settled");
+
+                // Reveal each die one at a time with a stagger
+                for (var k = 0; k < allWrappers.length; k++) {
+                    (function (idx) {
+                        setTimeout(function () {
+                            clearInterval(cycleIntervals[idx]);
+                            allWrappers[idx].valueEl.textContent = allWrappers[idx].finalValue;
+                            allWrappers[idx].valueEl.classList.add("dr-settled");
+
+                            // Show total after the very last die reveals
+                            if (idx === allWrappers.length - 1) {
+                                showTotal(total);
+                                rolling = false;
+                                rollBtn.disabled = false;
+                                setPoolButtonsDisabled(false);
+                            }
+                        }, allWrappers[idx].revealDelay);
+                    })(k);
                 }
-                showTotal(total);
-                rolling = false;
-                rollBtn.disabled = false;
-                setPoolButtonsDisabled(false);
             };
             lastEl.addEventListener("animationend", onEnd);
 
-            // Safety timeout: force cleanup if animationend never fires
-            // 0.6s animation + max stagger delay + 300ms buffer
-            var safetyMs = 600 + maxDelay + 300;
+            // Safety timeout: animation + stagger delays + buffer
+            var totalRevealMs = allWrappers.length * REVEAL_STAGGER;
+            var safetyMs = 600 + maxDelay + totalRevealMs + 300;
             setTimeout(function () {
                 if (!animDone) { onEnd(); }
             }, safetyMs);
