@@ -7,6 +7,7 @@ extra_css:
   - /css/tools/words.css
 extra_js:
   - /script/tools/words.js
+tags: [writing]
 ---
 
 ## Word Lookup

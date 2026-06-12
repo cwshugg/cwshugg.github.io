@@ -4,6 +4,7 @@ title: "ASCII Table"
 permalink: /tools/ascii
 extra_js:
   - /script/tools/ascii.js
+tags: [programming]
 ---
 
 ## ASCII Table

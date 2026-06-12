@@ -6,6 +6,7 @@ extra_css:
   - /css/tools/color.css
 extra_js:
   - /script/tools/color.js
+tags: [programming]
 ---
 
 ## Color Picker

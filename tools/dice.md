@@ -7,6 +7,7 @@ extra_css:
   - /css/tools/dice.css
 extra_js:
   - /script/tools/dice.js
+tags: [gaming]
 ---
 
 <!-- SVG filter for rounding clip-path polygon edges -->

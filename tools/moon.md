@@ -8,6 +8,7 @@ extra_css:
 extra_js:
   - /script/lib/celestial.js
   - /script/tools/moon.js
+tags: [astronomy]
 ---
 
 ## Moon Phase

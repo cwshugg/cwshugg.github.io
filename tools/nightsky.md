@@ -7,6 +7,7 @@ extra_css:
   - /css/tools/nightsky.css
 extra_js:
   - /script/tools/nightsky.js
+tags: [astronomy]
 ---
 
 ## Night Sky

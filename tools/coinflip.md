@@ -7,6 +7,7 @@ extra_css:
   - /css/tools/coinflip.css
 extra_js:
   - /script/tools/coinflip.js
+tags: [gaming]
 ---
 
 ## Coin Flip

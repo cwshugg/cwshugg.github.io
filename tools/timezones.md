@@ -6,6 +6,7 @@ extra_css:
   - /css/tools/timezones.css
 extra_js:
   - /script/tools/timezones.js
+tags: [travel]
 ---
 
 ## Time Zones

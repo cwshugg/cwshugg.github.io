@@ -5,6 +5,7 @@ permalink: /tools/wordcount
 theme: woodland
 extra_js:
   - /script/tools/wordcount.js
+tags: [writing]
 ---
 
 ## Word Counter
