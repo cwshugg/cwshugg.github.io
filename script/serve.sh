@@ -19,6 +19,10 @@
 #
 #  The site will be available at http://localhost:<port>
 #
+#  LiveReload runs on port <port>+1 by default (e.g. 4001 when using port
+#  4000). Override with the LIVERELOAD_PORT environment variable:
+#    LIVERELOAD_PORT=35729 ./script/serve.sh
+#
 # =============================================================================
 
 set -euo pipefail
@@ -37,6 +41,11 @@ while [[ $# -gt 0 ]]; do
             echo ""
             echo "  -p, --port PORT   Port to serve on (default: 4000)"
             echo "  -h, --help        Show this help message"
+            echo ""
+            echo "Environment variables:"
+            echo "  PORT              Port to serve on (default: 4000)"
+            echo "  HOST              Host to bind to (default: 0.0.0.0)"
+            echo "  LIVERELOAD_PORT   LiveReload port (default: PORT + 1)"
             exit 0
             ;;
         *)
@@ -52,6 +61,7 @@ done
 # ---------------------------------------------------------------------------
 HOST="${HOST:-0.0.0.0}"
 PORT="${PORT:-4000}"
+LIVERELOAD_PORT="${LIVERELOAD_PORT:-$((PORT + 1))}"
 
 # ---------------------------------------------------------------------------
 #  Colors & helpers
@@ -140,8 +150,9 @@ echo -e "${BOLD}─────────────────────�
 echo -e "${GREEN}  Starting Jekyll development server${NC}"
 echo -e "${BOLD}────────────────────────────────────────${NC}"
 echo ""
-echo -e "  Local:   ${CYAN}http://localhost:${PORT}${NC}"
-echo -e "  Network: ${CYAN}http://${HOST}:${PORT}${NC}"
+echo -e "  Local:      ${CYAN}http://localhost:${PORT}${NC}"
+echo -e "  Network:    ${CYAN}http://${HOST}:${PORT}${NC}"
+echo -e "  LiveReload: ${CYAN}http://localhost:${LIVERELOAD_PORT}${NC}"
 echo ""
 echo -e "  Press ${BOLD}Ctrl+C${NC} to stop the server."
 echo ""
@@ -150,4 +161,5 @@ bundle exec jekyll serve \
     --host "$HOST" \
     --port "$PORT" \
     --livereload \
+    --livereload-port "$LIVERELOAD_PORT" \
     --open-url

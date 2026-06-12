@@ -29,8 +29,6 @@ extra_js:
 
 Build a pool of dice and roll them all at once.
 
-<hr class="divider">
-
 ### Dice Pool
 
 <div class="box box-1">

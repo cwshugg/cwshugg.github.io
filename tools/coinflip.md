@@ -11,10 +11,6 @@ extra_js:
 
 ## Coin Flip
 
-<hr class="divider">
-
-### Coin
-
 <div class="box box-1">
     <div class="cf-coin-stage">
         <div id="cf-coin" class="cf-coin">

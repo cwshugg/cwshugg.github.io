@@ -279,6 +279,7 @@
             rowInfos.sort(function (a, b) { return a.finalValue - b.finalValue; });
 
             for (j = 0; j < rowInfos.length; j++) {
+                rowInfos[j].positionInGroup = j;
                 rowDice.appendChild(rowInfos[j].wrapper);
                 allWrappers.push(rowInfos[j]);
             }
@@ -293,14 +294,15 @@
             var typeRows = resultsEl.querySelectorAll(".dr-type-row-dice");
             var lastEl = null;
             var maxDelay = 0;
-            var REVEAL_STAGGER = 120; // ms between each die's final reveal
+            var REVEAL_STAGGER = 70; // ms between each column's final reveal
 
             for (i = 0; i < allWrappers.length; i++) {
                 cycleIntervals.push(startNumberCycle(allWrappers[i].valueEl, allWrappers[i].die));
             }
 
-            // Assign each die a reveal order index (within its type row)
-            var revealIndex = 0;
+            // Assign tumble animation stagger (within each type row)
+            var wrapperIdx = 0;
+            var maxColumn = 0;
             for (i = 0; i < typeRows.length; i++) {
                 var rowChildren = typeRows[i].children;
                 for (j = 0; j < rowChildren.length; j++) {
@@ -311,20 +313,25 @@
                         maxDelay = delay;
                         lastEl = rowChildren[j];
                     }
-                    // Tag each wrapper with its reveal order
-                    allWrappers[revealIndex].revealDelay = revealIndex * REVEAL_STAGGER;
-                    revealIndex++;
+                    // Set reveal delay based on column (position within type group)
+                    allWrappers[wrapperIdx].revealDelay = allWrappers[wrapperIdx].positionInGroup * REVEAL_STAGGER;
+                    if (allWrappers[wrapperIdx].positionInGroup > maxColumn) {
+                        maxColumn = allWrappers[wrapperIdx].positionInGroup;
+                    }
+                    wrapperIdx++;
                 }
             }
 
-            // When the tumble animation finishes, stagger the reveals
+            // When the tumble animation finishes, reveal dice in synchronized columns
             var animDone = false;
             var onEnd = function () {
                 if (animDone) return;
                 animDone = true;
                 lastEl.removeEventListener("animationend", onEnd);
 
-                // Reveal each die one at a time with a stagger
+                // Reveal dice by column — all dice sharing a positionInGroup
+                // reveal simultaneously, with REVEAL_STAGGER between columns
+                var revealedCount = 0;
                 for (var k = 0; k < allWrappers.length; k++) {
                     (function (idx) {
                         setTimeout(function () {
@@ -332,8 +339,9 @@
                             allWrappers[idx].valueEl.textContent = allWrappers[idx].finalValue;
                             allWrappers[idx].valueEl.classList.add("dr-settled");
 
-                            // Show total after the very last die reveals
-                            if (idx === allWrappers.length - 1) {
+                            revealedCount++;
+                            // Show total after every die has been revealed
+                            if (revealedCount === allWrappers.length) {
                                 showTotal(total);
                                 rolling = false;
                                 rollBtn.disabled = false;
@@ -346,7 +354,7 @@
             lastEl.addEventListener("animationend", onEnd);
 
             // Safety timeout: animation + stagger delays + buffer
-            var totalRevealMs = allWrappers.length * REVEAL_STAGGER;
+            var totalRevealMs = (maxColumn + 1) * REVEAL_STAGGER;
             var safetyMs = 600 + maxDelay + totalRevealMs + 300;
             setTimeout(function () {
                 if (!animDone) { onEnd(); }
