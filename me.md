@@ -17,10 +17,8 @@ extra_css:
 ## <span style="color: var(--color-accent2);"><i class="fa fa-scroll"></i></span> Background
 
 I'm a software engineer with a passion for invention and security.
-I graduated from Virginia Tech in 2021 with a B.S. in computer science and a minor in cyber security.
-A year later, I graduated with a M.S. (also in computer science), focusing on computer systems and security, with an emphasis on fuzzing.
-
 I enjoy software development, exploring software security, writing, and generally creating things in my free time.
+Thanks for stopping by 😁
 
 ### Timeline
 
@@ -96,7 +94,7 @@ I enjoy software development, exploring software security, writing, and generall
 <code class="color-acc3">Linux Kernel</code><br>
 <code class="color-acc5">Fuzzing</code><br>
 <code class="color-acc2">Software Security</code>
-<code class="color-acc2">Network Security</code>
+<code class="color-acc2">Threat Modeling</code>
 <code class="color-acc2">Cache Timing Attacks</code>
 <code class="color-acc2">Speculative Execution Attacks</code>
 </p>

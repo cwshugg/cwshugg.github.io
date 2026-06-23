@@ -11,6 +11,7 @@ tags: [programming]
 
 ## Color Picker
 
+After years of opening up Microsoft Paint, or using the first RGB wheel I could find online, I figured I'd go ahead and make one.
 Use this to pick a color in RGB or hex and view its values.
 
 <hr class="divider">
