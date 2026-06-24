@@ -85,6 +85,41 @@
     --divider-color1: var(--color-accent1);
     --divider-color2: var(--color-accent2);
     --divider-color3: var(--color-accent3);
+
+    /* ---- Tools page: fixed per-tool icon colors ----------------------- */
+    /* Each tool icon on /tools uses a FIXED color that stays identical
+       across every theme (woodland/retro/tabletop/galactic) — they do NOT
+       reference the theme accent vars. The values below are the dark-mode
+       appearance (dark is the default); light-mode counterparts are tuned
+       darker/more saturated under `body.light-mode` so they stay visible on
+       the parchment background. */
+    --tool-picker:    #F791FF;   /* Color Picker  — pink                */
+    --tool-ascii:     #3DDC84;   /* ASCII Table   — bright green        */
+    --tool-timezones: #FF414E;   /* Time Zones    — red                 */
+    --tool-moon:      #F2F2F2;   /* Moon Phase    — white               */
+    --tool-seasons:   #4DA3FF;   /* Earth Seasons — blue                */
+    --tool-nightsky:  #FFF3B0;   /* Night Sky     — light yellow        */
+    --tool-wordcount: #D2A679;   /* Word Counter  — tan / light-brown   */
+    --tool-words:     #FF8C42;   /* Word Lookup   — orange              */
+    --tool-coinflip:  #FFC107;   /* Coin Flip     — gold                */
+    --tool-dice:      #B07CF0;   /* Dice Roll     — purple              */
+}
+
+/* ---- Tools page: light-mode per-tool icon colors --------------------- */
+/* Darker/more saturated hues (same hue family) so each icon reads well on
+   the light parchment background. "White" (Moon Phase) becomes a silvery
+   grey so it stays visible instead of vanishing into the background. */
+body.light-mode {
+    --tool-picker:    #C171C7;   /* Color Picker  — pink                */
+    --tool-ascii:     #1F9E4D;   /* ASCII Table   — green               */
+    --tool-timezones: #FF414E;   /* Time Zones    — red                 */
+    --tool-moon:      #8A8F98;   /* Moon Phase    — silvery grey        */
+    --tool-seasons:   #1E6FD0;   /* Earth Seasons — blue                */
+    --tool-nightsky:  #B59B2E;   /* Night Sky     — muted light yellow  */
+    --tool-wordcount: #9C6B3F;   /* Word Counter  — light-brown         */
+    --tool-words:     #D2691E;   /* Word Lookup   — orange              */
+    --tool-coinflip:  #B8860B;   /* Coin Flip     — dark goldenrod      */
+    --tool-dice:      #7B3FCC;   /* Dice Roll     — purple              */
 }
 
 
@@ -814,9 +849,19 @@ table {
     transition: transform 0.2s ease;
 }
 
-.tool-icon:nth-child(3n+1) i { color: var(--color-accent1); }
-.tool-icon:nth-child(3n+2) i { color: var(--color-accent2); }
-.tool-icon:nth-child(3n+3) i { color: var(--color-accent3); }
+/* Fixed per-tool icon colors (theme-independent; see :root + body.light-mode
+   above). These replace the old `.tool-icon:nth-child(3n+...)` accent-cycling
+   rules so each tool keeps the same color regardless of theme or ordering. */
+.tool-icon--picker    i { color: var(--tool-picker); }
+.tool-icon--ascii     i { color: var(--tool-ascii); }
+.tool-icon--timezones i { color: var(--tool-timezones); }
+.tool-icon--moon      i { color: var(--tool-moon); }
+.tool-icon--seasons   i { color: var(--tool-seasons); }
+.tool-icon--nightsky  i { color: var(--tool-nightsky); }
+.tool-icon--wordcount i { color: var(--tool-wordcount); }
+.tool-icon--words     i { color: var(--tool-words); }
+.tool-icon--coinflip  i { color: var(--tool-coinflip); }
+.tool-icon--dice      i { color: var(--tool-dice); }
 
 .tool-icon span {
     font-family: var(--font-heading, inherit);
@@ -831,9 +876,18 @@ table {
     transform: scale(1.15);
 }
 
-.tool-icon:hover span {
-    color: var(--color-accent2);
-}
+/* Hover: label text matches its tool's fixed icon color (light/dark variants
+   track automatically via the same per-tool vars used for the icons above). */
+.tool-icon--picker:hover    span { color: var(--tool-picker); }
+.tool-icon--ascii:hover     span { color: var(--tool-ascii); }
+.tool-icon--timezones:hover span { color: var(--tool-timezones); }
+.tool-icon--moon:hover      span { color: var(--tool-moon); }
+.tool-icon--seasons:hover   span { color: var(--tool-seasons); }
+.tool-icon--nightsky:hover  span { color: var(--tool-nightsky); }
+.tool-icon--wordcount:hover span { color: var(--tool-wordcount); }
+.tool-icon--words:hover     span { color: var(--tool-words); }
+.tool-icon--coinflip:hover  span { color: var(--tool-coinflip); }
+.tool-icon--dice:hover      span { color: var(--tool-dice); }
 
 /* Click: bounce down */
 @keyframes tool-bounce {
