@@ -6,19 +6,17 @@ extra_css:
   - /css/me.css
 ---
 
-<div style="text-align: center;">
-    <div style="width: 280px; height: 280px; border-radius: 50%; overflow: hidden; margin: 0 auto;">
-        <img src="/images/polygon_guy.png" alt="polygon guy" style="width: 100%; height: 100%; object-fit: cover; object-position: center 60%; border: none; box-shadow: none;">
-    </div>
-</div>
-
 # About Me
 
 ## <span style="color: var(--color-accent2);"><i class="fa fa-scroll"></i></span> Background
 
-I'm a software engineer with a passion for invention and security.
+I'm a software engineer with a passion for invention, efficient design, security, and creativity.
 I enjoy software development, exploring software security, writing, and generally creating things in my free time.
-Thanks for stopping by 😁
+
+Check out my skill set, my engineering experience, or some of my projects, below.
+Feel free to browse the site and make use of the various tools I've built.
+
+Thanks for stopping by! 👍
 
 ### Timeline
 
@@ -165,6 +163,12 @@ Here are a few notable mentions of things I've created (or am still creating):
 * [shuggtools](https://github.com/cwshugg/shuggtools) - My dotfiles, scripts, vim configurations, and everything else that I use to set up my command-line environment.
 * [cobots](https://github.com/cwshugg/cobots) - My AI tooling setup: agents, skills, instructions, etc.
 * [Custom QMK firmware](https://github.com/cwshugg/qmk), for a mechanical keyboard I built.
+
+I'm a big enthusiast of note-taking and building a personal "[second brain](https://fortelabs.com/blog/basboverview/);" it's enabled me to store and retrieve huge amounts of useful information, which makes me a better engineer.
+As part of this effort, I've built some tooling to help me track to-dos and keep my notes organized:
+
+* [ragtag](https://github.com/cwshugg/ragtag) - A command-line tool for tagging notes and tracking tasks in arbitrary plain-text note files (in any format).
+* [ragtag.vim](https://github.com/cwshugg/ragtag.vim) - A Vim plugin that enables me to use ragtag in-line when editing files in Vim.
 
 I've also dabbled with Vim plugins.
 Here are a few I've written:
