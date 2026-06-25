@@ -30,8 +30,9 @@ Thanks for stopping by! 👍
         </p>
         <p>
             Specifically, I've been heavily contributing to Microsoft's <a href="https://techcommunity.microsoft.com/blog/AzureInfrastructureBlog/securing-azure-infrastructure-with-silicon-innovation/4293834">Azure Integrated HSM</a> (<strong>HSM</strong> meaning <strong>Hardware Security Module</strong>).
-            This is a small hardware device that offloads crypto operations and allows keys to be stored and used in a hardware isolated TEE (Trusted Execution Environment).
+            This is a small hardware device that serves as a local FIPS 140-3 key cache for Azure VMs, offloading key storage and crypto operations to a hardware isolated TEE (Trusted Execution Environment).
             Check out the <a href="https://github.com/microsoft/AziHSM-Guest">AziHSM GitHub repo</a> for a little more information.
+            If you want to see a brief 2-minute description + demonstration, check out <a href="https://www.youtube.com/live/nUzOFr3NrAo?si=la2iJDiQZE1bk9NZ&t=14729">this clip from the 2026 Confidential Computing Summit</a>
         </p>
     </div>
     <div class="career-entry">
