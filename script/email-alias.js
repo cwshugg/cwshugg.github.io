@@ -4,12 +4,12 @@
     "use strict";
 
     var ORIGINAL_ADDRESS = "connor@shugg.dev";
-    var ALIAS_PREFIX = "w-";
+    var ALIAS_PREFIX = "hello-";
     var ALIAS_DOMAIN = "@bootscooter.net";
-    var ALIAS_LENGTH = 24;
+    var ALIAS_LENGTH = 10;
     var ALIAS_STORAGE_KEY = "email-alias";
-    var ALPHANUMERIC = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    var ALIAS_PATTERN = /^w-[A-Za-z0-9]{24}@bootscooter\.net$/;
+    var CROCKFORD_BASE32 = "0123456789abcdefghjkmnpqrstvwxyz";
+    var ALIAS_PATTERN = /^hello-[0123456789abcdefghjkmnpqrstvwxyz]{10}@bootscooter\.net$/;
 
     /**
      * Returns a random character index, preferring unbiased Web Crypto output.
@@ -36,14 +36,14 @@
     }
 
     /**
-     * Generates an alias containing exactly 24 random ASCII letters and digits.
+     * Generates an alias containing exactly 10 lowercase Crockford Base32 characters.
      * @returns {string} The generated email address.
      */
     function generateAlias() {
         var randomPart = "";
 
         while (randomPart.length < ALIAS_LENGTH) {
-            randomPart += ALPHANUMERIC.charAt(randomIndex(ALPHANUMERIC.length));
+            randomPart += CROCKFORD_BASE32.charAt(randomIndex(CROCKFORD_BASE32.length));
         }
 
         return ALIAS_PREFIX + randomPart + ALIAS_DOMAIN;
