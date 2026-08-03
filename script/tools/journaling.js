@@ -919,7 +919,7 @@
         var selection = window.getSelection ? window.getSelection() : null;
         if (!card || card.getAttribute("draggable") !== "true" ||
                 dragState.nativeBlocked || isInteractiveDescendant(event.target, card) ||
-                (selection && !selection.isCollapsed)) {
+                event.altKey || (selection && !selection.isCollapsed)) {
             event.preventDefault();
             cleanupDragState();
             return;
@@ -936,7 +936,11 @@
     /** Track a native desktop drag over pinned cards only. */
     function handleDragOver(event) {
         var card = pinnedCardFrom(event.target);
-        if (!dragState.id || !card) {
+        if (!dragState.id) {
+            return;
+        }
+        if (!card) {
+            markDropTarget(null, event.clientY);
             return;
         }
         event.preventDefault();
@@ -944,6 +948,22 @@
             event.dataTransfer.dropEffect = "move";
         }
         markDropTarget(card, event.clientY);
+    }
+
+    /** Resolve and commit the native drop at its final nested event target. */
+    function handleDrop(event) {
+        var card;
+        if (!dragState.id) {
+            return;
+        }
+        event.preventDefault();
+        card = pinnedCardFrom(event.target);
+        if (!card) {
+            finishDrag(false);
+            return;
+        }
+        markDropTarget(card, event.clientY);
+        finishDrag(true);
     }
 
     /** Remember a card press; touch/pen dragging starts only after a movement threshold. */
@@ -990,10 +1010,16 @@
     /** Complete or cancel the currently captured touch/pen drag. */
     function handlePointerFinish(event) {
         var wasActive;
+        var target;
         if (dragState.pointerId !== event.pointerId) {
             return;
         }
         wasActive = Boolean(dragState.id);
+        if (wasActive && event.type === "pointerup") {
+            target = document.elementFromPoint ?
+                document.elementFromPoint(event.clientX, event.clientY) : event.target;
+            markDropTarget(pinnedCardFrom(target), event.clientY);
+        }
         finishDrag(wasActive && event.type === "pointerup");
         dragState.suppressClick = wasActive && event.type === "pointerup";
     }
@@ -1337,12 +1363,7 @@
         elements.promptList.addEventListener("keydown", handleReorderKeydown);
         elements.promptList.addEventListener("dragstart", handleDragStart);
         elements.promptList.addEventListener("dragover", handleDragOver);
-        elements.promptList.addEventListener("drop", function (event) {
-            if (dragState.id) {
-                event.preventDefault();
-                finishDrag(true);
-            }
-        });
+        elements.promptList.addEventListener("drop", handleDrop);
         elements.promptList.addEventListener("dragend", function () {
             finishDrag(false);
         });

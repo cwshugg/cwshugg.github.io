@@ -12,6 +12,6 @@
     {"id":"builtin-008","text":"What did you get stressed about that isn't in your control?","tags":["mindfulness"]},
     {"id":"builtin-009","text":"What was the most unexpected thing you were grateful for today?","tags":["gratitude"]},
     {"id":"builtin-010","text":"What was the nicest thing someone said to you today?","tags":["reflection", "gratitude"]},
-    {"id":"builtin-012","text":"What made you smile today?","tags":["reflection", "gratitude"]}
+    {"id":"builtin-011","text":"What made you smile today?","tags":["reflection", "gratitude"]}
   ]
 }
