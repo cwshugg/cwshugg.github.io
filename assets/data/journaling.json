@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "catalogVersion": "2026-08-02",
+  "prompts": [
+    {"id":"builtin-001","text":"What are your daily affirmations?","tags":["affirmations", "confidence"]},
+    {"id":"builtin-002","text":"What are you grateful for today?","tags":["gratitude"]},
+    {"id":"builtin-003","text":"What are you grateful for in your life?","tags":["gratitude"]},
+    {"id":"builtin-004","text":"What is something you accomplished today?","tags":["confidence", "reflection"]},
+    {"id":"builtin-005","text":"What is one good thing that happened to you today?","tags":["reflection"]},
+    {"id":"builtin-006","text":"What would you be sad about if it was missing from your life?","tags":["gratitude"]},
+    {"id":"builtin-007","text":"What is something you usually don't think about that you can appreciate?","tags":["gratitude"]},
+    {"id":"builtin-008","text":"What did you get stressed about that isn't in your control?","tags":["mindfulness"]},
+    {"id":"builtin-009","text":"What was the most unexpected thing you were grateful for today?","tags":["gratitude"]},
+    {"id":"builtin-010","text":"What was the nicest thing someone said to you today?","tags":["reflection", "gratitude"]},
+    {"id":"builtin-012","text":"What made you smile today?","tags":["reflection", "gratitude"]}
+  ]
+}

@@ -5,7 +5,7 @@
 
 # My AI tooling
 .cobots/
-test/
+test/*
 
 # Jekyll build output
 _site/
@@ -19,4 +19,3 @@ Gemfile.lock
 
 # Image artifacts
 *sec.endpointdlp
-

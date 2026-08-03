@@ -103,6 +103,7 @@
     --tool-words:     #FF8C42;   /* Word Lookup   — orange              */
     --tool-coinflip:  #FFC107;   /* Coin Flip     — gold                */
     --tool-dice:      #B07CF0;   /* Dice Roll     — purple              */
+    --tool-journaling: #52D6A3; /* Journaling    — teal                */
 }
 
 /* ---- Tools page: light-mode per-tool icon colors --------------------- */
@@ -120,6 +121,7 @@ body.light-mode {
     --tool-words:     #D2691E;   /* Word Lookup   — orange              */
     --tool-coinflip:  #B8860B;   /* Coin Flip     — dark goldenrod      */
     --tool-dice:      #7B3FCC;   /* Dice Roll     — purple              */
+    --tool-journaling: #167A5A; /* Journaling    — teal                */
 }
 
 
@@ -864,6 +866,7 @@ table {
 .tool-icon--words     i { color: var(--tool-words); }
 .tool-icon--coinflip  i { color: var(--tool-coinflip); }
 .tool-icon--dice      i { color: var(--tool-dice); }
+.tool-icon--journaling i { color: var(--tool-journaling); }
 
 .tool-icon span {
     font-family: var(--font-heading, inherit);
@@ -894,6 +897,7 @@ table {
 .tool-icon--words:hover     span { color: var(--tool-words); }
 .tool-icon--coinflip:hover  span { color: var(--tool-coinflip); }
 .tool-icon--dice:hover      span { color: var(--tool-dice); }
+.tool-icon--journaling:hover span { color: var(--tool-journaling); }
 
 /* Click: bounce down */
 @keyframes tool-bounce {
