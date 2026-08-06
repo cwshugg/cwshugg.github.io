@@ -5,7 +5,7 @@
     var CATALOG_SCHEMA_VERSION = 1;
     var INSTALLATION_VERSION = 1;
     var STATE_VERSION = 2;
-    var DEFAULT_RANDOM_COUNT = 5;
+    var DEFAULT_RANDOM_COUNT = 3;
     var MIN_RANDOM_COUNT = 1;
     var MAX_RANDOM_COUNT = 20;
     var MAX_PROMPT_LENGTH = 500;
@@ -38,6 +38,7 @@
     var storageBackend = null;
     var initialized = false;
     var customIdCounter = 0;
+    var promptLayoutFrame = null;
     var dragState = {
         id: null,
         targetId: null,
@@ -70,6 +71,16 @@
     /** Return a number constrained to an inclusive range. */
     function clamp(value, minimum, maximum) {
         return Math.min(maximum, Math.max(minimum, value));
+    }
+
+    /** Return the smallest whole rule-row count that contains a measured height. */
+    function quantizedRuleRows(contentHeight, ruleSpacing, minimumRows) {
+        var minimum = Math.max(1, Math.ceil(Number(minimumRows) || 1));
+        if (!Number.isFinite(contentHeight) || !Number.isFinite(ruleSpacing) ||
+                contentHeight < 0 || ruleSpacing <= 0) {
+            return minimum;
+        }
+        return Math.max(minimum, Math.ceil((contentHeight - 0.01) / ruleSpacing));
     }
 
     /** Normalize one textual tag without changing its internal characters. */
@@ -290,6 +301,16 @@
         var day = String(date.getDate());
         return date.getFullYear() + "-" + (month.length < 2 ? "0" + month : month) +
             "-" + (day.length < 2 ? "0" + day : day);
+    }
+
+    /** Format a date in the visitor's locale using the full local calendar date. */
+    function formatLocalDate(date) {
+        return new Intl.DateTimeFormat(undefined, {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+        }).format(date);
     }
 
     /** Compute stable FNV-1a over UTF-8 bytes. */
@@ -583,11 +604,20 @@
         return map;
     }
 
+    /** Keep the visible human and machine-readable date synchronized. */
+    function updateJournalDate(date) {
+        elements.localDate.dateTime = localDateKey(date);
+        elements.localDate.setAttribute("datetime", localDateKey(date));
+        elements.localDate.textContent = formatLocalDate(date);
+    }
+
     /** Re-check the local day and return to daily mode after rollover. */
     function checkLocalDay() {
-        var current = localDateKey(new Date());
+        var now = new Date();
+        var current = localDateKey(now);
         if (current !== localDay) {
             localDay = current;
+            updateJournalDate(now);
             mode = "daily";
             moreIndex = 0;
             moreExcludedIds = [];
@@ -676,6 +706,55 @@
         return item;
     }
 
+    /** Quantize every prompt's border-box height so following bullets retain rule phase. */
+    function quantizePromptCards() {
+        var cards;
+        var measurements;
+        var ruleSpacing;
+        if (!elements.promptList || !window.getComputedStyle) {
+            return;
+        }
+        ruleSpacing = parseFloat(window.getComputedStyle(elements.promptList)
+            .getPropertyValue("--jp-rule-spacing"));
+        if (!Number.isFinite(ruleSpacing) || ruleSpacing <= 0) {
+            return;
+        }
+        cards = Array.prototype.slice.call(
+            elements.promptList.querySelectorAll(".jp-prompt-card")
+        );
+        cards.forEach(function (card) {
+            card.style.removeProperty("--jp-card-rows");
+        });
+        measurements = cards.map(function (card) {
+            var cardTop = card.getBoundingClientRect().top;
+            var flow = card.querySelectorAll(".jp-prompt-text, .jp-tags");
+            var contentBottom = cardTop;
+            var i;
+            for (i = 0; i < flow.length; i++) {
+                contentBottom = Math.max(contentBottom, flow[i].getBoundingClientRect().bottom);
+            }
+            return quantizedRuleRows(contentBottom - cardTop, ruleSpacing, 2);
+        });
+        cards.forEach(function (card, index) {
+            card.style.setProperty("--jp-card-rows", String(measurements[index]));
+        });
+    }
+
+    /** Coalesce render, resize, and font-load layout requests into one measurement pass. */
+    function schedulePromptQuantization() {
+        if (promptLayoutFrame !== null) {
+            return;
+        }
+        if (!window.requestAnimationFrame) {
+            quantizePromptCards();
+            return;
+        }
+        promptLayoutFrame = window.requestAnimationFrame(function () {
+            promptLayoutFrame = null;
+            quantizePromptCards();
+        });
+    }
+
     /** Create a subordinate custom-management card. */
     function createCustomCard(prompt) {
         var item = document.createElement("li");
@@ -752,13 +831,7 @@
         elements.randomCount.value = String(state.randomCount);
         elements.generateMore.disabled = !initialized || availableCount === 0;
         elements.randomCount.disabled = !initialized;
-        elements.modeSummary.textContent = mode === "more" ?
-            "Showing a temporary replacement set for " + localDay + ". Reload or restore to return to today's set." :
-            "Showing your daily set for " + localDay + ".";
-        if (availableCount < state.randomCount) {
-            elements.modeSummary.textContent += " Showing " + availableCount + " of " +
-                state.randomCount + " requested prompts; add or unpin prompts for more.";
-        }
+        schedulePromptQuantization();
     }
 
     /** Set the shared polite status message, including durable warnings. */
@@ -1258,8 +1331,8 @@
     function collectElements() {
         var ids = [
             "prompt-list", "custom-list", "custom-count", "prompts-empty", "custom-empty",
-            "random-count", "generate-more",
-            "restore-today", "mode-summary", "custom-form", "form-heading", "custom-text",
+            "random-count", "generate-more", "local-date",
+            "restore-today", "custom-form", "form-heading", "custom-text",
             "custom-tags", "text-error", "tags-error", "save-custom", "cancel-edit",
             "custom-heading", "announcer"
         ];
@@ -1373,18 +1446,27 @@
         elements.promptList.addEventListener("pointercancel", handlePointerFinish);
         elements.promptList.addEventListener("lostpointercapture", handlePointerFinish);
         elements.customList.addEventListener("click", handleCustomAction);
+        if (window.addEventListener) {
+            window.addEventListener("resize", schedulePromptQuantization);
+        }
     }
 
     /** Initialize persistence, catalog loading, rendering, and interactions. */
     function init() {
+        var now;
         app = document.getElementById("jp-app");
         if (!app) {
             return;
         }
         collectElements();
-        localDay = localDateKey(new Date());
+        now = new Date();
+        localDay = localDateKey(now);
+        updateJournalDate(now);
         loadPersistence();
         bindEvents();
+        if (document.fonts && document.fonts.ready) {
+            document.fonts.ready.then(schedulePromptQuantization);
+        }
         loadCatalog(app.getAttribute("data-catalog-url")).then(function (prompts) {
             builtins = prompts;
             initialized = true;

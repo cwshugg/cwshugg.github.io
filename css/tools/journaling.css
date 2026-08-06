@@ -1,13 +1,8 @@
 /* Journaling tool layout, states, cards, and responsive behavior. */
 
 .jp-app {
-    --jp-unpin-color: #ff7373;
     display: grid;
     gap: 1.5rem;
-}
-
-body.light-mode .jp-app {
-    --jp-unpin-color: #a61b29;
 }
 
 .jp-section {
@@ -16,6 +11,117 @@ body.light-mode .jp-app {
 
 .jp-section h2 {
     margin-top: 0;
+}
+
+body .jp-app .jp-journal.box {
+    /* Paper mode overrides follow below; ink stays dark on both light surfaces. */
+    --jp-ink: #28251f;
+    --jp-ink-muted: #5e594f;
+    --jp-rule-color: #91a297;
+    --jp-binding-edge-color: var(--divider-color1);
+    --jp-paper-accent: #466246;
+    --jp-focus-color: #175f82;
+    --jp-state-color: #75402f;
+    --jp-unpin-color: #9b2230;
+    --jp-control-background: #e8dec8;
+    --jp-drag-feedback: #754a35;
+    --jp-binding-width: 0.625rem;
+    --jp-page-border-width: 1px;
+    --jp-page-radius: 1.35rem;
+    --jp-page-inline-start: calc(2rem + var(--jp-binding-width));
+    --jp-page-inline-end: 1.75rem;
+    --jp-rule-spacing: 28px;
+    --jp-prompt-font-size: 1.05rem;
+    position: relative;
+    isolation: isolate;
+    box-sizing: border-box;
+    padding: 1.5rem var(--jp-page-inline-end) 0 var(--jp-page-inline-start);
+    border: var(--jp-page-border-width) solid var(--jp-binding-edge-color);
+    border-radius: 0 var(--jp-page-radius) var(--jp-page-radius) 0;
+    background: var(--jp-paper);
+    color: var(--jp-ink);
+    box-shadow: none;
+    clip-path: none;
+    filter: none;
+    overflow: hidden;
+    text-shadow: none;
+}
+
+body .jp-app .jp-journal.box::before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    width: var(--jp-binding-width);
+    border-radius: 0;
+    background-color: var(--jp-binding-edge-color);
+    content: "";
+    pointer-events: none;
+}
+
+body.light-mode .jp-app .jp-journal {
+    --jp-paper: var(--color-bg-raised);
+    --jp-rule-color: #91a297;
+}
+
+body:not(.light-mode) .jp-app .jp-journal {
+    --jp-paper: #f7f1e3;
+    --jp-rule-color: #87998d;
+}
+
+.jp-journal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0 1rem;
+    min-height: 4.5rem;
+    margin: 0;
+    padding: 0 0 1rem;
+}
+
+.jp-journal-header h2 {
+    margin-bottom: 0;
+    color: var(--jp-paper-accent);
+}
+
+.jp-local-date {
+    color: var(--jp-ink-muted);
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.jp-journal-body {
+    margin: 0 calc(0px - var(--jp-page-inline-end)) 0 calc(0px - var(--jp-page-inline-start));
+    padding: 0 var(--jp-page-inline-end) var(--jp-rule-spacing) var(--jp-page-inline-start);
+    background-color: var(--jp-paper);
+    background-image: repeating-linear-gradient(
+        to bottom,
+        var(--jp-rule-color) 0,
+        var(--jp-rule-color) 1px,
+        transparent 1px,
+        transparent var(--jp-rule-spacing)
+    );
+    background-position: 0 0;
+    background-repeat: repeat;
+    color: var(--jp-ink);
+}
+
+.jp-journal .jp-empty {
+    display: block;
+    margin: 0 0 var(--jp-rule-spacing);
+    padding: 0;
+    background: transparent;
+    color: var(--jp-ink-muted);
+    font-size: var(--jp-prompt-font-size);
+    line-height: var(--jp-rule-spacing);
+}
+
+.jp-journal .jp-empty {
+    color: var(--jp-state-color);
+    font-weight: 700;
 }
 
 .jp-section-heading,
@@ -60,7 +166,6 @@ body.light-mode .jp-app {
 }
 
 .jp-field small,
-.jp-summary,
 .jp-empty,
 .jp-optional {
     color: var(--color-text-muted);
@@ -121,18 +226,26 @@ body.light-mode .jp-app {
     pointer-events: none;
 }
 
-.jp-prompt-grid,
+.jp-prompt-list,
 .jp-custom-list,
 .jp-tags {
-    list-style: none;
     padding: 0;
 }
 
-.jp-prompt-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 1rem;
-    margin: 1rem 0 0;
+.jp-custom-list,
+.jp-tags {
+    list-style: none;
+}
+
+.jp-prompt-list {
+    margin: 0;
+    padding-left: 1.6rem;
+    list-style: disc outside;
+}
+
+.jp-prompt-list > li::marker {
+    color: var(--jp-ink);
+    font-size: 1.1em;
 }
 
 .jp-prompt-card,
@@ -146,11 +259,32 @@ body.light-mode .jp-app {
 
 .jp-prompt-card {
     position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    padding-right: 4.25rem;
-    transition: opacity 0.15s ease, box-shadow 0.1s ease;
+    box-sizing: border-box;
+    height: calc(var(--jp-card-rows, 2) * var(--jp-rule-spacing));
+    min-height: calc(var(--jp-rule-spacing) * 2);
+    margin: 0 0 var(--jp-rule-spacing);
+    padding: 0 4.25rem 0 0.25rem;
+    border: 0;
+    background: transparent;
+    outline: 1px solid transparent;
+    outline-offset: 0;
+    line-height: var(--jp-rule-spacing);
+    transition: opacity 0.15s ease, outline-color 0.1s ease;
+}
+
+.jp-prompt-card:hover {
+    outline-color: var(--jp-rule-color);
+}
+
+.jp-prompt-card::after {
+    position: absolute;
+    right: 0;
+    left: 0;
+    display: none;
+    height: 3px;
+    background: var(--jp-drag-feedback);
+    content: "";
+    pointer-events: none;
 }
 
 .jp-pinned-card {
@@ -160,40 +294,60 @@ body.light-mode .jp-app {
 .jp-pinned-card.jp-dragging {
     cursor: grabbing;
     opacity: 0.5;
+    background: var(--jp-control-background);
 }
 
 .jp-pinned-card:focus-visible {
-    outline: 2px solid var(--color-accent1);
+    outline: 3px solid var(--jp-focus-color);
     outline-offset: 3px;
 }
 
 .jp-pinned-card.jp-drop-before {
-    box-shadow: inset 0 3px 0 var(--color-accent2);
+    outline-color: transparent;
 }
 
-.jp-pinned-card.jp-drop-after {
-    box-shadow: inset 0 -3px 0 var(--color-accent2);
+.jp-pinned-card.jp-drop-before::after {
+    top: 0;
+    display: block;
 }
 
-.jp-prompt-text {
+.jp-pinned-card.jp-drop-after::after {
+    bottom: 0;
+    display: block;
+}
+
+.jp-journal .jp-prompt-text {
     margin: 0;
-    font-size: 1.05rem;
+    color: var(--jp-ink);
+    font-size: var(--jp-prompt-font-size);
+    line-height: var(--jp-rule-spacing);
 }
 
 .jp-tags {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.4rem;
+    align-items: flex-start;
+    gap: 0 0.4rem;
     margin: 0;
+    list-style: none;
 }
 
 .jp-tag {
+    display: inline-flex;
+    flex: 0 1 auto;
+    box-sizing: border-box;
+    width: fit-content;
     max-width: 100%;
-    padding: 0.15rem 0.5rem;
+    min-height: var(--jp-rule-spacing);
+    padding: 0 0.5rem;
     border-radius: 0.375rem;
+    border: 0;
+    outline: 1px solid rgba(40, 37, 31, 0.38);
+    outline-offset: -1px;
     background: var(--jp-tag-background);
     color: var(--jp-tag-foreground);
     font-size: 0.8rem;
+    line-height: var(--jp-rule-spacing);
     overflow-wrap: anywhere;
 }
 
@@ -203,10 +357,10 @@ body.light-mode .jp-app {
     padding: 0.45em 0.75em;
 }
 
-.jp-pin-button {
+.jp-app .jp-journal .jp-pin-button {
     position: absolute;
-    top: 0.75rem;
-    right: 0.75rem;
+    top: 0;
+    right: 0;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -216,16 +370,27 @@ body.light-mode .jp-app {
     min-height: 44px;
     margin: 0;
     padding: 0;
-    color: var(--color-text-muted);
+    z-index: 2;
+    border: 2px solid var(--jp-paper-accent);
+    background: var(--jp-control-background);
+    box-shadow: none;
+    color: var(--jp-ink-muted);
 }
 
-.jp-pin-button[aria-pressed="true"] {
+.jp-app .jp-journal .jp-pin-button[aria-pressed="true"] {
     color: var(--jp-unpin-color);
 }
 
-.jp-pin-button:focus-visible {
-    outline: 2px solid var(--color-accent1);
+.jp-app .jp-journal .jp-pin-button:focus-visible {
+    outline: 3px solid var(--jp-focus-color);
     outline-offset: 2px;
+}
+
+.jp-app .jp-journal .jp-pin-button:hover:enabled {
+    border-color: var(--jp-ink);
+    background: var(--jp-paper);
+    color: var(--jp-ink);
+    box-shadow: none;
 }
 
 .jp-custom-list {
@@ -266,12 +431,42 @@ body.light-mode .jp-app {
         gap: 1rem;
     }
 
-    .jp-prompt-grid {
-        gap: 0.75rem;
+    body .jp-app .jp-journal.box {
+        --jp-binding-width: 0.5rem;
+        --jp-page-inline-start: calc(1rem + var(--jp-binding-width));
+        --jp-page-inline-end: 1.25rem;
+        --jp-page-radius: 0.8rem;
     }
 }
 
 @media screen and (max-width: 480px) {
+    .jp-journal-header {
+        display: block;
+    }
+
+    body .jp-app .jp-journal.box {
+        --jp-binding-width: 0.25rem;
+        --jp-page-inline-start: calc(0.85rem + var(--jp-binding-width));
+        --jp-page-inline-end: 0.85rem;
+        --jp-page-radius: 0.45rem;
+        --jp-rule-spacing: 26px;
+        --jp-prompt-font-size: 1rem;
+        padding-top: 1rem;
+    }
+
+    .jp-local-date {
+        display: block;
+        margin-top: 0.2rem;
+    }
+
+    .jp-prompt-list {
+        padding-left: 1.25rem;
+    }
+
+    .jp-prompt-card {
+        padding-right: 3.25rem;
+    }
+
     .jp-controls,
     .jp-form-actions,
     .jp-custom-card {
@@ -315,5 +510,60 @@ body.light-mode .jp-app {
     .jp-app *::after {
         scroll-behavior: auto;
         transition: none !important;
+    }
+}
+
+@media (prefers-contrast: more) {
+    body .jp-app .jp-journal.box {
+        --jp-rule-color: #69776c;
+        --jp-binding-edge-color: var(--divider-color1);
+    }
+
+    .jp-prompt-card:hover {
+        outline-color: var(--jp-ink);
+    }
+}
+
+@media (forced-colors: active) {
+    body .jp-app .jp-journal.box {
+        --jp-binding-edge-color: CanvasText;
+        --jp-paper: Canvas;
+        color: CanvasText;
+        forced-color-adjust: auto;
+    }
+
+    .jp-journal-body {
+        background-color: Canvas;
+        background-image: repeating-linear-gradient(
+            to bottom,
+            CanvasText 0,
+            CanvasText 1px,
+            Canvas 1px,
+            Canvas var(--jp-rule-spacing)
+        );
+    }
+
+    .jp-app .jp-journal .jp-pin-button {
+        border-color: CanvasText;
+    }
+
+    .jp-journal-header h2,
+    .jp-local-date,
+    .jp-journal .jp-empty,
+    .jp-prompt-text {
+        color: CanvasText;
+    }
+
+    .jp-prompt-list > li::marker,
+    .jp-pin-button[aria-pressed="true"] {
+        color: CanvasText;
+    }
+}
+
+@media print {
+    body .jp-app .jp-journal.box {
+        --jp-binding-edge-color: var(--divider-color1);
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
     }
 }

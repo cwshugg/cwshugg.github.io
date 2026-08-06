@@ -16,12 +16,16 @@ Journaling has been known to help ease the mind, improve confidence, and make pe
 Try following a few of these prompts daily!
 
 <div id="jp-app" class="jp-app" data-catalog-url="/assets/data/journaling.json">
-    <section class="jp-section box box-1" aria-labelledby="jp-prompts-heading">
-        <h2 id="jp-prompts-heading">Today's inspiration</h2>
-        <p id="jp-mode-summary" class="jp-summary">Loading today's prompts…</p>
-        <p id="jp-reorder-instructions" class="jp-visually-hidden">Pinned prompt cards can be reordered. Drag a card with a mouse, touch, or pen. When a card is focused, press Arrow Up or Arrow Down to move it. Hold Alt while dragging across prompt text to select it.</p>
-        <p id="jp-prompts-empty" class="jp-empty jp-hidden">No prompts are available. Add a custom prompt or reload to try again.</p>
-        <ul id="jp-prompt-list" class="jp-prompt-grid" aria-label="Pinned and current prompts"></ul>
+    <section class="jp-section jp-journal box box-1" aria-labelledby="jp-prompts-heading">
+        <header class="jp-journal-header">
+            <h2 id="jp-prompts-heading">Today’s inspiration</h2>
+            <time id="jp-local-date" class="jp-local-date" datetime="">Loading local date…</time>
+        </header>
+        <div class="jp-journal-body">
+            <p id="jp-reorder-instructions" class="jp-visually-hidden">Pinned prompt cards can be reordered. Drag a card with a mouse, touch, or pen. When a card is focused, press Arrow Up or Arrow Down to move it. Hold Alt while dragging across prompt text to select it.</p>
+            <p id="jp-prompts-empty" class="jp-empty jp-hidden">No prompts are available. Add a custom prompt or reload to try again.</p>
+            <ul id="jp-prompt-list" class="jp-prompt-list" aria-label="Pinned and current prompts"></ul>
+        </div>
     </section>
 
     <section class="jp-section box box-2" aria-labelledby="jp-settings-heading">
@@ -75,5 +79,3 @@ Try following a few of these prompts daily!
 <br>
 
 *Special thanks to the [**Kurzgesagt Gratitude Journal**](https://shop-us.kurzgesagt.org/products/gratitude-journal) for inspiring me to journal!*
-
-
