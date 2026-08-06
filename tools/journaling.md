@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Journaling"
-permalink: /journaling
+permalink: /tools/journaling
 theme: woodland
 extra_css:
   - /css/tools/journaling.css

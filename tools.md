@@ -51,7 +51,7 @@ A collection of small tools.
         <i class="fas fa-dice"></i>
         <span>Dice Roll</span>
     </a>
-    <a href="/journaling" class="tool-icon tool-icon--journaling">
+    <a href="/tools/journaling" class="tool-icon tool-icon--journaling">
         <i class="fas fa-feather-alt"></i>
         <span>Journaling</span>
     </a>
