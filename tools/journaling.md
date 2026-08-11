@@ -2,6 +2,7 @@
 layout: default
 title: "Journaling"
 permalink: /tools/journaling
+favicon: /images/icons/journal.ico
 theme: woodland
 extra_css:
   - /css/tools/journaling.css

@@ -13,7 +13,8 @@
     <link rel="stylesheet" href="{{ css_file | relative_url }}">
     {% endfor %}
     {% endif %}
-    <link rel="icon" href="{{ '/favicon.ico' | relative_url }}">
+    {% assign favicon = page.favicon | default: '/favicon.ico' %}
+    <link rel="icon" href="{{ favicon | relative_url }}">
 </head>
 <body class="{{ theme }}-theme">
     <header class="site-header">
