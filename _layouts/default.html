@@ -3,8 +3,15 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% if page.referrer_policy %}
+    <meta name="referrer" content="{{ page.referrer_policy }}">
+    {% endif %}
+    {% if page.content_security_policy %}
+    <meta http-equiv="Content-Security-Policy" content="{{ page.content_security_policy }}">
+    {% endif %}
     <title>{{ page.title | default: "shugg.dev" }}</title>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+    <link rel="stylesheet" href="{{ '/assets/vendor/fontawesome/css/all.min.css' | relative_url }}">
+    <link rel="stylesheet" href="{{ '/assets/vendor/fontawesome/css/local-icons.css' | relative_url }}">
     <link rel="stylesheet" href="{{ '/css/base.css' | relative_url }}">
     {% assign theme = page.theme | default: "retro" %}
     <link rel="stylesheet" href="{{ '/css/themes/' | append: theme | append: '.css' | relative_url }}">
@@ -25,6 +32,7 @@
             <a href="{{ '/' | relative_url }}" class="button-nav">Home</a>
             <a href="{{ '/me' | relative_url }}" class="button-nav">Me</a>
             <a href="{{ '/tools' | relative_url }}" class="button-nav">Tools</a>
+            <a href="{{ '/games' | relative_url }}" class="button-nav">Games</a>
             <button class="theme-toggle" id="themeToggle" title="Toggle light/dark mode"><i class="fas fa-sun"></i></button>
         </nav>
     </header>
@@ -42,6 +50,7 @@
             <a href="{{ '/' | relative_url }}" class="button-nav">Home</a>
             <a href="{{ '/me' | relative_url }}" class="button-nav">Me</a>
             <a href="{{ '/tools' | relative_url }}" class="button-nav">Tools</a>
+            <a href="{{ '/games' | relative_url }}" class="button-nav">Games</a>
             <button class="theme-toggle" id="themeToggleSidebar" title="Toggle light/dark mode"><i class="fas fa-sun"></i></button>
         </nav>
     </aside>
@@ -51,10 +60,10 @@
     </main>
     <footer class="site-footer">
         <div>
-            <a href="https://github.com/cwshugg" title="GitHub">
+            <a href="https://github.com/cwshugg" title="GitHub" rel="noreferrer">
                 <i class="fab fa-github"></i>
             </a>
-            <a href="https://www.linkedin.com/in/connor-shugg/" title="LinkedIn">
+            <a href="https://www.linkedin.com/in/connor-shugg/" title="LinkedIn" rel="noreferrer">
                 <i class="fab fa-linkedin"></i>
             </a>
             <a href="mailto:connor@shugg.dev" title="Email">

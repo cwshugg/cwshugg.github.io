@@ -10,8 +10,26 @@
 
     var STORAGE_KEY = "theme";
     var BODY_CLASS = "light-mode";
-    var LABEL_DARK = '<i class="fas fa-sun"></i>';   // shown in dark mode (click to go light)
-    var LABEL_LIGHT = '<i class="fas fa-moon"></i>'; // shown in light mode (click to go dark)
+    var ICON_BASE_CLASS = "fas";
+    var ICON_DARK_CLASS = "fa-sun";
+    var ICON_LIGHT_CLASS = "fa-moon";
+
+    /**
+     * Replaces a toggle's icon using only fixed DOM operations.
+     */
+    function setButtonIcon(button, theme) {
+        var icon;
+
+        if (!button) {
+            return;
+        }
+
+        button.replaceChildren();
+        icon = document.createElement("i");
+        icon.classList.add(ICON_BASE_CLASS);
+        icon.classList.add(theme === "light" ? ICON_LIGHT_CLASS : ICON_DARK_CLASS);
+        button.appendChild(icon);
+    }
 
     /**
      * Read persisted theme from localStorage.
@@ -43,17 +61,13 @@
     function applyTheme(theme, button) {
         if (theme === "light") {
             document.body.classList.add(BODY_CLASS);
-            if (button) {
-                button.innerHTML = LABEL_LIGHT;
-            }
+            setButtonIcon(button, theme);
         } else {
             document.body.classList.remove(BODY_CLASS);
-            if (button) {
-                button.innerHTML = LABEL_DARK;
-            }
+            setButtonIcon(button, theme);
         }
         var sidebarBtn = document.getElementById("themeToggleSidebar");
-        if (sidebarBtn) { sidebarBtn.innerHTML = (theme === "light") ? LABEL_LIGHT : LABEL_DARK; }
+        setButtonIcon(sidebarBtn, theme);
     }
 
     // ---------------------------------------------------------------

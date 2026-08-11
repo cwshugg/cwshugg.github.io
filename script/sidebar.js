@@ -32,10 +32,6 @@
         if (themeToggleSidebar && themeToggleMain) {
             themeToggleSidebar.addEventListener("click", function () {
                 themeToggleMain.click();
-                // Sync the sidebar button icon with the main one
-                setTimeout(function () {
-                    themeToggleSidebar.innerHTML = themeToggleMain.innerHTML;
-                }, 10);
             });
         }
     });

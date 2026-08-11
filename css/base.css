@@ -104,6 +104,7 @@
     --tool-coinflip:  #FFC107;   /* Coin Flip     — gold                */
     --tool-dice:      #B07CF0;   /* Dice Roll     — purple              */
     --tool-journaling: #52D6A3; /* Journaling    — teal                */
+    --app-sudoku:     #70C1B3;   /* Sudoku        — sea green           */
 }
 
 /* ---- Tools page: light-mode per-tool icon colors --------------------- */
@@ -122,6 +123,7 @@ body.light-mode {
     --tool-coinflip:  #B8860B;   /* Coin Flip     — dark goldenrod      */
     --tool-dice:      #7B3FCC;   /* Dice Roll     — purple              */
     --tool-journaling: #167A5A; /* Journaling    — teal                */
+    --app-sudoku:     #28796D;   /* Sudoku        — sea green           */
 }
 
 
@@ -821,6 +823,7 @@ table {
 }
 
 /* ---- Tool icon: app-drawer style ------------------------------------- */
+.app-icon,
 .tool-icon {
     display: flex;
     flex-direction: column;
@@ -836,6 +839,10 @@ table {
     -webkit-tap-highlight-color: transparent;
 }
 
+.app-icon:hover,
+.app-icon:active,
+.app-icon:focus,
+.app-icon:visited,
 .tool-icon:hover,
 .tool-icon:active,
 .tool-icon:focus,
@@ -845,6 +852,7 @@ table {
     -webkit-tap-highlight-color: transparent;
 }
 
+.app-icon i,
 .tool-icon i {
     font-size: 3rem;
     color: var(--color-accent1);
@@ -867,7 +875,9 @@ table {
 .tool-icon--coinflip  i { color: var(--tool-coinflip); }
 .tool-icon--dice      i { color: var(--tool-dice); }
 .tool-icon--journaling i { color: var(--tool-journaling); }
+.app-icon--sudoku i { color: var(--app-sudoku); }
 
+.app-icon span,
 .tool-icon span {
     font-family: var(--font-heading, inherit);
     font-size: 0.85rem;
@@ -881,6 +891,7 @@ table {
 }
 
 /* Hover: icon grows */
+.app-icon:hover i,
 .tool-icon:hover i {
     transform: scale(1.15);
 }
@@ -898,6 +909,7 @@ table {
 .tool-icon--coinflip:hover  span { color: var(--tool-coinflip); }
 .tool-icon--dice:hover      span { color: var(--tool-dice); }
 .tool-icon--journaling:hover span { color: var(--tool-journaling); }
+.app-icon--sudoku:hover span { color: var(--app-sudoku); }
 
 /* Click: bounce down */
 @keyframes tool-bounce {
@@ -907,6 +919,7 @@ table {
     100% { transform: scale(1); }
 }
 
+.app-icon:active i,
 .tool-icon:active i {
     animation: tool-bounce 0.35s ease forwards;
 }
@@ -922,6 +935,7 @@ table {
    in every theme without hardcoding any colours. The ring scales together
    with the glyph's hover `scale(1.15)` (the pseudo-element lives inside the
    scaling `<i>`), keeping the gap proportional and the circle clean. */
+.app-icon i::after,
 .tool-icon i::after {
     content: "";
     position: absolute;
@@ -941,6 +955,7 @@ table {
 }
 
 /* On hover the ring fades in and thickens from 0 -> target thickness. */
+.app-icon:hover i::after,
 .tool-icon:hover i::after {
     border-width: 4px;
     opacity: 1;
@@ -949,6 +964,7 @@ table {
 /* The label slides down in sync with the growing ring (transform only, so
    sibling grid cells never shift). Composes with the per-tool hover colour
    rules above (those animate `color`, this animates `transform`). */
+.app-icon:hover span,
 .tool-icon:hover span {
     transform: translateY(1.3rem);
 }
@@ -956,17 +972,22 @@ table {
 /* Respect users who prefer reduced motion (honoured elsewhere in the repo):
    keep the ring + label-shift as instant state changes, no animation. */
 @media (prefers-reduced-motion: reduce) {
+    .app-icon i,
+    .app-icon i::after,
+    .app-icon span,
     .tool-icon i,
     .tool-icon i::after,
     .tool-icon span {
         transition: none;
     }
+    .app-icon:active i,
     .tool-icon:active i {
         animation: none;
     }
 }
 
 /* ---- Tools grid: icon layout ----------------------------------------- */
+.app-grid,
 .tools-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));

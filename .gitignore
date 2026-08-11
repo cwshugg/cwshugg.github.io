@@ -15,7 +15,15 @@ _site/
 # Ruby / Bundler
 vendor/
 .bundle/
-Gemfile.lock
+
+# JavaScript development tooling
+node_modules/
+test-results/
+playwright-report/
+_site-test/
+_site-baseurl/
+_site-evidence/
+_site-icon-test/
 
 # Image artifacts
 *sec.endpointdlp

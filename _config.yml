@@ -9,3 +9,9 @@ exclude:
   - vendor
   - README.md
   - LICENSE.txt
+  - tests
+  - node_modules
+  - package.json
+  - package-lock.json
+  - playwright.config.js
+  - .github
