@@ -1,5 +1,5 @@
 title: "shugg.dev"
-description: "Connor Shugg's personal website — software engineering, security, and projects."
+description: "Connor Shugg's personal website."
 permalink: /:categories/:title
 
 exclude:
@@ -7,5 +7,5 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - vendor
-  - README.txt
+  - README.md
   - LICENSE.txt
