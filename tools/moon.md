@@ -2,6 +2,7 @@
 layout: default
 title: "The Moon"
 permalink: /tools/moon
+favicon: /images/icons/moon.ico
 theme: galactic
 extra_css:
   - /css/tools/moon.css

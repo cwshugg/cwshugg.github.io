@@ -2,6 +2,7 @@
 layout: default
 title: "Night Sky"
 permalink: /tools/nightsky
+favicon: /images/icons/nightsky.ico
 theme: galactic
 extra_css:
   - /css/tools/nightsky.css

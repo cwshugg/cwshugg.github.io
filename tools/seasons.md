@@ -2,6 +2,7 @@
 layout: default
 title: "The Seasons"
 permalink: /tools/seasons
+favicon: /images/icons/seasons.ico
 theme: galactic
 extra_css:
   - /css/tools/seasons.css

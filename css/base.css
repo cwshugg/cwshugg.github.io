@@ -845,59 +845,72 @@ table {
     -webkit-tap-highlight-color: transparent;
 }
 
-.tool-icon i {
-    font-size: 3rem;
+.tool-icon-glyph {
+    display: block;
+    width: 3rem;
+    height: 3rem;
+    flex: 0 0 3rem;
     color: var(--color-accent1);
     transition: transform 0.2s ease;
-    /* anchor for the hover ring pseudo-element (see below) */
     position: relative;
 }
 
-/* Fixed per-tool icon colors (theme-independent; see :root + body.light-mode
-   above). These replace the old `.tool-icon:nth-child(3n+...)` accent-cycling
-   rules so each tool keeps the same color regardless of theme or ordering. */
-.tool-icon--picker    i { color: var(--tool-picker); }
-.tool-icon--ascii     i { color: var(--tool-ascii); }
-.tool-icon--timezones i { color: var(--tool-timezones); }
-.tool-icon--moon      i { color: var(--tool-moon); }
-.tool-icon--seasons   i { color: var(--tool-seasons); }
-.tool-icon--nightsky  i { color: var(--tool-nightsky); }
-.tool-icon--wordcount i { color: var(--tool-wordcount); }
-.tool-icon--words     i { color: var(--tool-words); }
-.tool-icon--coinflip  i { color: var(--tool-coinflip); }
-.tool-icon--dice      i { color: var(--tool-dice); }
-.tool-icon--journaling i { color: var(--tool-journaling); }
+/* Override global and theme image decoration so the transparent app artwork
+   remains an undecorated replacement for the former Font Awesome glyph. */
+.tools-grid .tool-icon-glyph img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    box-shadow: none;
+    object-fit: contain;
+}
 
-.tool-icon span {
+/* Fixed per-tool colors retain the original hover-ring and label treatment. */
+.tool-icon--picker    .tool-icon-glyph { color: var(--tool-picker); }
+.tool-icon--ascii     .tool-icon-glyph { color: var(--tool-ascii); }
+.tool-icon--timezones .tool-icon-glyph { color: var(--tool-timezones); }
+.tool-icon--moon      .tool-icon-glyph { color: var(--tool-moon); }
+.tool-icon--seasons   .tool-icon-glyph { color: var(--tool-seasons); }
+.tool-icon--nightsky  .tool-icon-glyph { color: var(--tool-nightsky); }
+.tool-icon--wordcount .tool-icon-glyph { color: var(--tool-wordcount); }
+.tool-icon--words     .tool-icon-glyph { color: var(--tool-words); }
+.tool-icon--coinflip  .tool-icon-glyph { color: var(--tool-coinflip); }
+.tool-icon--dice      .tool-icon-glyph { color: var(--tool-dice); }
+.tool-icon--journaling .tool-icon-glyph { color: var(--tool-journaling); }
+
+.tool-icon-label {
     font-family: var(--font-heading, inherit);
     font-size: 0.85rem;
     font-weight: 600;
     text-align: center;
     color: var(--color-text-muted);
-    /* `transform` is animated on hover (label slides down as the ring grows);
-       `color` is animated by the per-tool hover rules below. Using transform
-       avoids reflowing neighbouring grid cells. */
     transition: transform 0.25s ease, color 0.2s ease;
 }
 
 /* Hover: icon grows */
-.tool-icon:hover i {
+.tool-icon:hover .tool-icon-glyph {
     transform: scale(1.15);
 }
 
 /* Hover: label text matches its tool's fixed icon color (light/dark variants
    track automatically via the same per-tool vars used for the icons above). */
-.tool-icon--picker:hover    span { color: var(--tool-picker); }
-.tool-icon--ascii:hover     span { color: var(--tool-ascii); }
-.tool-icon--timezones:hover span { color: var(--tool-timezones); }
-.tool-icon--moon:hover      span { color: var(--tool-moon); }
-.tool-icon--seasons:hover   span { color: var(--tool-seasons); }
-.tool-icon--nightsky:hover  span { color: var(--tool-nightsky); }
-.tool-icon--wordcount:hover span { color: var(--tool-wordcount); }
-.tool-icon--words:hover     span { color: var(--tool-words); }
-.tool-icon--coinflip:hover  span { color: var(--tool-coinflip); }
-.tool-icon--dice:hover      span { color: var(--tool-dice); }
-.tool-icon--journaling:hover span { color: var(--tool-journaling); }
+.tool-icon--picker:hover    .tool-icon-label { color: var(--tool-picker); }
+.tool-icon--ascii:hover     .tool-icon-label { color: var(--tool-ascii); }
+.tool-icon--timezones:hover .tool-icon-label { color: var(--tool-timezones); }
+.tool-icon--moon:hover      .tool-icon-label { color: var(--tool-moon); }
+.tool-icon--seasons:hover   .tool-icon-label { color: var(--tool-seasons); }
+.tool-icon--nightsky:hover  .tool-icon-label { color: var(--tool-nightsky); }
+.tool-icon--wordcount:hover .tool-icon-label { color: var(--tool-wordcount); }
+.tool-icon--words:hover     .tool-icon-label { color: var(--tool-words); }
+.tool-icon--coinflip:hover  .tool-icon-label { color: var(--tool-coinflip); }
+.tool-icon--dice:hover      .tool-icon-label { color: var(--tool-dice); }
+.tool-icon--journaling:hover .tool-icon-label { color: var(--tool-journaling); }
 
 /* Click: bounce down */
 @keyframes tool-bounce {
@@ -907,61 +920,44 @@ table {
     100% { transform: scale(1); }
 }
 
-.tool-icon:active i {
+.tool-icon:active .tool-icon-glyph {
     animation: tool-bounce 0.35s ease forwards;
 }
 
-/* ---- Hover ring: growing circular border around the glyph ------------ */
-/* A pseudo-element on the `<i>` draws a perfectly round ring centred on the
-   glyph. It is sized by a FIXED diameter (so it stays circular regardless of
-   the glyph's aspect ratio) and uses content-box sizing so the border grows
-   OUTWARD on hover — the inner gap to the glyph stays constant and the ring
-   never overlaps the glyph. `currentColor` resolves to the `<i>`'s colour,
-   i.e. the per-tool `--tool-*` var (and its light/dark override) already set
-   by the `.tool-icon--X i` rules above, so the ring matches each tool exactly
-   in every theme without hardcoding any colours. The ring scales together
-   with the glyph's hover `scale(1.15)` (the pseudo-element lives inside the
-   scaling `<i>`), keeping the gap proportional and the circle clean. */
-.tool-icon i::after {
+.tool-icon-glyph::after {
     content: "";
     position: absolute;
     top: 50%;
     left: 50%;
-    /* fixed diameter, comfortably larger than the ~3rem glyph -> wide, even
-       gap on all sides while still snugly surrounding (never overlapping) it */
     width: 5rem;
     height: 5rem;
-    box-sizing: content-box;     /* border grows outward, diameter stays put */
+    box-sizing: content-box;
     border: 0 solid currentColor;
-    border-radius: 50%;          /* perfect circle */
+    border-radius: 50%;
     transform: translate(-50%, -50%);
     opacity: 0;
     pointer-events: none;
     transition: border-width 0.25s ease, opacity 0.25s ease;
 }
 
-/* On hover the ring fades in and thickens from 0 -> target thickness. */
-.tool-icon:hover i::after {
+.tool-icon:hover .tool-icon-glyph::after {
     border-width: 4px;
     opacity: 1;
 }
 
-/* The label slides down in sync with the growing ring (transform only, so
-   sibling grid cells never shift). Composes with the per-tool hover colour
-   rules above (those animate `color`, this animates `transform`). */
-.tool-icon:hover span {
+.tool-icon:hover .tool-icon-label {
     transform: translateY(1.3rem);
 }
 
 /* Respect users who prefer reduced motion (honoured elsewhere in the repo):
    keep the ring + label-shift as instant state changes, no animation. */
 @media (prefers-reduced-motion: reduce) {
-    .tool-icon i,
-    .tool-icon i::after,
-    .tool-icon span {
+    .tool-icon-glyph,
+    .tool-icon-glyph::after,
+    .tool-icon-label {
         transition: none;
     }
-    .tool-icon:active i {
+    .tool-icon:active .tool-icon-glyph {
         animation: none;
     }
 }

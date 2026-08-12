@@ -2,6 +2,7 @@
 layout: default
 title: "Word Lookup"
 permalink: /tools/words
+favicon: /images/icons/words.ico
 theme: woodland
 extra_css:
   - /css/tools/words.css

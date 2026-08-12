@@ -2,6 +2,7 @@
 layout: default
 title: "Word Counter"
 permalink: /tools/wordcount
+favicon: /images/icons/wordcount.ico
 theme: woodland
 extra_js:
   - /script/tools/wordcount.js

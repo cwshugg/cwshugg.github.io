@@ -2,6 +2,7 @@
 layout: default
 title: "Color Picker"
 permalink: /tools/color
+favicon: /images/icons/colors.ico
 extra_css:
   - /css/tools/color.css
 extra_js:

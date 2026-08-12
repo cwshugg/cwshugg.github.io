@@ -2,6 +2,7 @@
 layout: default
 title: "Coin Flip"
 permalink: /tools/coinflip
+favicon: /images/icons/coinflip.ico
 theme: tabletop
 extra_css:
   - /css/tools/coinflip.css

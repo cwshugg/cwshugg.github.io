@@ -2,6 +2,7 @@
 layout: default
 title: "Time Zones"
 permalink: /tools/timezones
+favicon: /images/icons/timezones.ico
 extra_css:
   - /css/tools/timezones.css
 extra_js:

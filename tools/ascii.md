@@ -2,6 +2,7 @@
 layout: default
 title: "ASCII Table"
 permalink: /tools/ascii
+favicon: /images/icons/ascii.ico
 extra_js:
   - /script/tools/ascii.js
 tags: [programming]

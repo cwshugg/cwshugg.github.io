@@ -2,6 +2,7 @@
 layout: default
 title: "Dice Roll"
 permalink: /tools/dice
+favicon: /images/icons/diceroll.ico
 theme: tabletop
 extra_css:
   - /css/tools/dice.css
