@@ -13,10 +13,10 @@ extra_css:
 I'm a software engineer with a passion for invention, efficient design, security, and creativity.
 I enjoy software development, exploring software security, writing, and generally creating things in my free time.
 
-Check out my skill set, my engineering experience, or some of my projects, below.
+Check out my engineering experience, areas of expertise, or some of my projects, below.
 Feel free to browse the site and make use of the various tools I've built.
 
-Thanks for stopping by! 👍
+Thanks for stopping by!
 
 ### Timeline
 
@@ -158,12 +158,9 @@ Thanks for stopping by! 👍
 ## <span style="color: var(--color-accent2);"><i class="fas fa-hammer"></i></span> Projects
 
 Creation is one of my greatest passions in life.
-Turns out that a knack for making things plus a couple of computer science degrees equals a whole lot of projects.
-Here are a few notable mentions of things I've created (or am still creating):
+Here are some notable mentions of things I've created (or am still creating):
 
-* [DImROD](https://github.com/cwshugg/dimrod) - My custom-built smart-home driver and personal server.
 * [shuggtools](https://github.com/cwshugg/shuggtools) - My dotfiles, scripts, vim configurations, and everything else that I use to set up my command-line environment.
-* [cobots](https://github.com/cwshugg/cobots) - My AI tooling setup: agents, skills, instructions, etc.
 * [Custom QMK firmware](https://github.com/cwshugg/qmk), for a mechanical keyboard I built.
 
 I'm a big enthusiast of note-taking and building a personal "[second brain](https://fortelabs.com/blog/basboverview/);" it's enabled me to store and retrieve huge amounts of useful information, which makes me a better engineer.
@@ -171,6 +168,12 @@ As part of this effort, I've built some tooling to help me track to-dos and keep
 
 * [ragtag](https://github.com/cwshugg/ragtag) - A command-line tool for tagging notes and tracking tasks in arbitrary plain-text note files (in any format).
 * [ragtag.vim](https://github.com/cwshugg/ragtag.vim) - A Vim plugin that enables me to use ragtag in-line when editing files in Vim.
+
+I've created various agents and tools for AI-assisted software engineering:
+
+* [devbots](https://github.com/cwshugg/devbots) - My team of AI agents that I work with to create high-quality software.
+* [sleuthbots](https://github.com/cwshugg/sleuthbots) - My team of AI agents that I work with to investigate bugs, triage incidents, etc.
+* [botbrain](https://github.com/cwshugg/botbrain) - My personal knowledge base that I feed to the agents I work with.
 
 I've also dabbled with Vim plugins.
 Here are a few I've written:
