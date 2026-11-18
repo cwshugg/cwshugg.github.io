@@ -16,6 +16,7 @@
     {"id":"builtin-012","text":"What is something you've been worrying about?","tags":["anxiety"]},
     {"id":"builtin-013","text":"Who is somebody you're grateful for, and why?","tags":["gratitude", "relationships"]},
     {"id":"builtin-014","text":"Who is somebody important in your life that you haven't talked with recently?","tags":["relationships"]},
-    {"id":"builtin-015","text":"What are three small joys you can appreciate today?","tags":["gratitude"]}
+    {"id":"builtin-015","text":"What are three small joys you can appreciate today?","tags":["gratitude"]},
+    {"id":"builtin-016","text":"What have you got right now that past you wanted?","tags":["gratitude", "reflection"]}
   ]
 }
